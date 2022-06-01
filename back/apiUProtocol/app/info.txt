@@ -1,0 +1,1 @@
+Caso trabalhar com Orientação a objeto, criar uma pasta "entity" e colocar as classes
