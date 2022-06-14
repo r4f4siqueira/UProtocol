@@ -1,22 +1,27 @@
-FROM node:lts-alpine
+ARG NODE_IMAGE=node:16.13.1-alpine
 
-RUN mkdir -p ../../back:/home/node/app/node_modules
-
-WORKDIR ../../back:/home/node/app
-
-COPY ../../back/package.json yarn.* ./
-
-RUN apk add --no-cache git
-
-COPY . ../../back:/home/node/app/
-#COPY . /home/node/app/
-#copy pede dois argumentos . é um
-RUN chown -R node:node /home/node
-
-RUN yarn
-
+FROM $NODE_IMAGE AS base
+RUN apk --no-cache add dumb-init
+RUN mkdir -p ../back:/home/node/app && chown node:node ../back:/home/node/app
+WORKDIR /back
+RUN mkdir -p tmp
+RUN chown node tmp
 USER node
 
-EXPOSE 3333
+FROM base AS dependencies
+COPY --chown=node:node ../package*.json /.
+RUN npm ci
+COPY --chown=node:node . .
 
-ENTRYPOINT ["node"]
+FROM dependencies AS build
+RUN node ace build --production
+
+FROM base AS production
+ENV NODE_ENV=production
+ENV PORT=$PORT
+ENV HOST=0.0.0.0
+COPY --chown=node:node ./package*.json ./
+RUN npm ci --production
+COPY --chown=node:node --from=build ..back:/home/node/app/build .
+EXPOSE $PORT
+CMD [ "dumb-init", "node", "server.js" ]
