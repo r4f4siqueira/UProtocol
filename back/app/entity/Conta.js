@@ -6,7 +6,6 @@ module.exports = class Conta {
         this.ativo = 0;
         this.login = "";
         this.senha = "";
-        this.cargo = "";
         this.empresa = 0;
     }
     
@@ -15,7 +14,6 @@ module.exports = class Conta {
         this.ativo = ativo;
         this.login = login;
         this.senha = senha;
-        this.cargo = cargo;
         this.empresa = empresa;
     }
 
@@ -24,7 +22,6 @@ module.exports = class Conta {
     get ativo(){return this.ativo;}
     get login(){return this.login;}
     get senha(){return this.senha;}
-    get cargo(){return this.cargo;}
     get dataC(){return this.dataC;}
     get userC(){return this.userC;}
     get userM(){return this.userM;}
@@ -36,7 +33,6 @@ module.exports = class Conta {
     set ativo(ativo){this.ativo = ativo}
     set login(login){this.login = login;}
     set senha(senha){this.senha = senha;}
-    set cargo(cargo){this.cargo = cargo;}
     set dataC(dataC){this.dataC = dataC;}
     set userC(userC){this.userC = userC;}
     set dataM(dataM){this.dataM = dataM;}
