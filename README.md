@@ -1,8 +1,9 @@
 # Welcome in the UProtocol
 
-## After install node 16.15.1
+### After install PostegreSQL 14.4-1
+### After install node 16.15.1
 
-## stage one 
+## stage one: install node dependencies
 ```
 $ cd ./back
 $ npm install
@@ -11,5 +12,8 @@ $ npm install
 $ cd ./front
 $ npm install
 ```
+## stage two: create bd struture
 
-Enquanto o problema com o docker não for resolvido terá que rodar o sistema desta forma
+Run the SQLs that are in ./back/database/db/structure.sql
+
+Enquanto o impasse com o docker não for resolvido terá que montar o ambiente manualmente
