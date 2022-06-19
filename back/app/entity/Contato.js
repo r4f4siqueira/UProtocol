@@ -15,18 +15,18 @@ module.exports = class Contato {
         this.empresa = 0;
     }
 
-    //Metodos da classe
-    removerDados(){
-        //remover dados
-        
-    }
-
-    inserirDados(){
-        //Inserir dados
-    }
-
-    alterarDados(){
-        //alterar dados
+    constructor(id, ativo, cliente, telefone, email, pessoa, dataC, userC, dataM, userM, empresa) {
+        this.id = id;
+        this.ativo = ativo;
+        this.cliente = cliente;
+        this.telefone = telefone;
+        this.email = email;
+        this.pessoa = pessoa;
+        this.dataC = dataC;
+        this.userC = userC;
+        this.dataM = dataM;
+        this.userM = userM;
+        this.empresa = empresa;
     }
 
     //get

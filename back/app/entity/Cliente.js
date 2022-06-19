@@ -14,19 +14,19 @@ module.exports = class Cliente {
         this.empresa = 0;
     }
 
-    //Metodos da classe
-    removerDados(){
-        //remover dados
-        
+    constructor(id, ativo, cnpj_cpf, razaoSocial, fantasia, dataC, userC, dataM, userM, empresa) {
+        this.id = id;
+        this.ativo = ativo;
+        this.cnpj_cpf = cnpj_cpf;
+        this.razaoSocial = razaoSocial;
+        this.fantasia = fantasia;
+        this.dataC = dataC;
+        this.userC = userC;
+        this.dataM = dataM;
+        this.userM = userM;
+        this.empresa = empresa;
     }
 
-    inserirDados(){
-        //Inserir dados
-    }
-
-    alterarDados(){
-        //alterar dados
-    }
 
     //get
     get id(){return this.id;}

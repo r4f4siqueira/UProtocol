@@ -9,18 +9,14 @@ module.exports = class Conta {
         this.cargo = "";
         this.empresa = 0;
     }
-
-    //Metodos da classe
-    removerDados(){
-        //remover dados
-    }
-
-    inserirDados(){
-        //inserir dadodos
-    }
-
-    alterarDados(){
-        //alterar dados
+    
+    constructor(id, ativo, login, senha, cargo, empresa) {
+        this.id = id;
+        this.ativo = ativo;
+        this.login = login;
+        this.senha = senha;
+        this.cargo = cargo;
+        this.empresa = empresa;
     }
 
     //get

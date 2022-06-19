@@ -13,17 +13,16 @@ module.exports = class Anexo {
         this.empresa = 0;
     }
 
-    //Metodos da classe
-    removerDados(){
-        //remover dados
-    }
-
-    inserirDados(){
-        //inserir dadodos
-    }
-
-    alterarDados(){
-        //alterar dados
+    constructor(id, protocolo, descricao, anexo, dataC, userC, userM, dataM, empresa) {
+        this.id = id;
+        this.protocolo = protocolo;
+        this.descricao = descricao;
+        this.anexo = anexo;
+        this.dataC = dataC;
+        this.userC = userC;
+        this.userM = userM;
+        this.dataM = dataM;
+        this.empresa = empresa;
     }
 
     //get
