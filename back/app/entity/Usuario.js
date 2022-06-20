@@ -8,6 +8,7 @@ module.exports = class Usuario {
         this.email = "";
         this.conta = "";
         this.setor = 0;
+        this.cargo = "";
         this.dataC = new Date();
         this.userC = "";
         this.userM = "";
@@ -35,6 +36,7 @@ module.exports = class Usuario {
     get email(){return this.email;}
     get conta(){return this.conta;}
     get setor(){return this.setor;}
+    get cargo(){return this.cargo;}
     get dataC(){return this.dataC;}
     get userC(){return this.userC;}
     get userM(){return this.userM;}
@@ -48,6 +50,7 @@ module.exports = class Usuario {
     set email(email){this.email = email;}
     set conta(conta){this.conta = conta;}
     set setor(setor){this.setor = setor;}
+    set cargo(cargo){this.cargo = cargo;}
     set dataC(dataC){this.dataC = dataC;}
     set userC(userC){this.userC = userC;}
     set dataM(dataM){this.dataM = dataM;}
