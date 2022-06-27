@@ -3,12 +3,12 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class ContatoSchema extends Schema {
+class ContatosSchema extends Schema {
   up () {
-    this.create('contato', (table) => {
-      table.increments()
+    this.create('contatos', (table) => {
+      table.increments('id').primary()
       table.boolean('ativo')
-      table.integer('cliente').references('cliente.id')
+      table.integer('cliente').references('clientes.id')
       table.string('telefone', 20)
       table.string('email', 100)
       table.string('pessoa', 100)
@@ -20,8 +20,8 @@ class ContatoSchema extends Schema {
   }
 
   down () {
-    this.drop('contato')
+    this.drop('contatos')
   }
 }
 
-module.exports = ContatoSchema
+module.exports = ContatosSchema

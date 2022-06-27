@@ -6,8 +6,8 @@ const Schema = use('Schema')
 class AnexosSchema extends Schema {
   up () {
     this.create('anexos', (table) => {
-      table.increments()
-      table.integer('protocolo').references('protocolo.id')
+      table.increments('id').primary()
+      table.integer('protocolo').references('protocolos.id')
       table.string('descricao', 100)
       table.string('anexo', 255)
       table.integer('userc')

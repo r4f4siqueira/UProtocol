@@ -18,22 +18,13 @@ const Route = use('Route')
 
 //Rotas para pegar dados "get"
 Route.get('/', () => {
-  return { greeting: '404 api' }
+  return { Erro: '404 api' }
 })
 
-Route.get('/protocolos', () => {
-  return { greeting: 'Lista protocolos' }
-})
-
-Route.get('/protocolos/x', () => {
-  return { greeting: 'Lista protocolo especifico' }
-})
 
 //Rotas para enviar dados "post"
 
-Route.post('/protocolos', () => {
-  return { greeting: 'Cria protocolos' }
-})
+Route.post('/empresa', 'EmpresaController.store')
 
 //Rotas para alterar dados
 Route.put('/protocolos/x', () => {
