@@ -5,6 +5,9 @@
 
 ## stage one: install node dependencies
 ```
+$ npm install -g @adonisjs/cli
+```
+```
 $ cd ./back
 $ npm install
 ```
@@ -13,7 +16,6 @@ $ cd ./front
 $ npm install
 ```
 ## stage two: create bd struture
-
-Run the SQLs that are in ./back/database/db/structure.sql
-
-Enquanto o impasse com o docker não for resolvido terá que montar o ambiente manualmente
+```
+$ adonis migration:run
+```
