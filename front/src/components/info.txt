@@ -1,2 +1,0 @@
-Colocar componetes reutilizaves
-exemplo botoes
