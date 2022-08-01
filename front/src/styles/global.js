@@ -9,15 +9,19 @@ export const GlobalStyle = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
     }
 
+    html,
+    body,
+    #root {
+        height: 100%;
+       
+    }
 
+    *{
+        font-family: "Roboto", sans-serif;
+        letter-spacing: 1.5px;
+    }
     body{
-        background-position: center;
-        background-size: cover;
-        background-attachment: fixed;
-        backdrop-filter: blur(0.2rem);
-
-        font-family: "Roboto", sans-serif, monospace;
-
+        
         ::-webkit-scrollbar{
             display: none;
         }
@@ -25,10 +29,6 @@ export const GlobalStyle = createGlobalStyle`
 
     button{
         cursor: pointer;
-        border: none;
-    }
-
-    input{
         border: none;
     }
 
