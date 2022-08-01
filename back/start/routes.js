@@ -18,10 +18,10 @@ const Route = use("Route");
 
 //ROTAS PARA PEGAR DADOS "get"
 Route.get("/", () => {
-  return { Erro: "Api FUNCIONA!!!" };
+  return { msg: "Api FUNCIONA!!!" };
 }); //desativar esta rota assim que possivel
 
-//Route.get('/empresa','EmpresaController.listarEmpresas')
+Route.get('/empresa','EmpresaController.listarEmpresas')
 Route.get("/empresa/:id", "EmpresaController.dadosEmpresa");
 
 Route.get("/conta", "ContaController.listarConta");

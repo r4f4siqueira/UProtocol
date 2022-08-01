@@ -8,7 +8,7 @@ class UsuarioempresasSchema extends Schema {
     this.create('usuarioempresas', (table) => {
       table.increments('id').primary()
       table.integer('empresa').references('empresas.id')
-      table.integer('usuario').references('usuarios.id')
+      table.string('usuario')
       table.timestamps()
     })
   }

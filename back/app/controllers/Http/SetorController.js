@@ -1,5 +1,7 @@
 'use strict'
 
+const Setor = use('App/Models/Setor')
+
 class SetorController {
     async criarSetor({request}){
         const dataToCreate = request.only(['ativo','nome','userc','empresa',])

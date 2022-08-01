@@ -1,4 +1,5 @@
 'use strict'
+const Protocolo = use('App/Models/Protocolo')
 
 class ProtocoloController {
     async criarProtocolo({request}){

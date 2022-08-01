@@ -11,8 +11,8 @@ class AnexosSchema extends Schema {
       table.string('descricao', 100)
       table.string('anexo', 255)
       table.integer('userc')
-      table.integer('userm')
-      table.integer('empresa')
+      table.string('userm')
+      table.string('empresa')
       table.timestamps()
     })
   }
