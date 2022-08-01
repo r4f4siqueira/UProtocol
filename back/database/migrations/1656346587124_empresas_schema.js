@@ -12,8 +12,8 @@ class EmpresasSchema extends Schema {
       table.string('razaosocial', 100)
       table.string('fantasia', 100)
       table.string('criador',100)
-      table.integer('userc')
-      table.integer('userm')
+      table.string('userc')
+      table.string('userm')
       table.timestamps()
     })
   }

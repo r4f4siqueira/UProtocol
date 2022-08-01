@@ -22,30 +22,41 @@ test("1 - Listar todas empresas", async ({assert})=>{
   assert.equal(true,qtdRegistro!==null&&qtdRegistro!==undefined)
 })
 
-test("2 - Consultar empresa: Valida os parametros da URL", async ({assert})=>{
+test("2 - Consulta empresa: Valida os parametros da URL", async ({assert})=>{
   //Passando URL inválida para consultar dados
   let empresa = await empresaC.dadosEmpresa({params: {id:''}})
   //Esperando retono tratado pelo controller
-  assert.equal(1,empresa.erro.codigo)
+  assert.equal(2,empresa.erro.codigo)
 })
 
-test('3 - Consulta empresa: inexistente', async ({ assert }) => {
+test('3 - Consulta empresa: Inexistente', async ({ assert }) => {
   //passar os parametros como objeto pois é desta forma queo controller está esperando
   let idTeste = 0 //passa o id da empresa que quer consultart
   //Busca a empresa com o ID=0
   //Esperando que retorne null pois não temos a empresa 0
   let empresa = await empresaC.dadosEmpresa({params: {id:idTeste}})
-  assert.equal(2,empresa.erro.codigo)
+  assert.equal(3,empresa.erro.codigo)
 })
 
 test("4 - Deletar empresa: Valida os parametros da URL", async({assert})=>{
   let deletarEmpresa = await empresaC.deletarEmpresa({params:{id:''}})
   //let empresa = await empresaC.dadosEmpresa({params: {id:''}})
-  assert.equal(3,deletarEmpresa.erro.codigo)
+  assert.equal(4,deletarEmpresa.erro.codigo)
 })
 
 test("5 - Deletar empresa: inexistente", async({assert})=>{
+  //Buscando os dados de uma empresa que nao existe
   let deletarEmpresa = await empresaC.deletarEmpresa({params:{id:0}})
   //let empresa = await empresaC.dadosEmpresa({params: {id:''}})
-  assert.equal(4,deletarEmpresa.erro.codigo)
+  assert.equal(5,deletarEmpresa.erro.codigo)
+})
+
+test("6 - Alterar dados empresa: Valida os parametros da URL", async({assert})=>{
+  let alterarEmpresa = await empresaC.alterarEmpresa({params:{id:''}})
+  assert.equal(6,alterarEmpresa.erro.codigo)
+})
+
+test("7 - Alterar dados empresa: Inexistente", async({assert})=>{
+  let alterarEmpresa = await empresaC.alterarEmpresa({params:{id:0}})
+  assert.equal(7,alterarEmpresa.erro.codigo)
 })

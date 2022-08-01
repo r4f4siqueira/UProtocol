@@ -1,4 +1,8 @@
 "use strict";
+
+const LogController = require("./LogController");
+const logC = new LogController()
+
 const Empresa = use("App/Models/Empresa");
 
 class EmpresaController {
@@ -10,7 +14,7 @@ class EmpresaController {
     //Se nao tiver passando USERC retorna erro
     //Se USERC tiver preenchido cria a empresa
     if(dataToCreate.criador===null){
-      return {erro:{codigo:0,msg: 'UserC vazio'}}
+      return {erro:{codigo:0,msg: 'Criador vazio'}}
     }else{
       return await Empresa.create(dataToCreate);      
     }
@@ -28,11 +32,11 @@ class EmpresaController {
     //Se encontrar retorna os dados da empresa
 
     if(params.id ==='' || parseInt(params.id)===undefined){
-      return {erro:{codigo:1,msg: 'Parametros invalidos, parametro passado:'+params.id}}
+      return {erro:{codigo:2,msg: 'Parametros invalidos, parametro passado:'+params.id}}
     } else {
       const dados = await Empresa.find(params.id)
       if (dados === null){
-        return {erro:{codigo:2,msg: 'Empresa com ID:'+params.id+" Nao existe"}}
+        return {erro:{codigo:3,msg: 'Empresa com ID:'+params.id+" Nao encontrada"}}
       }else{
         return dados
       }
@@ -43,13 +47,34 @@ class EmpresaController {
   }
 
   async alterarEmpresa({ params, request }) {
-    const empresa = await Empresa.findOrFail(params.id); //Retorna erro caso nao encontrar
-    const atualizaEmpresa = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador",,"userm",]);
+    //varifica se o parametro passado esta valido
+    if(params.id ==='' || parseInt(params.id)===undefined){
+      return {erro:{codigo:6,msg:'Parametro ID inválido'}}
+    }else{
+      //Se o parametro estiver valido busca os dados da empresa e atribui a variavel
+      const empresa = await Empresa.find(params.id); 
+      //Verifica se encontrou a empresa
+      if(empresa === null){
+        //Se empresa estiver nula retorna mensagem de erro
+        return {erro:{codigo:7,msg:'Empresa com ID:'+params.id+' Nao encontrada'}}
+      }else{
+        //Se encontrar a empresa a variavel "atualizaEmpresa" recebe os dados passado pelo parametro request
+        const atualizaEmpresa = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador",,"userm",]);
+        //verifica se o campo de "usuerm" foi preenchido
+        if(atualizaEmpresa.userm===null || atualizaEmpresa.userm===''){
+          return {erro:{codigo:8,msg:'USERM invalido'}}
+        }else{
+          //Em seguida a variavel empresa recebe os novos dados atraves de uma funcao ".merge"
+          empresa.merge(atualizaEmpresa);
+          //Depois persiste os dados da variavel empresa no banco de dados
+          await empresa.save();
+          //retorna os dados atualizados
+          return empresa;
+        }
+      }
+    }
 
-    empresa.merge(atualizaEmpresa);
-
-    await empresa.save();
-    return empresa;
+    
   }
 
   async deletarEmpresa({ params }) {
@@ -58,20 +83,21 @@ class EmpresaController {
     //Se encotrar a empresa, ela sera deletada
     //caso nao encontre a empresa reteornara uma mensagem de erro
     if(params.id===''||params.id===null||params.id===undefined){
-      return {erro:{codigo:3,msg: 'parametros preenchidos errados'}}
+      return {erro:{codigo:4,msg: 'parametros preenchidos errados'}}
     }else{
       const empresa = await Empresa.find(params.id)
       if(empresa==null){
-        return {erro:{codigo:4,msg: 'Empresa com ID:'+params.id+" Nao encontrada para deletar"}}
+        return {erro:{codigo:5,msg: 'Empresa com ID:'+params.id+" Nao encontrada para deletar"}}
       }else{
         //variavel temporaria para mostrar os dados da empresa que foi deletada
         let temp = empresa
+        //Funcao para gravar na tabela de log
+        await logC.novoLog({request:{operacao:'DELETAR',tabela:'Empresa',coluna:'Empresa',valorantigo:temp.razaosocial,valornovo:'null',user:'nN4TfCisXFdapqgYzWdg29ohWHe2', empresa:params.id}})
         await empresa.delete()
         return temp
       }
       
     }
-   
    
     /* const empresa = await Empresa.findOrFail(params.id);
     await empresa.delete();

@@ -1,5 +1,7 @@
 'use strict'
 
+const Usuario = use("App/Models/Usuario");
+
 class UsuarioController {
     async criarUsuario({request}){
         const dataToCreate = request.only(['ativo','nome','email','conta','setor', 'cargo'])

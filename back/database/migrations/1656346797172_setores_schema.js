@@ -5,19 +5,19 @@ const Schema = use('Schema')
 
 class SetoresSchema extends Schema {
   up () {
-    this.create('setores', (table) => {
+    this.create('setors', (table) => {
       table.increments('id').primary()
       table.boolean('ativo')
       table.string('nome', 100)
-      table.integer('userc')
-      table.integer('userm')
+      table.string('userc')
+      table.string('userm')
       table.integer('empresa')
       table.timestamps()
     })
   }
 
   down () {
-    this.drop('setores')
+    this.drop('setors')
   }
 }
 
