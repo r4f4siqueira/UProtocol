@@ -23,7 +23,7 @@ test("1 - Listar todas empresas", async ({assert})=>{
 })
 
 test("2 - Consulta empresa: Valida os parametros da URL", async ({assert})=>{
-  //Passando URL inválida para consultar dados
+  //Passando parametros de URL inválida para consultar dados
   let empresa = await empresaC.dadosEmpresa({params: {id:''}})
   //Esperando retono tratado pelo controller
   assert.equal(2,empresa.erro.codigo)
@@ -34,7 +34,7 @@ test('3 - Consulta empresa: Inexistente', async ({ assert }) => {
   let idTeste = 0 //passa o id da empresa que quer consultart
   //Busca a empresa com o ID=0
   //Esperando que retorne null pois não temos a empresa 0
-  let empresa = await empresaC.dadosEmpresa({params: {id:idTeste}})
+  let empresa = await empresaC.dadosEmpresa({params: {id:idTeste}})//pode colocar o ID da empresa direto no parametro, sem precisar criar uma variavel
   assert.equal(3,empresa.erro.codigo)
 })
 
@@ -52,6 +52,7 @@ test("5 - Deletar empresa: inexistente", async({assert})=>{
 })
 
 test("6 - Alterar dados empresa: Valida os parametros da URL", async({assert})=>{
+  //Passando parametro invalido para a funcao "alterarEmpresa"
   let alterarEmpresa = await empresaC.alterarEmpresa({params:{id:''}})
   assert.equal(6,alterarEmpresa.erro.codigo)
 })

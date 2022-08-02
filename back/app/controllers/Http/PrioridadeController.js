@@ -1,5 +1,6 @@
 'use strict'
 
+const Prioridade = use("App/Models/Prioridade")
 class PrioridadeController {
     async criarPrioridade({request}){
         const dataToCreate = request.only(['ativo','nome','ordemimportancia','userc','empresa'])

@@ -7,8 +7,8 @@ const Empresa = use("App/Models/Empresa");
 
 class EmpresaController {
   async criarEmpresa({ request }) {
-    //Criador = ID fornecida pelo firebase
-    const dataToCreate = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador","userc",]);
+    //userc = ID fornecida pelo firebase
+    const dataToCreate = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","userc"]);
     
     //Verifica se o usuario de criacao está preenchido
     //Se nao tiver passando USERC retorna erro
@@ -16,13 +16,20 @@ class EmpresaController {
     if(dataToCreate.criador===null){
       return {erro:{codigo:0,msg: 'Criador vazio'}}
     }else{
-      return await Empresa.create(dataToCreate);      
+      //verifica se o parametro fantasia esta preenchido
+      //se nao estiver preenchido retorna erro
+      //se tiver preenchido cadastra a empresa no bd e retorna os dados que foram cadastrados
+      if(dataToCreate.fantasia ===null || dataToCreate.fantasia===undefined){
+        return {erro:{codigo:8,msg:'Nome ou Fantasia não preenchido'}}
+      } else{ 
+        return await Empresa.create(dataToCreate);
+      }
     }
   }
 
   async listarEmpresas() {
-    const dados = await Empresa.all();
-    return dados;
+    //Lista todas as empresas cadastradas
+    return await Empresa.all();
   }
 
   async dadosEmpresa({ params }) {
@@ -59,22 +66,28 @@ class EmpresaController {
         return {erro:{codigo:7,msg:'Empresa com ID:'+params.id+' Nao encontrada'}}
       }else{
         //Se encontrar a empresa a variavel "atualizaEmpresa" recebe os dados passado pelo parametro request
-        const atualizaEmpresa = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador",,"userm",]);
+        const atualizaEmpresa = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador","userm"]);
         //verifica se o campo de "usuerm" foi preenchido
         if(atualizaEmpresa.userm===null || atualizaEmpresa.userm===''){
           return {erro:{codigo:8,msg:'USERM invalido'}}
         }else{
-          //Em seguida a variavel empresa recebe os novos dados atraves de uma funcao ".merge"
-          empresa.merge(atualizaEmpresa);
-          //Depois persiste os dados da variavel empresa no banco de dados
-          await empresa.save();
-          //retorna os dados atualizados
-          return empresa;
+          if(atualizaEmpresa.fantasia===null||atualizaEmpresa.fantasia===undefined){
+            return {erro:{codigo:9,msg:"Nome ou Fantasia não preenchido"}}
+          }else{
+            //salva os dados antigos dentro da tabela de log
+            //Como não estou verificando qual o dado que o usuario esta alterando entao salvo todos os dados da empresa no log
+            //E tambem estou salvando todos os dados novos
+            await logC.novoLog({request:{operacao:'ALTERAR',tabela:'Empresa',coluna:'',valorantigo:JSON.stringify(empresa),valornovo:JSON.stringify(atualizaEmpresa),user:atualizaEmpresa.userm,empresa:params.id}})
+            //Em seguida a variavel empresa recebe os novos dados atraves de uma funcao ".merge"
+            empresa.merge(atualizaEmpresa);
+            //Depois persiste os dados da variavel empresa no banco de dados
+            await empresa.save();
+            //retorna os dados atualizados
+            return empresa;
+          }
         }
       }
     }
-
-    
   }
 
   async deletarEmpresa({ params }) {

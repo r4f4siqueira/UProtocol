@@ -11,7 +11,6 @@ class EmpresasSchema extends Schema {
       table.string('CNPJ_CPF', 18)
       table.string('razaosocial', 100)
       table.string('fantasia', 100)
-      table.string('criador',100)
       table.string('userc')
       table.string('userm')
       table.timestamps()
