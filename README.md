@@ -6,14 +6,14 @@
 ## Step 1 : Install dependencies
 ### 📂 back
 ```bash
-$cd back/
-$npm install
-$npm install -g @adonisjs/cli
+cd back/
+npm install
+npm install -g @adonisjs/cli
 ```
 ### 📂 front
 ```bash
-$cd front/
-$npm install
+cd front/
+npm install
 ```
 ## Step 2 : Create bd struture
 
@@ -27,18 +27,18 @@ CREATE DATABASE uprotocol
 
 📂 back
 ```bash
-$adonis migration:run
+adonis migration:run
 ```
 
 ## Step 3 : Run system
 
 📂 back
 ```bash
-$npm start
+npm start
 ```
 📂 front
 ```bash
-$npm start
+npm start
 ```
 ### Open http://localhost:3000/ in your browser
 
