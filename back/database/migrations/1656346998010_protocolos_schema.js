@@ -7,7 +7,7 @@ class ProtocolosSchema extends Schema {
   up () {
     this.create('protocolos', (table) => {
       table.increments('id').primary()
-      table.integer('atendente').references('usuarios.id')
+      table.string('atendente')
       table.integer('cliente').references('clientes.id')
       table.string('situacao', 1)
       table.integer('prioridade').references('prioridades.id')

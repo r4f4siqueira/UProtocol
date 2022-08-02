@@ -1,5 +1,6 @@
 'use strict'
 
+const Cliente = use("App/Models/Cliente")
 class ClienteController {
     async criarCliente({request}){
         const dataToCreate = request.only(['ativo','razaosocial','fantasia','CNPJ_CPF','userc','empresa'])

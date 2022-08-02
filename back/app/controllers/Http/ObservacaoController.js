@@ -1,5 +1,6 @@
 'use strict'
 
+const Observacao = use("App/Models/Observacao")
 class ObservacaoController {
     async criarObservacao({request}){
         const dataToCreate = request.only(['protocolo','atendente','observacao','empresa'])
