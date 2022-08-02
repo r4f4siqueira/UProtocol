@@ -11,7 +11,14 @@ function AuthProvider({ children }) {
 
     useEffect(() => {}, []);
 
-    async function register() {}
+    /**
+     * registra o usuário pelo firebase auth
+     * @param   {int} operacao  1: Registro com email e senha, 2: Registro com conta google
+     * @param   {Object} dados  Dados do usuario a serem registrados
+     */
+    async function register(operacao, dados) {
+        console.log("bomdia");
+    }
 
     async function login() {}
 
@@ -23,6 +30,7 @@ function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 signed: false,
+                register,
             }}
         >
             {children}

@@ -15,7 +15,7 @@ $ npm start
 ## Sitema
 
 ```
-#b8b8b8 - background sistema:
+#e2f1ff - background sistema:
 #666666 - Textos
 #1498d5 - bordas
 #d9d9d9 - background input
