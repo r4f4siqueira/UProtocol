@@ -48,12 +48,28 @@ export const BtLogin = styled(GButton)`
 
         box-shadow: 0.1rem 0.1rem 1px grey;
     }
+
+    :disabled {
+        :hover {
+            background-color: #73c685;
+        }
+        :active {
+            margin: 1.5rem 0 0 0;
+            box-shadow: 0.3rem 0.3rem 1px grey;
+        }
+    }
 `;
 
 export const BtGLogin = styled(BtLogin)`
     background-color: #59cee9;
     :hover {
         background-color: #00add4;
+    }
+
+    :disabled {
+        :hover {
+            background-color: #59cee9;
+        }
     }
 `;
 

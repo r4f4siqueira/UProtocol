@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { AuthContext } from "../context/auth";
+import { AuthContext } from "../context/auth.tsx";
 import Loading from "../pages/Loading/loading.js";
 
 function RouteWrapper({ children }) {

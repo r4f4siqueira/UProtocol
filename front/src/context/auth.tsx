@@ -6,19 +6,20 @@ export const AuthContext = createContext({});
 function AuthProvider({ children }) {
     const [user, setUser] = useState();
     const [loadAuth, setLoadAuth] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
     useEffect(() => {}, []);
 
     /**
-     * registra o usuário pelo firebase auth
-     * @param   {int} operacao  1: Registro com email e senha, 2: Registro com conta google
-     * @param   {Object} dados  Dados do usuario a serem registrados
+     * registra o usuário no firebase authenticator
+     * @param   {char} isGoogle  caso true faz o registro com o google caso false realiza o registo com email e senha
+     * @param   {object} data  Dados do usuario a serem registrados
      */
-    async function register(operacao, dados) {
+    async function register(isGoogle: boolean, data: { email: string; password: string }) {
         console.log("bomdia");
     }
+    //documentacao fica disponivel acessar dentro do documento mas a partir do momento que é importado pelo useContext fica indisponivel novamente
 
     async function login() {}
 
@@ -31,6 +32,7 @@ function AuthProvider({ children }) {
             value={{
                 signed: false,
                 register,
+                loading,
             }}
         >
             {children}

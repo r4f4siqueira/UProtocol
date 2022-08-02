@@ -35,6 +35,11 @@ export const GButton = styled.button`
     color: white;
     font-weight: 800;
     font-size: 1rem;
+
+    :disabled {
+        filter: saturate(0);
+        cursor: not-allowed;
+    }
 `;
 
 export const LinkText = styled(Link)`

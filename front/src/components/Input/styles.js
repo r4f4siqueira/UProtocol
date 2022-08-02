@@ -9,6 +9,7 @@ export const InputContainer = styled(ContainerC)`
         margin-bottom: 0.2rem;
     }
     input {
+        z-index: 1;
         width: 100%;
         height: 2rem;
 
@@ -40,6 +41,66 @@ export const InputContainer = styled(ContainerC)`
         }
     }
     svg {
-        margin-left: -1.5rem;
+        :hover {
+            background-color: #d6d6d6;
+            border-radius: 2rem;
+            cursor: pointer;
+            padding: 0.2rem;
+            transform: scale(1.32);
+        }
+        margin-top: -2rem;
+    }
+    .msg {
+        span {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        position: absolute;
+        background-color: #feffac;
+        border-radius: 0.5rem;
+        border: solid 2px #9c9e24;
+        z-index: 2;
+
+        margin-top: -8rem;
+        margin-right: -8.8rem;
+        margin-bottom: 1rem;
+
+        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+        display: flex;
+
+        flex-direction: column;
+
+        ::after {
+            align-self: center;
+            content: "";
+
+            width: 0;
+            z-index: 2;
+            border-style: solid;
+
+            border-color: #9c9e24 transparent;
+            border-width: 1rem 0.5rem 0;
+            margin-bottom: -1.5rem;
+        }
+    }
+`;
+
+export const ContainerMsg = styled(ContainerC)`
+    display: flex;
+    width: 100%;
+    align-items: flex-end;
+    min-width: fit-content;
+    max-height: fit-content;
+
+    z-index: 1;
+    svg {
+        margin-right: 0.2rem;
+    }
+    &.disabled {
+        .msg {
+            display: none;
+        }
+        svg {
+        }
     }
 `;
