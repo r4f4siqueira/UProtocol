@@ -61,17 +61,14 @@ export const InputContainer = styled(ContainerC)`
         border: solid 2px #9c9e24;
         z-index: 2;
 
-        margin-top: -8rem;
-        margin-right: -8.8rem;
-        margin-bottom: 1rem;
-
+        margin-top: -11rem;
         padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-        display: flex;
 
+        display: flex;
         flex-direction: column;
 
         ::after {
-            align-self: center;
+            align-self: flex-end;
             content: "";
 
             width: 0;
@@ -81,6 +78,7 @@ export const InputContainer = styled(ContainerC)`
             border-color: #9c9e24 transparent;
             border-width: 1rem 0.5rem 0;
             margin-bottom: -1.5rem;
+            margin-right: -0.2rem;
         }
     }
 `;

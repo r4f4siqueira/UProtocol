@@ -10,102 +10,194 @@ import { ContainerCenter } from "../../styles/styles";
 import Logo from "../../assets/logo/logo.png";
 import { BtLogin, LoginWrapper, LinkPassword, BtGLogin, LinkRegister } from "./styles";
 
+// var canVerify = false;
 function Login() {
-    const { register } = useContext(AuthContext);
+    // const { register } = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [touched, setTouched] = useState({ email: false, pass: false });
+    // const [firstTime, setFirstTime] = useState({ email: true, senha: true });
 
-    const fieldValidation = {
-        email: [null, ""],
-        senha: [null, ""],
-    };
+    // seta de forma genérica o state touched que comeca como falso para true, de acordo com o parametro passado, utilizado com a prop blur do input
+    function handleBlur(field) {
+        // canVerify = true;
+        // canSubmit(true);
+        if (!touched[`${field}`] === true) {
+            setTouched({ ...touched, [field]: true });
+        }
+    }
 
     /**
-     * verifica algumas condicões basicas para liberar o botao de submit
-     * @return {boolean} true ou false se pode dar submit ou nao
+     * verifica algumas condicões para validar o que foi digitado
+     * @param {string} temail email do usuario
+     * @param {string} tsenha senha do usuario
+     * @return {fieldValidation} objeto contendo erros e mensagem de erros dos campos
      */
-    function canSubmit() {
+    function validate(temail, tpassword) {
+        // if (firstTime.email) {
+        //     fieldValidation.email.err = null;
+        //     setFirstTime({ ...firstTime, email: false });
+        //     return false;
+        // }
+        // if (firstTime.senha) {
+        //     fieldValidation.pass.err = null;
+        //     setFirstTime({ ...firstTime, senha: false });
+        //     return false;
+        // }
+
+        // if (!canVerify) {
+        //     console.log("nao verificou");
+        //     return false;
+        // }
+
+        // constante de validacao, indica se o campo possui um erro e a mensagem de erro que ele vai ter, as proximas verificacoes
+        // são para verificar o email e a senha e empurrar uma mensagem referente ao erro
+        const fieldValidation = {
+            email: { err: null, msg: [""] },
+            pass: { err: null, msg: [""] },
+        };
+
         let ver = true;
-        let msgEmail = "";
+        let msgEmail = ["Erros encontrados: "];
+        let msgPass = ["Erros encontrados: "];
 
-        if (password < 6) {
+        //REX = Regular Expression, expressao regular para validacao de email, basicamente requer algo@algo.algo
+        // eslint-disable-next-line
+        const emailREX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+        // console.log("function validate call");
+
+        // lança um erro se a senha for menor que 6 digitos
+        if (tpassword.length < 6) {
             ver = false;
+            msgPass.push("A senha deve possuir mais de 6 caracteres");
+            fieldValidation.pass.err = false;
         }
 
-        if (!email.includes("@")) {
+        // lança um erro se o erro não possuir @
+        if (!temail.includes("@")) {
             ver = false;
-            msgEmail = msgEmail == "" ? "O Email deve possuir (@)" : msgEmail + ", e possuir (@)";
-            fieldValidation.email[0] = false;
+            msgEmail.push("O Email deve possuir @");
+            fieldValidation.email.err = false;
         }
 
-        if (!email.includes(".")) {
+        // lança um erro se o email não possuir nenhum ponto
+        if (!temail.includes(".")) {
             ver = false;
-            msgEmail = msgEmail == "" ? "O Email deve possuir (.)" : msgEmail + ", e possuir (.)";
-            fieldValidation.email[0] = false;
+            msgEmail.push("O Email deve possuir ponto final (.)");
+            fieldValidation.email.err = false;
         }
 
-        if (fieldValidation.email[0] !== false) {
-            fieldValidation.email[0] = true;
+        // lança um erro se o email não coincidir com a expressao regular
+        if (!temail.match(emailREX)) {
+            ver = false;
+            msgEmail.push("O Email não possui formato válido");
+            fieldValidation.email.err = false;
         }
 
+        // fim da verificacao dos erros
+
+        // se até essa parte da funcao o campo err não foi marcado como false, ele será marcado como true
+        // para indicar que o que foi digitado está correto
+        if (fieldValidation.email.err !== false) {
+            fieldValidation.email.err = true;
+        }
+
+        // mesmo que o de cima só que dessa vez com senha
+        if (fieldValidation.pass.err !== false) {
+            fieldValidation.pass.err = true;
+        }
+
+        // se existir erros, vai setar o vetor de erros na const fieldvalidation
         if (!ver) {
-            fieldValidation.email[1] = msgEmail;
+            fieldValidation.email.msg = msgEmail;
+            fieldValidation.pass.msg = msgPass;
         }
 
-        return ver;
+        return fieldValidation;
     }
-    const isEnabled = canSubmit();
 
-    console.log("render");
+    // console.log("render");
+    // console.log(fieldValidation);
+
+    //funcao executada ao submitar o formulário, ela para a execucao antes caso a funcao canbesubmitted retorne false
     function handleSubmit(e) {
         e.preventDefault();
-        if (!canSubmit()) {
+        if (!canBeSubmitted()) {
             return;
         }
+
         alert("bomdia");
     }
 
-    /**
-     * Valida os campos passados no input de acordo com as condicoes da função
-     * @param   {string} email  E-mail do usuario
-     * @param   {string} password  Senha do usuario
-     * @return {Object = {email: boolean, senha: boolean, msg: String} - Objeto de campos com erro e mensagens de erro
-     */
-    function validate(email, password) {}
+    // retorna true ou false se o formulario pode ser enviado
+    function canBeSubmitted() {
+        const errors = validate(email, password);
+        const isDisabled = Object.keys(errors).some((x) => !errors[`${x}`].err);
+        // console.log(errors);
+        // console.log("desativado: " + isDisabled);
+        return !isDisabled;
+    }
 
+    // const isEnabled = Object.keys(fieldValidation).some((key) => fieldValidation[`${key}`].err);
+    // const isEnabled = validate();
+    const errors = validate(email, password);
+    const isDisabled = Object.keys(errors).some((x) => !errors[`${x}`].err);
+
+    // retorna true ou false se o input deveria mostrar os erros
+    const shouldMarkError = (field) => {
+        const hasError = !errors[`${field}`].err;
+        // const hasError = !canSubmit();
+        // if (fieldValidation[`${field}`].err === null) {
+        //     return null;
+        // }
+        // console.log("has error: " + hasError + " - field: " + field);
+        const shouldShow = touched[field];
+        // console.log("Should show: " + shouldShow);
+        if (!shouldShow) {
+            return null;
+        }
+        return hasError ? shouldShow : false;
+    };
     return (
         <ContainerCenter>
             <LoginWrapper>
                 <img alt="logotipo da empresa" src={Logo} />
                 <form onSubmit={handleSubmit}>
                     <Input
+                        blur={() => {
+                            handleBlur("email");
+                        }}
                         inputValue={email}
-                        errMsg={fieldValidation.email[1]}
+                        errMsg={errors.email.msg}
                         ocHandler={(e) => {
                             setEmail(e.target.value);
                         }}
                         type="email"
-                        isValid={fieldValidation.email[0]}
+                        isValid={shouldMarkError("email") ? false : shouldMarkError("email") === null ? null : true} /* false - erro, null - nada, true - correto */
                         label="Email:"
                         placeholder="exemplo@exemplo.com.br"
                     />
                     <Input
+                        blur={() => {
+                            handleBlur("pass");
+                        }}
                         inputValue={password}
-                        errMsg={fieldValidation.senha[1]}
+                        errMsg={errors.pass.msg}
                         ocHandler={(e) => {
                             setPassword(e.target.value);
                         }}
                         type="password"
-                        isValid={fieldValidation.senha[0]}
+                        isValid={shouldMarkError("pass") ? false : shouldMarkError("pass") === null ? null : true}
                         label="Senha:"
                         placeholder="Insira sua senha"
                     />
-                    <BtLogin disabled={!isEnabled}>Entrar</BtLogin>
+                    <BtLogin disabled={isDisabled}>Entrar</BtLogin>
                     <LinkPassword to="/">Esqueci minha senha</LinkPassword>
                 </form>
                 <BtGLogin>Entrar com Google</BtGLogin>
-                <LinkRegister to="/">Cadastrar-se</LinkRegister>
+                <LinkRegister to="/register">Cadastrar-se</LinkRegister>
             </LoginWrapper>
         </ContainerCenter>
     );

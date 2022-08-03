@@ -5,6 +5,7 @@ import PrivateRoute from "./privateRoute";
 
 //paginas
 import Login from "../pages/Login/login";
+import Register from "../pages/Register/register";
 
 //componentes
 
@@ -31,6 +32,14 @@ function RoutesApp() {
                     element={
                         <PrivateRoute>
                             <Login />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/register"
+                    element={
+                        <PrivateRoute>
+                            <Register />
                         </PrivateRoute>
                     }
                 />

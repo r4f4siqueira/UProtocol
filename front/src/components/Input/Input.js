@@ -10,16 +10,15 @@ import { ContainerMsg, InputContainer } from "./styles";
 
 function Input(props) {
     const [isEnabled, setIsEnabled] = useState(false);
-    // const [inputValidation, setInputValidation] = useState();
+    // const [errorMessages, setErrorMessages] = useState([""]);
+    const errorMessages = props.errMsg ? [...props.errMsg] : [];
 
     // useEffect(() => {
-    //     const correct = props.isValid;
-    //     if (correct === true || correct === false) {
-    //         setInputValidation(correct ? "correct" : "incorrect");
-    //     } else {
-    //         setInputValidation(null);
+    //     const tErr = props.errMsg;
+    //     if (tErr.length > 0) {
+    //         setErrorMessages(tErr);
     //     }
-    // }, [props.isValid]);
+    // }, [props.errMsg]);
 
     // console.log("render");
     // let isEnabled = false;  //transformado em state para poder renderizar o componente novamente
@@ -51,6 +50,7 @@ function Input(props) {
                     type={props.type}
                     className={props.isValid ? "correct" : props.isValid === false ? "incorrect" : ""}
                     placeholder={props.placeholder}
+                    onBlur={props.blur}
                 />
                 {props.isValid ? (
                     <ContainerMsg className="disabled">
@@ -59,7 +59,11 @@ function Input(props) {
                 ) : props.isValid === false ? (
                     <ContainerMsg className={isEnabled ? "" : "disabled"}>
                         <div className="msg">
-                            <span>{props.errMsg}</span>
+                            <span>
+                                {errorMessages.map((err, index) => {
+                                    return <p key={index}>{err}</p>;
+                                })}
+                            </span>
                         </div>
                         <AiOutlineClose
                             onMouseEnter={() => {

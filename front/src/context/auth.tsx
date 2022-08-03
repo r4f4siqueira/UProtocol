@@ -13,13 +13,14 @@ function AuthProvider({ children }) {
 
     /**
      * registra o usuário no firebase authenticator
-     * @param   {char} isGoogle  caso true faz o registro com o google caso false realiza o registo com email e senha
+     * @param   {boolean} isGoogle  caso true faz o registro com o google caso false realiza o registo com email e senha
      * @param   {object} data  Dados do usuario a serem registrados
      */
     async function register(isGoogle: boolean, data: { email: string; password: string }) {
         console.log("bomdia");
     }
-    //documentacao fica disponivel acessar dentro do documento mas a partir do momento que é importado pelo useContext fica indisponivel novamente
+    // infelizmente a documentacao fica disponivel acessar dentro do documento mas a partir do momento que
+    // é importado pelo useContext dentro de outro documento a mesma fica indisponivel
 
     async function login() {}
 
