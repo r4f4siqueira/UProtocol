@@ -20,7 +20,7 @@ class EmpresaController {
       //se nao estiver preenchido retorna erro
       //se tiver preenchido cadastra a empresa no bd e retorna os dados que foram cadastrados
       if(dataToCreate.fantasia ===null || dataToCreate.fantasia===undefined){
-        return {erro:{codigo:8,msg:'Nome ou Fantasia não preenchido'}}
+        return {erro:{codigo:1,msg:'Nome ou Fantasia não preenchido'}}
       } else{ 
         return await Empresa.create(dataToCreate);
       }
@@ -38,7 +38,7 @@ class EmpresaController {
     //se não encontre retorna null
     //Se encontrar retorna os dados da empresa
 
-    if(params.id ==='' || parseInt(params.id)===undefined){
+    if(params.id===null||params.id ==='' || parseInt(params.id)===undefined){
       return {erro:{codigo:2,msg: 'Parametros invalidos, parametro passado:'+params.id}}
     } else {
       const dados = await Empresa.find(params.id)
@@ -90,7 +90,7 @@ class EmpresaController {
     }
   }
 
-  async deletarEmpresa({ params }) {
+  async deletarEmpresa({ params,request}) {
     //verifica se o parametro passado esta preenchido
     //se o parametro estiver preenchido ele busca a empresa
     //Se encotrar a empresa, ela sera deletada
@@ -102,12 +102,19 @@ class EmpresaController {
       if(empresa==null){
         return {erro:{codigo:5,msg: 'Empresa com ID:'+params.id+" Nao encontrada para deletar"}}
       }else{
-        //variavel temporaria para mostrar os dados da empresa que foi deletada
-        let temp = empresa
-        //Funcao para gravar na tabela de log
-        await logC.novoLog({request:{operacao:'DELETAR',tabela:'Empresa',coluna:'Empresa',valorantigo:temp.razaosocial,valornovo:'null',user:'nN4TfCisXFdapqgYzWdg29ohWHe2', empresa:params.id}})
-        await empresa.delete()
-        return temp
+        //busca o userm para inserir no log
+        //se nao tiver userm nao deleta
+        //se tiver ele deleta
+        const dados = request.only(['userm'])
+        if(dados.userm===''||dados.userm===undefined||dados.userm===null){
+          return {erro:{codigo:17,msg:'userm vazio'}}
+        }else{
+          //variavel temporaria para mostrar os dados da empresa que foi deletada        
+          //Funcao para gravar na tabela de log
+          await logC.novoLog({request:{operacao:'DELETAR',tabela:'Empresa',coluna:'Empresa',valorantigo:temp.razaosocial,valornovo:'null',user:dados.userm, empresa:params.id}})
+          await empresa.delete()
+          return temp
+        }
       }
       
     }

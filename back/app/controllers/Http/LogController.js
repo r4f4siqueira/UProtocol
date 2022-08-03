@@ -23,7 +23,7 @@ class LogController {
         return await Log.findOrFail(params.id)
     }
 
-    async alterarLog({params, request}){
+    /*async alterarLog({params, request}){
         const log = await Log.findOrFail(params.id);//Retorna erro caso nao encontrar
         const atualizaLog = request.only(['operacao','tabela','coluna','valorantigo','valornovo'])//Nao se altera log mas dx a funcao aki para estudos
 
@@ -31,13 +31,13 @@ class LogController {
 
         await log.save();
         return log
-    }
+    }*/
 
-    async deletarLog({params}){
+    /*async deletarLog({params}){
         const log = await Log.findOrFail(params.id)
         await log.delete();
         return{mensagem: 'Log deletado'}//Nao se deleta log mas dx para estudos
-    }
+    }*/
 }
 
 module.exports = LogController
