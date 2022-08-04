@@ -12,16 +12,16 @@ class ProtocoloController {
         //se todas as validacoes passar cadastra o protocolo
         //Caso contrario retorna erro com suas respectivas informacoes de erro
         if(dataToCreate.userc===null || dataToCreate.userc===undefined){
-            return {erro:{codigo:10,msg:'Userc não preenchido'}}
+            return {erro:{codigo:10,msg:'Userc não preenchido para cadastrar protocolo'}}
         }else{
             if(dataToCreate.atendente===null || dataToCreate.atendente===undefined){
-                return {erro:{codigo:11, msg:'Atendente não preenchido'}}
+                return {erro:{codigo:11, msg:'Atendente não preenchido para cadastrar protocolo'}}
             } else{
                 if(dataToCreate.cliente===null || dataToCreate.cliente===undefined){
-                    return {erro:{codigo:12,msg:'Cliente não preenchido'}}
+                    return {erro:{codigo:12,msg:'Cliente não preenchido para cadastrar protocolo'}}
                 }else{
                     if(dataToCreate.empresa===null || dataToCreate.empresa===undefined){
-                        return {erro:{codigo:13,msg:'Empresa não preenchida'}}
+                        return {erro:{codigo:13,msg:'Empresa não preenchida para cadastrar protocolo'}}
                     }else{
                         return await Protocolo.create(dataToCreate);
                     }
@@ -37,7 +37,7 @@ class ProtocoloController {
     async dadosProtocolo({params}){
         //Verifica se o parametro passado pela URL é valido
         if(params.id===null||params.id===''||parseInt(params.id)===undefined){
-            return {erro:{codigo:14,msg:'Parametros invalidos, parametro passado:'+params.id}}
+            return {erro:{codigo:14,msg:'Parametros invalidos para consultar protocolo, parametro passado:'+params.id}}
         }else{
             //Pega os dados da empresa encontrada e atribui para dados
             const dados = await Protocolo.find(params.id)
