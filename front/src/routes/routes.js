@@ -6,6 +6,7 @@ import PrivateRoute from "./privateRoute";
 //paginas
 import Login from "../pages/Login/login";
 import Register from "../pages/Register/register";
+import Dashboard from "../pages/Dashboard/dashboard";
 
 //componentes
 
@@ -40,6 +41,14 @@ function RoutesApp() {
                     element={
                         <PrivateRoute>
                             <Register />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <Dashboard />
                         </PrivateRoute>
                     }
                 />

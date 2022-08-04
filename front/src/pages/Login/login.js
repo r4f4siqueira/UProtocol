@@ -17,6 +17,8 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [touched, setTouched] = useState({ email: false, pass: false });
+
+    const { login } = useContext(AuthContext);
     // const [firstTime, setFirstTime] = useState({ email: true, senha: true });
 
     // seta de forma genérica o state touched que comeca como falso para true, de acordo com o parametro passado, utilizado com a prop blur do input
@@ -127,8 +129,9 @@ function Login() {
         if (!canBeSubmitted()) {
             return;
         }
-
-        alert("bomdia");
+        const userData = { email, password };
+        login(userData, false);
+        // console.log("enviado");
     }
 
     // retorna true ou false se o formulario pode ser enviado
@@ -160,6 +163,10 @@ function Login() {
         }
         return hasError ? shouldShow : false;
     };
+    function handleGoogleLogin() {
+        login(null, true);
+    }
+
     return (
         <ContainerCenter>
             <LoginWrapper>
@@ -196,7 +203,7 @@ function Login() {
                     <BtLogin disabled={isDisabled}>Entrar</BtLogin>
                     <LinkPassword to="/">Esqueci minha senha</LinkPassword>
                 </form>
-                <BtGLogin>Entrar com Google</BtGLogin>
+                <BtGLogin onClick={handleGoogleLogin}>Entrar com Google</BtGLogin>
                 <LinkRegister to="/register">Cadastrar-se</LinkRegister>
             </LoginWrapper>
         </ContainerCenter>

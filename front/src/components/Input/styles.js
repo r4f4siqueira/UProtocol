@@ -19,7 +19,7 @@ export const InputContainer = styled(ContainerC)`
 
         border-radius: 0.2rem;
 
-        padding: 0.2rem 0.5rem;
+        padding: 0.2rem 2rem 0.2rem 0.5rem;
 
         :hover {
             box-shadow: 0 0 8px #1498d5;
