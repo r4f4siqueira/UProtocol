@@ -91,8 +91,6 @@ Route.put("/observacao/:id", "ObservacaoController.alterarObservacao");
 Route.put("/log/:id", "LogController.alterarLog");
 
 //ROTAS PARA EXCLUIR DADOS
-//exemplo url pois preciso do userm como query:
-//http://127.0.0.1:3333/empresa/5?userm=nN4TfCisXFdapqgYzWdg29ohWHe2
 
 Route.delete("/empresa/:id", "EmpresaController.deletarEmpresa");
 Route.delete("/conta/:id", "ContaController.deletarConta");

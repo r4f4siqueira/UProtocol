@@ -46,7 +46,7 @@ test("4 - Deletar EMPRESA: Valida os parametros da URL", async({assert})=>{
 
 test("5 - Deletar EMPRESA: inexistente", async({assert})=>{
   //Buscando os dados de uma empresa que nao existe
-  let deletarEmpresa = await empresaC.deletarEmpresa({params:{id:0}})
+  let deletarEmpresa = await empresaC.deletarEmpresa({params:{id:0},request:{body:{userm:'byHbcMVq3fYb7mWi2VrU3cs7FlB2'}}})
   //let empresa = await empresaC.dadosEmpresa({params: {id:''}})
   assert.equal(5,deletarEmpresa.erro.codigo)
 })
@@ -60,4 +60,10 @@ test("6 - Alterar dados EMPRESA: Valida os parametros da URL", async({assert})=>
 test("7 - Alterar dados EMPRESA: Inexistente", async({assert})=>{
   let alterarEmpresa = await empresaC.alterarEmpresa({params:{id:0}})
   assert.equal(7,alterarEmpresa.erro.codigo)
+})
+
+//Para este teste passar precisa ter uma empresa cadastrada, caso contrário ira retornar erro de empresa nao encontrada
+test('8 - Deletar EMPRESA: Sem userm',async({assert})=>{
+  let deletarEmpresa = await empresaC.deletarEmpresa({params:{id:1},request:{body:{userm:''}}})
+  assert.equal(17,deletarEmpresa.erro.codigo)
 })
