@@ -7,6 +7,9 @@ import PrivateRoute from "./privateRoute";
 import Login from "../pages/Login/login";
 import Register from "../pages/Register/register";
 import Dashboard from "../pages/Dashboard/dashboard";
+import { PagesContainer } from "../styles/styles";
+import Navbar from "../components/Navbar/Navbar";
+import Profile from "../pages/Profile/Profile";
 
 //componentes
 
@@ -48,7 +51,21 @@ function RoutesApp() {
                     path="/dashboard"
                     element={
                         <PrivateRoute>
-                            <Dashboard />
+                            <PagesContainer>
+                                <Navbar />
+                                <Dashboard />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar />
+                                <Profile />
+                            </PagesContainer>
                         </PrivateRoute>
                     }
                 />

@@ -56,9 +56,9 @@ export const InputContainer = styled(ContainerC)`
             margin-bottom: 0.5rem;
         }
         position: absolute;
-        background-color: #feffac;
+        background-color: #e6f4ff;
         border-radius: 0.5rem;
-        border: solid 2px #9c9e24;
+        border: solid 2px #1498d5;
         z-index: 2;
 
         margin-top: -11rem;
@@ -75,7 +75,7 @@ export const InputContainer = styled(ContainerC)`
             z-index: 2;
             border-style: solid;
 
-            border-color: #9c9e24 transparent;
+            border-color: #1498d5 transparent;
             border-width: 1rem 0.5rem 0;
             margin-bottom: -1.5rem;
             margin-right: -0.2rem;

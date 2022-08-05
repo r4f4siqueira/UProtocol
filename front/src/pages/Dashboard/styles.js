@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { GButton } from "../../styles/styles";
+import { ContainerC, GButton } from "../../styles/styles";
 
 export const BtLogout = styled(GButton)`
     background-color: crimson;

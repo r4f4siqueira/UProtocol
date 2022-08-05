@@ -1,5 +1,6 @@
 //react
 import React, { useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 //components
 import Input from "../../components/Input/Input";
@@ -18,7 +19,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [touched, setTouched] = useState({ email: false, pass: false });
 
-    const { login } = useContext(AuthContext);
+    const { login, forgotPassword } = useContext(AuthContext);
     // const [firstTime, setFirstTime] = useState({ email: true, senha: true });
 
     // seta de forma genérica o state touched que comeca como falso para true, de acordo com o parametro passado, utilizado com a prop blur do input
@@ -167,6 +168,15 @@ function Login() {
         login(null, true);
     }
 
+    function handleForgotPass() {
+        if (errors.email.err) {
+            forgotPassword(email);
+        } else {
+            toast.error("O email precisa estar preenchido corretamente!");
+            setTouched({ ...touched, email: true });
+        }
+    }
+
     return (
         <ContainerCenter>
             <LoginWrapper>
@@ -201,7 +211,9 @@ function Login() {
                         placeholder="Insira sua senha"
                     />
                     <BtLogin disabled={isDisabled}>Entrar</BtLogin>
-                    <LinkPassword to="/">Esqueci minha senha</LinkPassword>
+                    <LinkPassword to="" onClick={handleForgotPass}>
+                        Esqueci minha senha
+                    </LinkPassword>
                 </form>
                 <BtGLogin onClick={handleGoogleLogin}>Entrar com Google</BtGLogin>
                 <LinkRegister to="/register">Cadastrar-se</LinkRegister>
