@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ContainerC, GButton, LinkText } from "../../styles/styles";
+import { BtSubmit, ContainerC, GButton, LinkText } from "../../styles/styles";
 
 export const LoginWrapper = styled(ContainerC)`
     min-width: 40%;
@@ -25,40 +25,7 @@ export const LoginWrapper = styled(ContainerC)`
     }
 `;
 
-export const BtLogin = styled(GButton)`
-    margin-top: 1.5rem;
-
-    width: 100%;
-    border: none;
-
-    outline: 2px solid #1498d5;
-    background-color: #73c685;
-
-    box-shadow: 0.3rem 0.3rem 1px grey;
-    transition: all 200ms;
-
-    :hover {
-        background-color: #3fc45c;
-    }
-
-    :active {
-        margin-top: 1.7rem;
-        margin-bottom: -0.2rem;
-        margin-left: 0.3rem;
-
-        box-shadow: 0.1rem 0.1rem 1px grey;
-    }
-
-    :disabled {
-        :hover {
-            background-color: #73c685;
-        }
-        :active {
-            margin: 1.5rem 0 0 0;
-            box-shadow: 0.3rem 0.3rem 1px grey;
-        }
-    }
-`;
+export const BtLogin = styled(BtSubmit)``;
 
 export const BtGLogin = styled(BtLogin)`
     background-color: #59cee9;

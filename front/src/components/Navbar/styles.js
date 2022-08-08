@@ -4,9 +4,11 @@ import { ContainerC } from "../../styles/styles";
 export const NavbarContainer = styled.nav`
     min-width: 250px;
     height: 100vh;
-    background-color: #e0f6ff;
+    background-color: #f0f8ff;
     border-right: solid 2px #1498d5;
     box-shadow: 2px 0px 5px #949494ff;
+
+    position: sticky;
 
     display: flex;
     flex-direction: column;
@@ -18,6 +20,7 @@ export const AvatarWrapper = styled.div`
     overflow: hidden;
     margin: 1.5rem 0 0.5rem 0;
     width: 6rem;
+    height: 6rem;
     transition: ease-in 100ms;
 
     img {

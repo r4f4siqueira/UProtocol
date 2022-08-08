@@ -1,10 +1,31 @@
 import React from "react";
-import Input from "../Input/Input";
-function PageHeader(props) {
+import { useNavigate } from "react-router-dom";
+
+import { MdArrowBack } from "react-icons/md";
+
+import { ContainerR, Titles } from "../../styles/styles";
+import { BtBack, ContainerPageHeader, PanelPageHeader } from "./styles";
+
+function PageHeader({ children, title }) {
+    const navigate = useNavigate();
+
+    function handleBack() {
+        navigate(-1);
+    }
     return (
-        <div>
-            <Input label={props.title} />
-        </div>
+        <ContainerPageHeader>
+            <PanelPageHeader>
+                <BtBack onClick={handleBack}>
+                    <MdArrowBack size="2.5rem" color="#ffffff" />
+                </BtBack>
+                <ContainerR>
+                    {children}
+                    <Titles>
+                        <h1>{title}</h1>
+                    </Titles>
+                </ContainerR>
+            </PanelPageHeader>
+        </ContainerPageHeader>
     );
 }
 

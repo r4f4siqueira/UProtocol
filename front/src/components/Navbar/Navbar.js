@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { AuthContext } from "../../context/auth.tsx";
-import { Titulos } from "../../styles/styles";
+import { Titles } from "../../styles/styles";
 import AsyncImage from "../AsyncImage/AsyncImage";
 
 //styles
@@ -28,10 +28,10 @@ function Navbar() {
                 <AvatarWrapper>
                     <AsyncImage src={user.avatar} />
                 </AvatarWrapper>
-                <Titulos>
+                <Titles>
                     <h3 title={user.name}>{user.name}</h3>
                     <h5 title={user.email}>{user.email}</h5>
-                </Titulos>
+                </Titles>
             </UserWrapper>
         </NavbarContainer>
     );

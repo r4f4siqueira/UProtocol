@@ -250,6 +250,8 @@ function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 user,
+                setUser,
+                handleUser,
                 signed,
                 login,
                 logout,

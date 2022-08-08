@@ -8,7 +8,7 @@ export const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
         -webkit-font-smoothing: antialiased;
         font-family: "Roboto", sans-serif;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
     }
 
     html,
