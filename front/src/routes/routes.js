@@ -6,6 +6,12 @@ import PrivateRoute from "./privateRoute";
 //paginas
 import Login from "../pages/Login/login";
 import Register from "../pages/Register/register";
+import Dashboard from "../pages/Dashboard/dashboard";
+import { PagesContainer } from "../styles/styles";
+import Navbar from "../components/Navbar/Navbar";
+import Profile from "../pages/Profile/Profile";
+import Error from "../pages/Error/Error";
+import DUser from "../pages/DUser/DUser";
 
 //componentes
 
@@ -43,6 +49,37 @@ function RoutesApp() {
                         </PrivateRoute>
                     }
                 />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar />
+                                <Dashboard />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/inactiveAccount"
+                    element={
+                        <PrivateRoute>
+                            <DUser />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar />
+                                <Profile />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+                <Route path="/*" element={<Error />} />
             </Routes>
         </BrowserRouter>
     );

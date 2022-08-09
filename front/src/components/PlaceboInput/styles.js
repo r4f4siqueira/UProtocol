@@ -4,7 +4,18 @@ import { ContainerC } from "../../styles/styles";
 export const InputContainer = styled(ContainerC)`
     align-items: flex-start;
     margin-top: 1.2rem;
-
+    &.disabled {
+        filter: grayscale(1);
+        input {
+            cursor: not-allowed;
+            :hover {
+                box-shadow: 0 0 0px #1498d5;
+            }
+            :focus {
+                outline: solid 2px #1498d5;
+            }
+        }
+    }
     label {
         margin-bottom: 0.2rem;
     }

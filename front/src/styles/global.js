@@ -7,19 +7,18 @@ export const GlobalStyle = createGlobalStyle`
         outline:0;
         box-sizing: border-box;
         -webkit-font-smoothing: antialiased;
+        font-family: "Roboto", sans-serif;
+        letter-spacing: 1px;
     }
 
     html,
     body,
     #root {
         height: 100%;
-       
+        -webkit-font-smoothing: antialiased;
+        scroll-behavior: smooth;
     }
 
-    *{
-        font-family: "Roboto", sans-serif;
-        letter-spacing: 1.5px;
-    }
     body{
         
         ::-webkit-scrollbar{

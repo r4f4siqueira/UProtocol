@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 //components
 import { AiOutlineClose, AiOutlineCheck } from "react-icons/ai";
-import { ContainerC, ContainerR } from "../../styles/styles";
+import { ContainerC, ContainerR, Titles } from "../../styles/styles";
 
 //styles
 import { ContainerMsg, InputContainer } from "./styles";
@@ -37,7 +37,9 @@ function Input(props) {
     // console.log("render");
     return (
         <InputContainer>
-            <label>{props.label}</label>
+            <Titles>
+                <label>{props.label}</label>
+            </Titles>
             <ContainerC>
                 <input
                     value={props.inputValue || ""}
