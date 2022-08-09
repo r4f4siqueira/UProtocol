@@ -8,7 +8,7 @@ class ObservacoesSchema extends Schema {
     this.create('observacaos', (table) => {
       table.increments('id').primary()
       table.integer('protocolo').references('protocolos.id')
-      table.string('atendente')
+      table.integer('atendente')
       table.string('observacao', 8000)
       table.integer('empresa')
       table.timestamps()

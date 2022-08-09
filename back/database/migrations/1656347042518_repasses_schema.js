@@ -7,11 +7,11 @@ class RepassesSchema extends Schema {
   up () {
     this.create('repasses', (table) => {
       table.increments('id').primary()
-      table.integer('usuarioatual').references('usuarios.id')
+      table.integer('funcionariatual').references('funcionarios.id')
       table.integer('protocolo').references('protocolos.id')
-      table.integer('usuariodestino').references('usuarios.id')
-      table.string('userc')
-      table.string('userm')
+      table.integer('funcionariodestino').references('funcionarios.id')
+      table.integer('userc')
+      table.integer('userm')
       table.integer('empresa')
       table.timestamps()
     })

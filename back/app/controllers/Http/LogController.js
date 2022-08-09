@@ -3,10 +3,10 @@ const Log = use('App/Models/Log')
 
 class LogController {    
     //Funcao usada quando se usa uma requisicao via HTTP
-    async criarLog({request}){
+    /*async criarLog({request}){
         const dataToCreate = request.only(['operacao','tabela','coluna','valorantigo','valornovo','user', 'empresa'])
         return await Log.create(dataToCreate);
-    }
+    }*/
     //Funcao criada para usar nos controlers, pois a REQUEST é diferente quando se usa HTTP;
     //Quando se passa direto por parametro vai apenas um objeto com as informacoes nescessarias, no HTTP vai um arrey de objetos
     //Por HTTP é pasaddo um vetor de objeto com varias informacoes referente ao cabecalho HTTP

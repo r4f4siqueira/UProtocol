@@ -12,7 +12,7 @@ class LogsSchema extends Schema {
       table.string('coluna', 100)
       table.string('valorantigo')
       table.string('valornovo')
-      table.string('user')
+      table.integer('funcionario')
       table.integer('empresa')
       table.timestamps()
     })

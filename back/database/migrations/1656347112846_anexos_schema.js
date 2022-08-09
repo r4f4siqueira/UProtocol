@@ -9,10 +9,10 @@ class AnexosSchema extends Schema {
       table.increments('id').primary()
       table.integer('protocolo').references('protocolos.id')
       table.string('descricao', 100)
-      table.string('anexo', 255)
+      table.string('anexo')
       table.integer('userc')
-      table.string('userm')
-      table.string('empresa')
+      table.integer('userm')
+      table.integer('empresa')
       table.timestamps()
     })
   }
