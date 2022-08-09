@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext } from "react";
 import firebase from "../services/firebaseConnection";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { GoogleAuthProvider } from "firebase/auth";
 
 export const AuthContext = createContext({});
@@ -13,13 +13,19 @@ function AuthProvider({ children }) {
 
     useEffect(() => {
         firebase.auth().languageCode = "pt";
+        setLoading(true);
         // @ts-ignore
         const userStorage = JSON.parse(localStorage.getItem("@UProtocolUser"));
         if (userStorage) {
+            if (userStorage.avatar === null) {
+                userStorage.avatar = require("../assets/placeholder.png");
+            }
             setUser(userStorage);
             setSigned(true);
             // no react strict mode o toast é mandado duas vezes, mas no modo de produção irá ficar normal
-            toast.success("Bem vindo " + userStorage.name + "!");
+            if (Object.keys(user).length > 0) {
+                toast.success("Bem vindo " + userStorage.name + "!");
+            }
             // console.log("login");
         }
         setLoading(false);
@@ -40,10 +46,10 @@ function AuthProvider({ children }) {
                     .firestore()
                     .collection("usuarios")
                     .doc(response.user?.uid)
-                    .set({ name: data.name, avatar: null, email: response.user?.email })
+                    .set({ name: data.name, avatar: null, email: response.user?.email, active: true })
                     .then(() => {
-                        let userData = { uid: response.user?.uid, name: data.name, email: response.user?.email, avatar: null };
-                        handleUser(userData, true);
+                        let userData = { uid: response.user?.uid, name: data.name, email: response.user?.email, avatar: null, active: true };
+                        handleUser(userData, true, false);
                         setLoadAuth(false);
                     })
                     .catch((error) => {
@@ -71,8 +77,6 @@ function AuthProvider({ children }) {
 
         if (!isGoogle) {
             if (userData) {
-                // verificando email:
-
                 await firebase
                     .auth()
                     .signInWithEmailAndPassword(userData.email, userData.password)
@@ -83,12 +87,18 @@ function AuthProvider({ children }) {
                             .doc(response.user?.uid)
                             .get()
                             .catch((err) => console.log("erro ao buscar o usuario firebase auth:" + err));
-                        const userData = { uid: response.user?.uid, name: firebaseUser?.data()?.name, email: response.user?.email, avatar: firebaseUser?.data()?.avatar };
-                        handleUser(userData, true);
+                        const userData = {
+                            uid: response.user?.uid,
+                            name: firebaseUser?.data()?.name,
+                            email: response.user?.email,
+                            avatar: firebaseUser?.data()?.avatar,
+                            active: firebaseUser?.data()?.active,
+                        };
+                        handleUser(userData, true, false);
                         setLoadAuth(false);
                     })
                     .catch((error) => {
-                        handleUser(null, false);
+                        handleUser(null, false, false);
                         setLoadAuth(false);
                         switch (error.code) {
                             case "auth/user-not-found":
@@ -129,13 +139,14 @@ function AuthProvider({ children }) {
                                         name: snapshot.data()?.name,
                                         email: snapshot.data()?.email,
                                         avatar: snapshot.data()?.avatar,
+                                        active: snapshot.data()?.active,
                                     };
-                                    handleUser(userData, true);
+                                    handleUser(userData, true, false);
                                     setLoadAuth(false);
                                 })
                                 .catch((err) => {
                                     console.log("erro ao atualizar avatar: " + err);
-                                    handleUser(null, false);
+                                    handleUser(null, false, false);
                                     setLoadAuth(false);
                                 });
                         } else {
@@ -151,19 +162,20 @@ function AuthProvider({ children }) {
                                         name: snapshot.data()?.name,
                                         email: snapshot.data()?.email,
                                         avatar: snapshot.data()?.avatar,
+                                        active: snapshot.data()?.active,
                                     };
-                                    handleUser(userData, true);
+                                    handleUser(userData, true, false);
                                     setLoadAuth(false);
                                 })
                                 .catch((err) => {
                                     console.log("erro ao pegar dados do usuario: " + err);
-                                    handleUser(null, false);
+                                    handleUser(null, false, false);
                                     setLoadAuth(false);
                                 });
                         }
                     } else {
                         //se o usuário ainda não existe no firestore
-                        const userFirebase = { name: response.user?.displayName, email: response.user?.email, avatar: response.user?.photoURL };
+                        const userFirebase = { name: response.user?.displayName, email: response.user?.email, avatar: response.user?.photoURL, active: true };
                         const userData = { ...userFirebase, uid: response.user?.uid };
                         await firebase
                             .firestore()
@@ -171,18 +183,19 @@ function AuthProvider({ children }) {
                             .doc(response.user?.uid)
                             .set(userFirebase)
                             .then(() => {
-                                handleUser(userData, true);
+                                handleUser(userData, true, false);
                                 setLoadAuth(false);
                             })
                             .catch((err) => {
                                 toast.error("erro ao salvar usuario google novo firestore: " + err);
-                                handleUser(null, false);
+                                handleUser(null, false, false);
                                 setLoadAuth(false);
                             });
                     }
                 })
                 .catch((error) => {
                     console.log(error);
+                    console.log(error.code);
                     toast.error("Algo deu errado 😥");
                     setLoadAuth(false);
                     // setErro(true);
@@ -192,7 +205,7 @@ function AuthProvider({ children }) {
 
     async function logout() {
         firebase.auth().signOut();
-        handleUser(null, false);
+        handleUser(null, false, false);
     }
 
     //
@@ -200,8 +213,9 @@ function AuthProvider({ children }) {
      * lida com as operacoes do usuario no sistema
      * @param   {object | null} userData  Dados do usuario, se passado null, nenhuma operacao além da de remover será executada
      * @param   {boolean} op  Operação a realizar: false - remover usuario do LS e contexts   ------- true - adicionar usuario no LS e contexts
+     * @param   {boolean} isEdit Se é uma operação de edição do usuário ou não, somente muda a mensagem do toast
      */
-    function handleUser(userData: { uid; name; email; avatar } | null, op: boolean) {
+    function handleUser(userData: { uid; name; email; avatar; active } | null, op: boolean, isEdit: boolean) {
         switch (op) {
             case false:
                 localStorage.removeItem("@UProtocolUser");
@@ -218,7 +232,11 @@ function AuthProvider({ children }) {
                     setSigned(true);
                     console.log(userData);
 
-                    toast.success("Bem vindo " + userData.name + "!");
+                    if (isEdit) {
+                        toast.success("Salvo com sucesso!");
+                    } else {
+                        toast.success("Bem vindo " + userData.name + "!");
+                    }
                 } else {
                     toast.error("tentando salvar usuario vazio ou nulo");
                 }
@@ -246,6 +264,36 @@ function AuthProvider({ children }) {
             });
     }
 
+    /**
+     * lida com as operacoes do usuario no sistema
+     * @param   {boolean} op  Operação a realizar: false - desativar conta   ------- true - ativar conta desativada
+     * @param   {boolean} uid  UID do usuario
+     */
+    async function manageAccount(op: boolean, uid) {
+        firebase
+            .firestore()
+            .collection("usuarios")
+            .doc(uid)
+            .update({ active: op })
+            .then(() => {
+                if (!op) {
+                    logout();
+                    toast.info("Conta desativada");
+                } else {
+                    toast.info("Conta reativada com sucesso!");
+                }
+            })
+            .catch((err) => {
+                toast.error("Ocorreu um erro ao gerenciar conta");
+                console.log(err.code);
+                console.log(err);
+            })
+            .finally(() => {
+                //@ts-ignore
+                handleUser({ ...user, active: op }, true);
+            });
+    }
+
     return (
         <AuthContext.Provider
             value={{
@@ -257,6 +305,7 @@ function AuthProvider({ children }) {
                 logout,
                 register,
                 forgotPassword,
+                manageAccount,
                 loading,
                 loadAuth,
             }}

@@ -10,12 +10,12 @@ import PlaceboInput from "../../components/PlaceboInput/PlaceboInput";
 import { FaUser } from "react-icons/fa";
 import { BsUpload } from "react-icons/bs";
 
-import { BtSubmit, ContainerC, ContainerPage, PanelPage, Titles } from "../../styles/styles";
-import { AvatarImg, AvatarWrapper, FormWrapper } from "./styles";
+import { BtsContainer, BtSubmit, ContainerC, ContainerPage, PanelPage, Titles } from "../../styles/styles";
+import { AvatarImg, AvatarWrapper, BtDAccount, FormWrapper } from "./styles";
 import { LinkPassword } from "../Login/styles";
 
 function Profile() {
-    const { user, handleUser, forgotPassword } = useContext(AuthContext);
+    const { user, handleUser, forgotPassword, manageAccount } = useContext(AuthContext);
     const [username, setUsername] = useState();
     const [avatar, setAvatar] = useState();
     const [avatarObj, setAvatarObj] = useState();
@@ -25,6 +25,11 @@ function Profile() {
         setUsername(user.name);
         setAvatar(user.avatar);
     }, []);
+
+    // console.log(user);
+    // console.log(username + " - " + avatar);
+    const isDisabled = username === user.name && avatar === user.avatar;
+    // console.log(isDisabled);
 
     function handleForgotPass() {
         forgotPassword(user.email);
@@ -48,24 +53,48 @@ function Profile() {
         e.preventDefault();
         // console.log(avatarObj);
         setSaving(true);
-        await firebase
-            .storage()
-            .ref("avatares/" + user.uid + "/" + avatarObj.name)
-            .put(avatarObj)
-            .then(async (snapshot) => {
-                // console.log(snapshot);
-                let tuser = { avatar: await snapshot.ref.getDownloadURL() };
-                if (username !== user.name) {
-                    tuser = { ...tuser, name: username };
-                }
+        // console.log("avatar: " + avatar + " - " + user.avatar);
+        if (avatar !== user.avatar) {
+            await firebase
+                .storage()
+                .ref("avatares/" + user.uid + "/" + avatarObj.name)
+                .put(avatarObj)
+                .then(async (snapshot) => {
+                    // console.log(snapshot);
+                    let tuser = { avatar: await snapshot.ref.getDownloadURL() };
+                    if (username !== user.name) {
+                        tuser = { ...tuser, name: username };
+                    }
+                    await firebase
+                        .firestore()
+                        .collection("usuarios")
+                        .doc(user.uid)
+                        .update(tuser)
+                        .then(() => {
+                            handleUser({ ...user, ...tuser }, true, true);
+                            setSaving(false);
+                        })
+                        .catch((err) => {
+                            toast.error("Erro ao salvar");
+                            console.log(err);
+                            setSaving(false);
+                        });
+                })
+                .catch((err) => {
+                    toast.error("Ocorreu um erro!");
+                    console.log(err);
+                    setSaving(false);
+                });
+        } else {
+            if (username !== user.name) {
+                let tuser = { name: username };
                 await firebase
                     .firestore()
                     .collection("usuarios")
                     .doc(user.uid)
                     .update(tuser)
                     .then(() => {
-                        toast.success("Salvo com sucesso!");
-                        handleUser({ ...user, ...tuser }, true);
+                        handleUser({ ...user, ...tuser }, true, true);
                         setSaving(false);
                     })
                     .catch((err) => {
@@ -73,12 +102,18 @@ function Profile() {
                         console.log(err);
                         setSaving(false);
                     });
-            })
-            .catch((err) => {
-                toast.error("Ocorreu um erro!");
-                console.log(err);
+            } else {
+                toast.error("Erro inesperado");
                 setSaving(false);
-            });
+            }
+        }
+    }
+
+    function handleDeactivateAccount() {
+        const msg = window.prompt("Você tem certeza que deseja desativar sua conta? ela não poderá mais acessar o sistema, se tiver certeza, digite 'Eu compreendo'");
+        if (msg.toLowerCase() === "eu compreendo") {
+            manageAccount(false, user.uid);
+        }
     }
 
     return (
@@ -124,11 +159,14 @@ function Profile() {
                             }}
                             isValid={null}
                         />
-                        <BtSubmit>Salvar</BtSubmit>
+                        <BtSubmit disabled={isDisabled}>Salvar</BtSubmit>
                     </form>
-                    <LinkPassword to="" onClick={handleForgotPass}>
-                        Esqueceu a sua senha?
-                    </LinkPassword>
+                    <BtsContainer>
+                        <LinkPassword to="" onClick={handleForgotPass}>
+                            Alterar senha
+                        </LinkPassword>
+                        <BtDAccount onClick={handleDeactivateAccount}>Desativar conta</BtDAccount>
+                    </BtsContainer>
                 </FormWrapper>
             </PanelPage>
         </ContainerPage>

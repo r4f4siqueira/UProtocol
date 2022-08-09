@@ -8,7 +8,7 @@ export const NavbarContainer = styled.nav`
     border-right: solid 2px #1498d5;
     box-shadow: 2px 0px 5px #949494ff;
 
-    position: sticky;
+    position: fixed;
 
     display: flex;
     flex-direction: column;
@@ -24,8 +24,7 @@ export const AvatarWrapper = styled.div`
     transition: ease-in 100ms;
 
     img {
-        width: 100%;
-        height: 100%;
+        width: 6rem;
     }
 `;
 
@@ -40,7 +39,7 @@ export const UserWrapper = styled(ContainerC)`
     margin-bottom: 1rem;
     div {
         :hover {
-            box-shadow: 0 0px 5px #0c0c0c;
+            transform: scale(1.1);
         }
     }
     span:hover {

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ContainerC } from "../../styles/styles";
+import { ContainerC, GButton } from "../../styles/styles";
 
 export const FormWrapper = styled(ContainerC)`
     form {
@@ -13,6 +13,12 @@ export const AvatarWrapper = styled.label`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    height: 10rem;
+    width: 10rem;
+    border-radius: 5rem;
+
+    overflow: hidden;
 
     input {
         display: none;
@@ -35,7 +41,21 @@ export const AvatarWrapper = styled.label`
 `;
 
 export const AvatarImg = styled.img`
-    height: 10rem;
     width: 10rem;
-    border-radius: 5rem;
+`;
+
+export const BtDAccount = styled(GButton)`
+    background-color: crimson;
+    outline: #a11515 2px solid;
+    box-shadow: 0.3rem 0.3rem 1px grey;
+    transition: all 200ms;
+    :hover {
+        background-color: #a11515;
+    }
+    :active {
+        margin-top: 1.4rem;
+        margin-bottom: -0.2rem;
+
+        box-shadow: 0.1rem 0.1rem 1px grey;
+    }
 `;

@@ -10,6 +10,8 @@ import Dashboard from "../pages/Dashboard/dashboard";
 import { PagesContainer } from "../styles/styles";
 import Navbar from "../components/Navbar/Navbar";
 import Profile from "../pages/Profile/Profile";
+import Error from "../pages/Error/Error";
+import DUser from "../pages/DUser/DUser";
 
 //componentes
 
@@ -59,6 +61,14 @@ function RoutesApp() {
                     }
                 />
                 <Route
+                    path="/inactiveAccount"
+                    element={
+                        <PrivateRoute>
+                            <DUser />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
                     path="/profile"
                     element={
                         <PrivateRoute>
@@ -69,6 +79,7 @@ function RoutesApp() {
                         </PrivateRoute>
                     }
                 />
+                <Route path="/*" element={<Error />} />
             </Routes>
         </BrowserRouter>
     );

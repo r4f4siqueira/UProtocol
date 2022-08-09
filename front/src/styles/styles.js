@@ -27,6 +27,7 @@ export const ContainerCenter = styled(ContainerC)`
 export const ContainerPage = styled(ContainerC)`
     min-width: 85%;
     height: 100%;
+    margin-left: 15rem;
 `;
 
 export const GButton = styled.button`
@@ -34,7 +35,6 @@ export const GButton = styled.button`
     padding: 0.4rem;
     border-radius: 0.2rem;
 
-    border: solid 2px black;
     background-color: darkgray;
 
     color: white;
@@ -86,6 +86,10 @@ export const LinkText = styled(Link)`
 
     color: #395b9b;
     padding: 0.5rem;
+
+    :hover {
+        color: #153777;
+    }
 `;
 
 export const PagesContainer = styled(ContainerR)`
@@ -144,4 +148,8 @@ export const BtSubmit = styled(GButton)`
             box-shadow: 0.3rem 0.3rem 1px grey;
         }
     }
+`;
+
+export const BtsContainer = styled(ContainerR)`
+    justify-content: space-evenly;
 `;
