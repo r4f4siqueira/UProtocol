@@ -6,11 +6,12 @@ import { toast } from "react-toastify";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Input from "../../components/Input/Input";
 import PlaceboInput from "../../components/PlaceboInput/PlaceboInput";
+import { ReactComponent as Loading } from "../../assets/Loading/Gear.svg";
 
 import { FaUser } from "react-icons/fa";
 import { BsUpload } from "react-icons/bs";
 
-import { BtsContainer, BtSubmit, ContainerC, ContainerPage, PanelPage, Titles } from "../../styles/styles";
+import { BtsContainer, BtSubmit, ContainerC, ContainerPage, ContainerR, PanelPage, Titles } from "../../styles/styles";
 import { AvatarImg, AvatarWrapper, BtDAccount, FormWrapper } from "./styles";
 import { LinkPassword } from "../Login/styles";
 
@@ -159,7 +160,10 @@ function Profile() {
                             }}
                             isValid={null}
                         />
-                        <BtSubmit disabled={isDisabled}>Salvar</BtSubmit>
+                        <ContainerR>
+                            <BtSubmit disabled={saving ? true : isDisabled}>{saving ? "Salvando..." : "Salvar"}</BtSubmit>
+                            {saving ? <Loading className="loading" /> : ""}
+                        </ContainerR>
                     </form>
                     <BtsContainer>
                         <LinkPassword to="" onClick={handleForgotPass}>

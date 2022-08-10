@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 //components
 import Input from "../../components/Input/Input";
 import { AuthContext } from "../../context/auth.tsx";
+import { ReactComponent as Loading } from "../../assets/Loading/Gear.svg";
 
 //styles
-import { ContainerCenter } from "../../styles/styles";
+import { ContainerCenter, ContainerR } from "../../styles/styles";
 import Logo from "../../assets/logo/logo.png";
 import { BtLogin, LoginWrapper, LinkPassword, BtGLogin, LinkRegister } from "./styles";
 
@@ -19,7 +20,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [touched, setTouched] = useState({ email: false, pass: false });
 
-    const { login, forgotPassword } = useContext(AuthContext);
+    const { login, forgotPassword, loadAuth } = useContext(AuthContext);
     // const [firstTime, setFirstTime] = useState({ email: true, senha: true });
 
     // seta de forma genérica o state touched que comeca como falso para true, de acordo com o parametro passado, utilizado com a prop blur do input
@@ -210,7 +211,10 @@ function Login() {
                         label="Senha:"
                         placeholder="Insira sua senha"
                     />
-                    <BtLogin disabled={isDisabled}>Entrar</BtLogin>
+                    <ContainerR>
+                        <BtLogin disabled={loadAuth ? true : isDisabled}>{loadAuth ? "Carregando..." : "Entrar"}</BtLogin>
+                        {loadAuth ? <Loading className="loading" /> : ""}
+                    </ContainerR>
                     <LinkPassword to="" onClick={handleForgotPass}>
                         Esqueci minha senha
                     </LinkPassword>

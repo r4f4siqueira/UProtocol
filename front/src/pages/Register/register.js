@@ -4,9 +4,10 @@ import React, { useContext, useState } from "react";
 //components
 import Input from "../../components/Input/Input";
 import { AuthContext } from "../../context/auth.tsx";
+import { ReactComponent as Loading } from "../../assets/Loading/Gear.svg";
 
 //styles
-import { ContainerCenter } from "../../styles/styles";
+import { ContainerCenter, ContainerR } from "../../styles/styles";
 import Logo from "../../assets/logo/logo.png";
 import { BtLogin, LoginWrapper, BtGLogin, LinkRegister } from "../Login/styles";
 
@@ -18,7 +19,7 @@ function Register() {
 
     const [touched, setTouched] = useState({ name: false, email: false, password: false, repPassword: false });
 
-    const { register, login } = useContext(AuthContext);
+    const { register, login, loadAuth } = useContext(AuthContext);
 
     function handleBlur(field) {
         if (!touched[`${field}`] === true) {
@@ -75,9 +76,9 @@ function Register() {
         // lança um erro aos 2 campos se as senhas não coincidirem
         if (tpassword !== trepPassword) {
             ver = false;
-            msgPass.push("As senhas devem ser iguais!");
+            // msgPass.push("As senhas devem ser iguais!");
             msgRepPass.push("As senhas devem ser iguais!");
-            fieldValidation.password.err = false;
+            // fieldValidation.password.err = false;
             fieldValidation.repPassword.err = false;
         }
 
@@ -270,9 +271,12 @@ function Register() {
                             handleBlur("repPassword");
                         }}
                     />
-                    <BtLogin disabled={isDisabled} type="submit">
-                        Cadastrar
-                    </BtLogin>
+                    <ContainerR>
+                        <BtLogin disabled={loadAuth ? true : isDisabled} type="submit">
+                            {loadAuth ? "Carregando..." : "Cadastrar"}
+                        </BtLogin>
+                        {loadAuth ? <Loading className="loading" /> : ""}
+                    </ContainerR>
                 </form>
                 <BtGLogin onClick={handleGoogleLogin}>Entrar com Google</BtGLogin>
                 <LinkRegister to="/">Já tenho uma conta</LinkRegister>

@@ -6,6 +6,15 @@ export const FormWrapper = styled(ContainerC)`
         align-self: center;
         min-width: 60%;
     }
+    .loading {
+        width: 2.4rem;
+
+        position: absolute;
+        margin-top: 0.7rem;
+        margin-left: 4.5rem;
+
+        fill: lightgray;
+    }
 `;
 
 export const AvatarWrapper = styled.label`

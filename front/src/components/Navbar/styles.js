@@ -13,6 +13,12 @@ export const NavbarContainer = styled.nav`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    z-index: 3;
+
+    @media screen and (max-width: 700px) {
+        display: none;
+    }
 `;
 
 export const AvatarWrapper = styled.div`

@@ -59,8 +59,15 @@ function AuthProvider({ children }) {
                     });
             })
             .catch((error) => {
-                console.log("Erro ao criar conta firebase auth: " + error);
-                toast.error(error);
+                switch (error.code) {
+                    case "auth/email-already-in-use":
+                        toast.error("Email informado já está em uso");
+                        break;
+                    default:
+                        toast.error(error);
+                        console.log(error.code);
+                        break;
+                }
                 setLoadAuth(false);
             });
     }
@@ -107,6 +114,8 @@ function AuthProvider({ children }) {
                             case "auth/wrong-password":
                                 toast.error("Senha inválida");
                                 break;
+                            case "auth/too-many-requests":
+                                toast.error("Muitas tentativas falhas, aguarde alguns segundos");
                             default:
                                 toast.error(error);
                                 console.log(error.code);

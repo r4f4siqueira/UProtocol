@@ -28,6 +28,10 @@ export const ContainerPage = styled(ContainerC)`
     min-width: 85%;
     height: 100%;
     margin-left: 15rem;
+    @media screen and (max-width: 700px) {
+        margin: 0;
+        width: 100%;
+    }
 `;
 
 export const GButton = styled.button`

@@ -23,6 +23,16 @@ export const LoginWrapper = styled(ContainerC)`
         border-bottom: 1px solid lightgray;
         padding-bottom: 1rem;
     }
+
+    .loading {
+        width: 2.4rem;
+
+        position: absolute;
+        margin-top: 0.7rem;
+        margin-left: 4.5rem;
+
+        fill: lightgray;
+    }
 `;
 
 export const BtLogin = styled(BtSubmit)``;
