@@ -4,11 +4,12 @@ FROM $NODE_IMAGE AS base
 RUN apk --no-cache add dumb-init
 RUN mkdir -p /home/node/app && chown node:node /home/node/app
 WORKDIR /home/node/app
+RUN mkdir -p tmp
+RUN chown node tmp
 USER node
-RUN mkdir tmp
 
 FROM base AS dependencies
-COPY --chown=node:node ./package*.json ./
+COPY --chown=node:node ../package*.json /.
 RUN npm ci
 COPY --chown=node:node . .
 
@@ -19,8 +20,8 @@ FROM base AS production
 ENV NODE_ENV=production
 ENV PORT=$PORT
 ENV HOST=0.0.0.0
-COPY --chown=node:node ./package*.json ./
+COPY --chown=node:node ../package*.json ./
 RUN npm ci --production
-COPY --chown=node:node --from=build /home/node/app/build .
+COPY --chown=node:node --from=build ..back:/home/node/app/build .
 EXPOSE $PORT
 CMD [ "dumb-init", "node", "server.js" ]

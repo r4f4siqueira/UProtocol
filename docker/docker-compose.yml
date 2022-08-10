@@ -1,64 +1,57 @@
-version: '3'
+version: "3"
 services:
-  
-  pg:
-    build: ./postgreSQL
-    container_name: pg
-    restart: always
-    environment:
-      POSTGRES_USER: oficina
-      POSTGRES_PASSWORD: oficina
-      POSTGRES_HOST_AUTH_METHOD: trust
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - ./postgreSQL/data:/var/lib/postgresql/data/pgdata
-    ports:
-      - '5432:5432'
-  
-  
-#    env_file:
-#      - ../back/.env
-#    command: dumb-init node ace serve --watch --node-args="--inspect=0.0.0.0"
+    adonis_app:
+        build:
+            context: .
+            dockerfile: adonis/Dockerfile
+        volumes:
+            - ../back:/home/node/app
+            - ../back:/home/node/app/node_modules
+        ports:
+            - 3333:3333
+        depends_on:
+            - pg
 
-#  node-server:
-#    container_name: node-server
-#    image: "node:16"
-#    user: "node"
-#    working_dir: /home/node/app
-#    environment:
-#      - NODE_ENV=production
-#    volumes:
-#      - ../back:/home/node/app
-#    ports:
-#      - 3333:3333
-#    command: "npm start"
-  adonis_app:
-    container_name: adonis_app
-    restart: always
-    build:
-      context: .
-      #target: dependencies
-    ports:
-      - 3333:3333
-    env_file:
-      - ../back/.env
-    volumes:
-      - ../back:/home/node/app
-    command: dumb-init node ace serve --watch --node-args="--inspect=0.0.0.0"
+    #    env_file:
+    #      - ../back/.env
+    #    command: dumb-init node ace serve --watch --node-args="--inspect=0.0.0.0"
 
-
-  node-client:
-    container_name: node-client
-    image: "node:16"
-    user: "node"
-    working_dir: /home/node/app
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - ../front:/home/node/app
-    ports:
-      - 3000:3000
-    command: "npm start"
-    links:
-      - adonis_app
-  
+    #  node-server:
+    #    container_name: node-server
+    #    image: "node:16"
+    #    user: "node"
+    #    working_dir: /home/node/app
+    #    environment:
+    #      - NODE_ENV=production
+    #    volumes:
+    #      - ../back:/home/node/app
+    #    ports:
+    #      - 3333:3333
+    #    command: "npm start"
+    node-client:
+        container_name: node-client
+        image: "node:16"
+        user: "node"
+        working_dir: /home/node/app
+        environment:
+            - NODE_ENV=production
+        volumes:
+            - ../front:/home/node/app
+        ports:
+            - 3000:3000
+        command: "npm start"
+        links:
+            - adonis_app
+    pg:
+        build: ./postgreSQL
+        container_name: pg
+        restart: always
+        environment:
+            POSTGRES_USER: oficina
+            POSTGRES_PASSWORD: oficina
+            POSTGRES_HOST_AUTH_METHOD: trust
+            PGDATA: /var/lib/postgresql/data/pgdata
+        volumes:
+            - ./postgreSQL/data:/var/lib/postgresql/data/pgdata
+        ports:
+            - "5432:5432"
