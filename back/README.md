@@ -21,4 +21,7 @@
 |Protocolo|[14](# "ver no codigo")|Parametros invalidos para consultar protocolo, parametro passado: `id`| 
 |Protocolo|[15](# "ver no codigo")|Protocolo com ID: `id` nao encontrada| 
 |Protocolo|[16](# "ver no codigo")|Protocolo já está concluido| 
-|Empresa|[17](# "ver no codigo")|userm não preenchido para DELETAR empresa| 
+|Empresa|[17](# "ver no codigo")|userm não preenchido para DELETAR empresa|
+|Empresa|[18](# "ver no codigo")|UID inválida para criar funcionário|
+|Empresa|[19](# "ver no codigo")|Nome invalido para criar funcionario|
+|Empresa|[20](# "ver no codigo")|Email invalido para criar funcionario|
