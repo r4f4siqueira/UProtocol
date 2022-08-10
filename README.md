@@ -23,7 +23,28 @@ npm install
 CREATE DATABASE uprotocol
 ```
 
-2 - Run commands in terminal:
+2 - Review the .env file
+
+in `back/.env` set `DB_USER` and `DB_PASSWORD` according to your database username and password, as shown in the example below
+
+```javascript
+HOST=127.0.0.1
+PORT=3333
+NODE_ENV=development
+APP_NAME=AdonisJs
+APP_URL=http://${HOST}:${PORT}
+CACHE_VIEWS=false
+APP_KEY=bHaSTp0PIkZKnLqKdWRj0sYEcLj61GaG
+DB_CONNECTION=pg
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_USER=myUser
+DB_PASSWORD=myPassword
+DB_DATABASE=uprotocol
+HASH_DRIVER=bcrypt
+```
+
+3 - Run commands in terminal:
 
 📂 back
 ```bash

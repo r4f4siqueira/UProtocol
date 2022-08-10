@@ -2,7 +2,7 @@
 const Protocolo = use('App/Models/Protocolo')
 
 class ProtocoloController {
-    async criarProtocolo({request}){
+    async criarProtocolo({request, response}){
         const dataToCreate = request.only(['atendente','cliente','situacao','prioridade','pessoaatendida', 'motivo', 'userc', 'empresa'])
         
         //1 - Verifica se o usario de cracao esta preenchido
@@ -12,16 +12,16 @@ class ProtocoloController {
         //se todas as validacoes passar cadastra o protocolo
         //Caso contrario retorna erro com suas respectivas informacoes de erro
         if(dataToCreate.userc===null || dataToCreate.userc===undefined){
-            return {erro:{codigo:10,msg:'Userc não preenchido para cadastrar protocolo'}}
+            return response.status(400).json({erro:{codigo:10,msg:'Userc não preenchido para cadastrar protocolo'}})
         }else{
             if(dataToCreate.atendente===null || dataToCreate.atendente===undefined){
-                return {erro:{codigo:11, msg:'Atendente não preenchido para cadastrar protocolo'}}
+                return response.status(400).json({erro:{codigo:11, msg:'Atendente não preenchido para cadastrar protocolo'}})
             } else{
                 if(dataToCreate.cliente===null || dataToCreate.cliente===undefined){
-                    return {erro:{codigo:12,msg:'Cliente não preenchido para cadastrar protocolo'}}
+                    return response.status(400).json({erro:{codigo:12,msg:'Cliente não preenchido para cadastrar protocolo'}})
                 }else{
                     if(dataToCreate.empresa===null || dataToCreate.empresa===undefined){
-                        return {erro:{codigo:13,msg:'Empresa não preenchida para cadastrar protocolo'}}
+                        return response.status(400).json({erro:{codigo:13,msg:'Empresa não preenchida para cadastrar protocolo'}})
                     }else{
                         return await Protocolo.create(dataToCreate);
                     }
@@ -34,10 +34,10 @@ class ProtocoloController {
         return await Protocolo.all();
     }
 
-    async dadosProtocolo({params}){
+    async dadosProtocolo({params, response}){
         //Verifica se o parametro passado pela URL é valido
         if(params.id===null||params.id===''||parseInt(params.id)===undefined){
-            return {erro:{codigo:14,msg:'Parametros invalidos para consultar protocolo, parametro passado:'+params.id}}
+            return response.status(400).json({erro:{codigo:14,msg:'Parametros invalidos para consultar protocolo, parametro passado:'+params.id}})
         }else{
             //Pega os dados da empresa encontrada e atribui para dados
             const dados = await Protocolo.find(params.id)
@@ -45,7 +45,7 @@ class ProtocoloController {
             //se nao encontrou retorna erro
             //se encontrar a empresa retorna os dados do protocolo encotrado
             if(dados === null){
-                return {erro:{codigo:15, msg:'Protocolo com ID:'+params.id+' nao encontrada'}}
+                return response.status(404).json({erro:{codigo:15, msg:'Protocolo com ID:'+params.id+' nao encontrado'}})
             }else{
                 return await Protocolo.find(params.id)
             }
@@ -53,7 +53,7 @@ class ProtocoloController {
         //return await Protocolo.find(params.id)
     }
 
-    async alterarProtocolo({params, request}){
+    async alterarProtocolo({params, request, response}){
         //usa a funcao dadosProtocolo para pegar os dados do protocolo, pois a funcao ja faz a validacao do parametro
         //caso retorne erro sera exibido o erro
         const protocolo = await this.dadosProtocolo({params})
@@ -61,7 +61,7 @@ class ProtocoloController {
             return protocolo
         }else{
             if(protocolo.situacao==='C'||protocolo.situacao==='c'){
-                return {erro:{codigo:16,msg:'Protocolo já está concluido'}}
+                return response.status(403).json({erro:{codigo:16,msg:'Protocolo já está concluido'}})
             }else{
                 const atualizaProtocolo = request.only(['atendente','cliente','situacao','prioridade','pessoaatendida', 'motivo', 'userm'])//lembrar de tratar a situacao para alterar apenas quando for concluir
             }
