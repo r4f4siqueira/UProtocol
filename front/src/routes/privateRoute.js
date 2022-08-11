@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.tsx";
 import DUser from "../pages/DUser/DUser";
-import Loading from "../pages/Loading/loading.js";
+import Loading from "../pages/Loading/Loading.js";
 
 function RouteWrapper({ children }) {
     const { signed, loading, user } = useContext(AuthContext);
