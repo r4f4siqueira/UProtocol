@@ -1,28 +1,64 @@
 "use strict";
 
+const Database = use('Database')
+
 const LogController = require("./LogController");
 const logC = new LogController()
+const FuncionarioEmpresaController = require('./FuncionarioEmpresaController')
+const funcionarioEmpresaC = new FuncionarioEmpresaController()
+const FuncionarioController = require('./FuncionarioController')
+const funcionarioC = new FuncionarioController()
 
 const Empresa = use("App/Models/Empresa");
+
 
 class EmpresaController {
   async criarEmpresa({ request,response }) {
     //userc = ID fornecida pelo firebase
-    const dataToCreate = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","userc"]);
+    const dataToCreate = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","uid"]);
     
     //Verifica se o usuario de criacao está preenchido
     //Se nao tiver passando USERC retorna erro
     //Se USERC tiver preenchido cria a empresa
-    if(dataToCreate.userc===null){
-      return response.status(400).json({erro:{codigo:0,msg: 'Userc vazio para cadastrar nova empresa'}})
+    if(dataToCreate.uid===null){
+      response?.status(400)
+      return {erro:{codigo:0,msg: 'UID vazio para cadastrar nova empresa'}}
     }else{
-      //verifica se o parametro fantasia esta preenchido
-      //se nao estiver preenchido retorna erro
-      //se tiver preenchido cadastra a empresa no bd e retorna os dados que foram cadastrados
-      if(dataToCreate.fantasia ===null || dataToCreate.fantasia===undefined){
-        return response.status(400).json({erro:{codigo:1,msg:'Nome ou Fantasia não preenchido para criar empresa'}})
-      } else{ 
-        return await Empresa.create(dataToCreate);
+      //variavel recebe a funcao para consultar a ID do usuario no banco de dados
+      //funcao retorna um array de objetos
+      //para acessar a informacao que eu quero, preciso saber a posicao do objeto no array e qual o atributo que preciso pegar
+      //no caso para usar o id retornado preciso utilizar a variavel da seguinte forma:
+      //idUser[0].id desta forma ira pegar somente o numero da id
+      const idUser = await Database.select('id','nome').table('funcionarios').where('uid',dataToCreate.uid)
+      //verifica se encontrou o usuario no banco de dados
+      if (idUser.length===0){
+        response?.status(404)
+        return {erro:{codigo:22,msg:'Funcionario nao encontrado no banco de dados'}}
+      }else{
+
+        //verifica se o parametro fantasia esta preenchido
+        //se nao estiver preenchido retorna erro
+        //se tiver preenchido cadastra a empresa no bd e retorna os dados que foram cadastrados
+        if(dataToCreate.fantasia ===null || dataToCreate.fantasia===undefined){
+          response?.status(400)
+          return {erro:{codigo:1,msg:'Nome ou Fantasia não preenchido para criar empresa'}}
+        } else{
+          
+          
+          //salvar a empresa para depois fazer o vinculo da empresa com o usuario que criou
+          //variavel idEmpresa recebe o retorno dos dados salvos no banco para poder pegar o id da empresa cadastrada
+          const novaEmpresa = await Empresa.create({
+            ativo:dataToCreate.ativo,
+            CNPJ_CPF:dataToCreate.CNPJ_CPF,
+            razaosocial:dataToCreate.razaosocial,
+            fantasia:dataToCreate.fantasia,
+            userc:idUser[0].id
+          });
+          //Fazer o vinculo do ususario na empresa criada
+          await funcionarioEmpresaC.vinculaFuncionarioEmpresa({request:{funcionario:idUser[0].id,empresa:novaEmpresa.id,cargo:'A',userc:idUser[0].id}})
+          //retrnando os dados da empresa cadastrada
+          return novaEmpresa
+        }
       }
     }
   }
@@ -39,11 +75,13 @@ class EmpresaController {
     //Se encontrar retorna os dados da empresa
 
     if(params.id===null||params.id ==='' || parseInt(params.id)===undefined){
-      return response.status(400).json({erro:{codigo:2,msg: 'Parametros invalidos para buscar dados, parametro passado:'+params.id}})
+      response?.status(400)
+      return {erro:{codigo:2,msg: 'Parametros invalidos para buscar dados, parametro passado:'+params.id}}
     } else {
       const dados = await Empresa.find(params.id)
       if (dados === null){
-        return response.status(404).json({erro:{codigo:3,msg: 'Empresa com ID:'+params.id+" Nao encontrada para buscar os dados"}})
+        response?.status(404)
+        return {erro:{codigo:3,msg: 'Empresa com ID:'+params.id+" Nao encontrada para buscar os dados"}}
       }else{
         return dados
       }
@@ -56,23 +94,27 @@ class EmpresaController {
   async alterarEmpresa({ params, request, response }) {
     //varifica se o parametro passado esta valido
     if(params.id ==='' || parseInt(params.id)===undefined){
-      return response.status(400).json({erro:{codigo:6,msg:'Parametro ID inválido para alterar os dados da empresa'}})
+      response?.status(400)
+      return {erro:{codigo:6,msg:'Parametro ID inválido para alterar os dados da empresa'}}
     }else{
       //Se o parametro estiver valido busca os dados da empresa e atribui a variavel
       const empresa = await Empresa.find(params.id); 
       //Verifica se encontrou a empresa
       if(empresa === null){
         //Se empresa estiver nula retorna mensagem de erro
-        return response.status(404).json({erro:{codigo:7,msg:'Empresa com ID:'+params.id+' Nao encontrada para alterar os dados'}})
+        response?.status(404)
+        return {erro:{codigo:7,msg:'Empresa com ID:'+params.id+' Nao encontrada para alterar os dados'}}
       }else{
         //Se encontrar a empresa a variavel "atualizaEmpresa" recebe os dados passado pelo parametro request
         const atualizaEmpresa = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador","userm"]);
         //verifica se o campo de "usuerm" foi preenchido
         if(atualizaEmpresa.userm===null || atualizaEmpresa.userm===''){
-          return response.status(400).json({erro:{codigo:8,msg:'USERM invalido para alterar dados da empresa'}})
+          response?.status(400)
+          return {erro:{codigo:8,msg:'USERM invalido para alterar dados da empresa'}}
         }else{
           if(atualizaEmpresa.fantasia===null||atualizaEmpresa.fantasia===undefined){
-            return response.status(400).json({erro:{codigo:9,msg:"Nome ou Fantasia não preenchido para alterar dados da empresa"}})
+            response?.status(400)
+            return {erro:{codigo:9,msg:"Nome ou Fantasia não preenchido para alterar dados da empresa"}}
           }else{
             //salva os dados antigos dentro da tabela de log
             //Como não estou verificando qual o dado que o usuario esta alterando entao salvo todos os dados da empresa no log
@@ -96,18 +138,21 @@ class EmpresaController {
     //Se encotrar a empresa, ela sera deletada
     //caso nao encontre a empresa reteornara uma mensagem de erro
     if(params.id===''||params.id===null||params.id===undefined){
-      return response.status(400).json({erro:{codigo:4,msg: 'parametros preenchidos errados para deletar empresa'}})
+      response?.status(400)
+      return {erro:{codigo:4,msg: 'parametros preenchidos errados para deletar empresa'}}
     }else{
       const empresa = await Empresa.find(params.id)
       if(empresa==null){
-        return response.status(404).json({erro:{codigo:5,msg: 'Empresa com ID:'+params.id+" Nao encontrada para deletar"}})
+        response?.status(404)
+        return {erro:{codigo:5,msg: 'Empresa com ID:'+params.id+" Nao encontrada para deletar"}}
       }else{
         //busca o userm para inserir no log
         //se nao tiver userm nao deleta
         //se tiver ele deleta
         //const dados = request.only(['userm'])
         if(request.body.userm===''||request.body.userm===null||request.body.userm===undefined){
-          return response.status(400).json({erro:{codigo:17,msg:'userm não preenchido para DELETAR empresa'}})
+          response?.status(400)
+          return {erro:{codigo:17,msg:'userm não preenchido para DELETAR empresa'}}
         }else{
           const temp = empresa
           await logC.novoLog({request:{operacao:'DELETAR',tabela:'Empresa',coluna:'',valorantigo:temp.razaosocial,valornovo:'null',user:request.body.userm, empresa:params.id}})

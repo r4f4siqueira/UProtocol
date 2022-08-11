@@ -1,13 +1,26 @@
-# Api DOC
+# 📃Api DOC
 
+##  🚫 Permissoes:
+### 📄 Permissions Table
+| Codigo | Descricao |
+| ------ | --------- |
+| **A** | **Administrador:** quem criou a empresa ou que tenha poder de convidar funcionarios e alterar dados sobre a empresa
+| **G** | **Gerente:** tem poder de remover funcionarios da empresa, mas não pode alterar os dados da empresa
+| **F** | **Funcionario:** Apenas meche com os protocolos
 
-## ❌ Erros:
+## ⛔ Erros:
 
+### 🟡 Server Response 
 
-
+| Codigo | Descrção |
+| ------ | -------- |
+| 400 | Parametros enviados invalidos|
+| 403 | Sem permissao para realizar a ação|
+| 404 | Nao encontrado retorno para requisicao|
+### 📩 Errors Messages
 | Entidade | Codigo | Mensagem | response
 | -------- | ------ | -------- | --------
-|Empresa | [0](# "ver no codigo") | Userc vazio para cadastrar nova empresa | 400
+|Empresa | [0](# "ver no codigo") | UID vazio para cadastrar nova empresa | 400
 |Empresa|[1](# "ver no codigo")|Nome ou Fantasia não preenchido para criar empresa| 400
 |Empresa|[2](# "ver no codigo")|Parametros invalidos para buscar dados, parametro passado: `id`| 400
 |Empresa|[3](# "ver no codigo")|Empresa com ID: `id` Nao encontrada para buscar os dados"| 404
@@ -30,3 +43,4 @@
 |Funcionario|[20](# "ver no codigo")|Email invalido para criar funcionario| 400
 |Funcionario|[21](# "ver no codigo")|Parametro invalido para consultar funcionario| 400
 |Funcionario|[21](# "ver no codigo")|Funcionaro com ID: `id` nao encontrado| 404
+|Empresa|[22](# "ver no codigo")|Funcionario nao encontrado no banco de dados| 404

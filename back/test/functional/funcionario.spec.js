@@ -17,8 +17,7 @@ test('1 - Listar todos Funcionarios', async ({ assert }) => {
 })
 
 test('2 - Consultar FUNCIONARIO: Valida parametros da URL', async ({assert})=>{
-  //let funcionario = await funcionarioC.dadosFuncionario({params: {id:''}})
-  console.log(funcionario)
+  let funcionario = await funcionarioC.dadosFuncionario({params: {id:''}})
   assert.equal(21,funcionario.erro.codigo)
 })
 
