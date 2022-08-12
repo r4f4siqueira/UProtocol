@@ -11,6 +11,11 @@ export const PanelPageHeader = styled(PanelPage)`
     div {
         z-index: 1;
     }
+    .icon {
+        width: 2rem;
+        height: 2rem;
+        color: #1498d5;
+    }
 `;
 
 export const BtBack = styled(GButton)`
