@@ -8,7 +8,7 @@ class EmpresasSchema extends Schema {
     this.create('empresas', (table) => {
       table.increments('id').primary()
       table.boolean('ativo')
-      table.string('CNPJ_CPF', 18)
+      table.string('CNPJ_CPF', 18).unique()
       table.string('razaosocial', 100)
       table.string('fantasia', 100)
       table.integer('userc').references('funcionarios.id')

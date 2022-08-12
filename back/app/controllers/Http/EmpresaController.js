@@ -6,8 +6,8 @@ const LogController = require("./LogController");
 const logC = new LogController()
 const FuncionarioEmpresaController = require('./FuncionarioEmpresaController')
 const funcionarioEmpresaC = new FuncionarioEmpresaController()
-const FuncionarioController = require('./FuncionarioController')
-const funcionarioC = new FuncionarioController()
+//const FuncionarioController = require('./FuncionarioController')
+//const funcionarioC = new FuncionarioController()
 
 const Empresa = use("App/Models/Empresa");
 
@@ -93,39 +93,68 @@ class EmpresaController {
 
   async alterarEmpresa({ params, request, response }) {
     //varifica se o parametro passado esta valido
-    if(params.id ==='' || parseInt(params.id)===undefined){
+    if(params.id ==='' || parseInt(params.id)===undefined||params.id===null){
       response?.status(400)
       return {erro:{codigo:6,msg:'Parametro ID inválido para alterar os dados da empresa'}}
     }else{
       //Se o parametro estiver valido busca os dados da empresa e atribui a variavel
       const empresa = await Empresa.find(params.id); 
       //Verifica se encontrou a empresa
+      //Se nao encontrar a empresa retorna mensagem de erro
       if(empresa === null){
-        //Se empresa estiver nula retorna mensagem de erro
         response?.status(404)
         return {erro:{codigo:7,msg:'Empresa com ID:'+params.id+' Nao encontrada para alterar os dados'}}
       }else{
         //Se encontrar a empresa a variavel "atualizaEmpresa" recebe os dados passado pelo parametro request
-        const atualizaEmpresa = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador","userm"]);
-        //verifica se o campo de "usuerm" foi preenchido
-        if(atualizaEmpresa.userm===null || atualizaEmpresa.userm===''){
+        const atualizaEmpresa = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","criador","uid"]);//uid de quem ta alterando a empresa
+        //verifica se o campo de "uid" foi preenchido
+        if(atualizaEmpresa.uid===null || atualizaEmpresa.uid===''||atualizaEmpresa.uid===undefined){
           response?.status(400)
-          return {erro:{codigo:8,msg:'USERM invalido para alterar dados da empresa'}}
+          return {erro:{codigo:8,msg:'UID invalido para alterar dados da empresa'}}
         }else{
-          if(atualizaEmpresa.fantasia===null||atualizaEmpresa.fantasia===undefined){
-            response?.status(400)
-            return {erro:{codigo:9,msg:"Nome ou Fantasia não preenchido para alterar dados da empresa"}}
+          const idUser = await Database.select('id','nome').table('funcionarios').where('uid',atualizaEmpresa.uid)
+          //verifica se encontrou o funcionario no banco de dados
+          //se nao encontrar o funcionario retorna erro
+          //se encontrar verifica se ele tem permissao para laterar os dados da empresa
+          if (idUser.length===0){
+            response?.status(404)
+            return {erro:{codigo:23,msg:'Funcionario nao encontrado no banco de dados'}}
           }else{
-            //salva os dados antigos dentro da tabela de log
-            //Como não estou verificando qual o dado que o usuario esta alterando entao salvo todos os dados da empresa no log
-            //E tambem estou salvando todos os dados novos
-            await logC.novoLog({request:{operacao:'ALTERAR',tabela:'Empresa',coluna:'',valorantigo:JSON.stringify(empresa),valornovo:JSON.stringify(atualizaEmpresa),user:atualizaEmpresa.userm,empresa:params.id}})
-            //Em seguida a variavel empresa recebe os novos dados atraves de uma funcao ".merge"
-            empresa.merge(atualizaEmpresa);
-            //Depois persiste os dados da variavel empresa no banco de dados
-            await empresa.save();
-            //retorna os dados atualizados
-            return empresa;
+            //busca no banco de dados o funcionario vinculado a empresa
+            const funcionarioEmpresa = await Database.select('*').table('funcionario_empresas').where('funcionario',idUser[0].id).where('empresa',empresa.id)
+            
+            //verifica se encontrou o funcionario vinculado a empresa
+            if(funcionarioEmpresa.length===0){
+              response?.status(404)
+              return {erro:{codigo:25,msg:'Funcionario nao esta vinculado a esta empresa'}}
+            }else{
+              //verifica se o funcionario tem permissao para poder fazer as alteracoes
+              //se nao tiver permissao retorna erro
+              if(funcionarioEmpresa[0].cargo !=='A'){
+                response?.status(403)
+                return {erro:{codigo:24,msg:'Funcionario sem permissao para alterar os dados da empresa'}}
+              }else{
+                if(atualizaEmpresa.fantasia===null||atualizaEmpresa.fantasia===undefined){
+                  response?.status(400)
+                  return {erro:{codigo:9,msg:"Nome ou Fantasia não preenchido para alterar dados da empresa"}}
+                }else{
+                  //salva os dados antigos dentro da tabela de log
+                  //Como não estou verificando qual o dado que o usuario esta alterando entao salvo todos os dados da empresa no log
+                  //E tambem estou salvando todos os dados novos
+                  await logC.novoLog({request:{operacao:'ALTERAR',tabela:'Empresa',coluna:'',valorantigo:JSON.stringify(empresa),valornovo:JSON.stringify(atualizaEmpresa),funcionario:funcionarioEmpresa[0].funcionario,empresa:params.id}})
+                  //removo o atributo UID pois na empresa não guarda esta informacão
+                  delete atualizaEmpresa.uid
+                  //Em seguida a variavel empresa recebe os novos dados atraves de uma funcao ".merge"
+                  empresa.merge(atualizaEmpresa);
+                  empresa.userm = funcionarioEmpresa[0].funcionario
+                  
+                  //Depois persiste os dados da variavel empresa no banco de dados
+                  await empresa.save();
+                  //retorna os dados atualizados
+                  return empresa;
+                }
+              }
+            }
           }
         }
       }
@@ -146,24 +175,44 @@ class EmpresaController {
         response?.status(404)
         return {erro:{codigo:5,msg: 'Empresa com ID:'+params.id+" Nao encontrada para deletar"}}
       }else{
-        //busca o userm para inserir no log
-        //se nao tiver userm nao deleta
-        //se tiver ele deleta
-        //const dados = request.only(['userm'])
-        if(request.body.userm===''||request.body.userm===null||request.body.userm===undefined){
+        const dados = request?.only(['uid'])
+        //busca o UID para inserir no log e verificar permissao para deletar
+        //se nao tiver UID nao deleta
+        //se tiver faz as verificacoes
+        if(dados.uid===''||dados.uid===null||dados.uid===undefined){
           response?.status(400)
-          return {erro:{codigo:17,msg:'userm não preenchido para DELETAR empresa'}}
+          return {erro:{codigo:17,msg:'UID não preenchido para DELETAR empresa'}}
         }else{
-          const temp = empresa
-          await logC.novoLog({request:{operacao:'DELETAR',tabela:'Empresa',coluna:'',valorantigo:temp.razaosocial,valornovo:'null',user:request.body.userm, empresa:params.id}})
-          await empresa.delete()
-          return temp
+          //pega as informacoes do usuario no banco de dados
+          const idUser = await Database.select('id','nome').table('funcionarios').where('uid',dados.uid)
+          //verifica se encontrou o funcionario no banco de dados
+          //se encontrar verifica se tem permissao para excuir
+          if(idUser.length===0){
+            response?.status(404)
+            return {erro:{codigo:26,msg:'Funcionario nao encontrado no banco de dados para DELETAR os dados da empresa'}}
+          }else{
+            //busca no banco de dados o funcionario vinculado a empresa
+            const funcionarioEmpresa = await Database.select('*').table('funcionario_empresas').where('funcionario',idUser[0].id).where('empresa',empresa.id)
+            if(funcionarioEmpresa.length===0){
+              response?.status(404)
+              return {erro:{codigo:27,msg:'Funcionario nao vinculado a empresa para DELETAR'}}
+            }else{
+              //verificando se o funcionario pode deletar a empresa
+              if(funcionarioEmpresa[0].cargo!=='A'){
+                response?.status(403)
+                return {erro:{codigo:28,msg:'Funcionario sem permissao para DELETAR empresa'}}
+              }else{
+                const temp = empresa
+                await logC.novoLog({request:{operacao:'DELETAR',tabela:'Empresa',coluna:'',valorantigo:'ID da empresa:'+temp.id+' - Nome:'+temp.fantasia+' - CNPJ_CPF:'+temp.CNPJ_CPF,valornovo:'DELETADO',funcionario:funcionarioEmpresa[0].funcionario, empresa:params.id}})
+                await Database.table('funcionario_empresas').where('empresa',temp.id).delete()
+                await empresa.delete()
+                return temp 
+              }              
+            }
+          }
         }
       }
     }
-    /* const empresa = await Empresa.findOrFail(params.id);
-    await empresa.delete();
-    return { mensagem: "Empresa deletada" };*/
   }
 }
 

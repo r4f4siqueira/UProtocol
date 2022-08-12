@@ -1,4 +1,10 @@
 # 📃Api DOC
+## ▶ Start Server
+`adonis serve --dev`
+
+or
+
+`adonis serve`
 
 ##  🚫 Permissoes:
 ### 📄 Permissions Table
@@ -17,10 +23,12 @@
 | 400 | Parametros enviados invalidos|
 | 403 | Sem permissao para realizar a ação|
 | 404 | Nao encontrado retorno para requisicao|
+
+
 ### 📩 Errors Messages
 | Entidade | Codigo | Mensagem | response
 | -------- | ------ | -------- | --------
-|Empresa | [0](# "ver no codigo") | UID vazio para cadastrar nova empresa | 400
+|Empresa|[0](# "ver no codigo")|UID vazio para cadastrar nova empresa | 400
 |Empresa|[1](# "ver no codigo")|Nome ou Fantasia não preenchido para criar empresa| 400
 |Empresa|[2](# "ver no codigo")|Parametros invalidos para buscar dados, parametro passado: `id`| 400
 |Empresa|[3](# "ver no codigo")|Empresa com ID: `id` Nao encontrada para buscar os dados"| 404
@@ -37,10 +45,16 @@
 |Protocolo|[14](# "ver no codigo")|Parametros invalidos para consultar protocolo, parametro passado: `id`| 400
 |Protocolo|[15](# "ver no codigo")|Protocolo com ID: `id` nao encontrado| 404
 |Protocolo|[16](# "ver no codigo")|Protocolo já está concluido| 403
-|Empresa|[17](# "ver no codigo")|userm não preenchido para DELETAR empresa| 400
+|Empresa|[17](# "ver no codigo")|UID não preenchido para DELETAR empresa| 400
 |Funcionario|[18](# "ver no codigo")|UID inválida para criar funcionário| 400
 |Funcionario|[19](# "ver no codigo")|Nome invalido para criar funcionario| 400
 |Funcionario|[20](# "ver no codigo")|Email invalido para criar funcionario| 400
 |Funcionario|[21](# "ver no codigo")|Parametro invalido para consultar funcionario| 400
 |Funcionario|[21](# "ver no codigo")|Funcionaro com ID: `id` nao encontrado| 404
 |Empresa|[22](# "ver no codigo")|Funcionario nao encontrado no banco de dados| 404
+|Empresa|[23](# "ver no codigo")|Funcionario nao encontrado no banco de dados para alterar os dados da empresa| 404
+|Empresa|[24](# "ver no codigo")|Funcionario sem permissao para alterar os dados da empresa| 403
+|Empresa|[25](# "ver no codigo")|Funcionario nao esta vinculado a esta empresa| 404
+|Empresa|[26](# "ver no codigo")|Funcionario nao encontrado no banco de dados para DELETAR os dados da empresa| 404
+|Empresa|[27](# "ver no codigo")|Funcionario nao vinculado a empresa para DELETAR| 404
+|Empresa|[28](# "ver no codigo")|Funcionario sem permissao para DELETAR empresa| 403
