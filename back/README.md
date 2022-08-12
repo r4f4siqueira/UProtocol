@@ -1,5 +1,6 @@
 # 📃Api DOC
 ## ▶ Start Server
+After performing the steps on the repository homepage:
 `adonis serve --dev`
 
 or

@@ -1,5 +1,6 @@
 'use strict'
 
+const Database = use('Database')
 const FuncionarioEmpresa = use("App/Models/FuncionarioEmpresa")
 
 class FuncionarioEmpresaController {
@@ -23,6 +24,11 @@ class FuncionarioEmpresaController {
         return await FuncionarioEmpresa.findOrFail(params.id)
     }
 
+    async verificaVinculo(uid,empresa){
+        const result = await Database.table('funcionario_empresas').where('funcionario_uid',uid).where('empresa',empresa)
+        return result.length !== 0
+    }
+
     async alterarFuncionarioEmpresa({params, request}){
         const funcionarioEmpresa = await FuncionarioEmpresa.findOrFail(params.id);//Retorna erro caso nao encontrar
         const atualizaFuncionarioEmpresa = request.only(['empresa','funcionario'])
@@ -33,7 +39,7 @@ class FuncionarioEmpresaController {
         return funcionarioEmpresa
     }
 
-    async deletarUsuarioEmpresa({params}){
+    async deletarFuncionarioEmpresa({params}){
         const funcionarioEmpresa = await FuncionarioEmpresa.findOrFail(params.id)
         await funcionarioEmpresa.delete();
         return{mensagem: 'Funcionario relacionado a Empresa deletado'}

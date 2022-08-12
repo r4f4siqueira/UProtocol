@@ -9,6 +9,7 @@ class FuncionarioempresasSchema extends Schema {
       table.increments('id').primary()
       table.integer('empresa').references('empresas.id')
       table.integer('funcionario').references('funcionarios.id')
+      table.string('funcionario_uid')
       table.integer('setor').references('setors.id')
       table.string('cargo',1)
       table.integer('userc').references('funcionarios.id')

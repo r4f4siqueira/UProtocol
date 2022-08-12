@@ -29,7 +29,7 @@ class EmpresaController {
       //para acessar a informacao que eu quero, preciso saber a posicao do objeto no array e qual o atributo que preciso pegar
       //no caso para usar o id retornado preciso utilizar a variavel da seguinte forma:
       //idUser[0].id desta forma ira pegar somente o numero da id
-      const idUser = await Database.select('id','nome').table('funcionarios').where('uid',dataToCreate.uid)
+      const idUser = await Database.select('*').table('funcionarios').where('uid',dataToCreate.uid)
       //verifica se encontrou o usuario no banco de dados
       if (idUser.length===0){
         response?.status(404)
@@ -55,7 +55,7 @@ class EmpresaController {
             userc:idUser[0].id
           });
           //Fazer o vinculo do ususario na empresa criada
-          await funcionarioEmpresaC.vinculaFuncionarioEmpresa({request:{funcionario:idUser[0].id,empresa:novaEmpresa.id,cargo:'A',userc:idUser[0].id}})
+          await funcionarioEmpresaC.vinculaFuncionarioEmpresa({request:{funcionario:idUser[0].id,empresa:novaEmpresa.id,cargo:'A',userc:idUser[0].id,funcionario_uid:idUser[0].uid}})
           //retrnando os dados da empresa cadastrada
           return novaEmpresa
         }
