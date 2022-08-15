@@ -61,9 +61,3 @@ test("7 - Alterar dados EMPRESA: Inexistente", async({assert})=>{
   let alterarEmpresa = await empresaC.alterarEmpresa({params:{id:0}})
   assert.equal(7,alterarEmpresa.erro.codigo)
 })
-
-//Para este teste passar precisa ter uma empresa cadastrada, caso contrário ira retornar erro de empresa nao encontrada
-test('8 - Deletar EMPRESA: Sem userm',async({assert})=>{
-  let deletarEmpresa = await empresaC.deletarEmpresa({params:{id:1},request:{body:{userm:''}}})
-  assert.equal(17,deletarEmpresa.erro.codigo)
-})

@@ -1,11 +1,17 @@
 'use strict'
 
 const Setor = use('App/Models/Setor')
+const FuncionarioEmpresaController = require('./FuncionarioEmpresaController')
+const funcionarioEmpresaC = new FuncionarioEmpresaController()
 
 class SetorController {
     async criarSetor({request}){
-        const dataToCreate = request.only(['ativo','nome','userc','empresa',])
-        return await Setor.create(dataToCreate);
+        
+        
+        funcionarioEmpresaC.verificaVinculo()
+        
+//        const dataToCreate = request.only(['ativo','nome','userc','empresa',])
+//        return await Setor.create(dataToCreate);
     }
 
     async listarSetores(){
