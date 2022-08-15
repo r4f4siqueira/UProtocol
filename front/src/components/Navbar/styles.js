@@ -13,16 +13,11 @@ export const NavbarContainer = styled.nav`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
 
     z-index: 3;
 
     @media screen and (max-width: 700px) {
         display: none;
-    }
-
-    footer {
-        justify-self: flex-end;
     }
 `;
 
@@ -41,13 +36,12 @@ export const AvatarWrapper = styled.div`
 
 export const UserWrapper = styled(ContainerC)`
     max-width: 250px;
-    transition: all 250ms;
 
     :hover {
         box-shadow: -2px 0 5px black;
         cursor: pointer;
     }
-    padding-bottom: 1.5rem;
+    padding-bottom: 1rem;
     margin-bottom: 1rem;
     div {
         :hover {
@@ -57,39 +51,5 @@ export const UserWrapper = styled(ContainerC)`
     span:hover {
         * {
         }
-    }
-
-    border-bottom: 1px solid #6a74ff63;
-`;
-
-export const LinksWrapper = styled(ContainerC)``;
-
-export const NavFooter = styled.footer`
-    display: flex;
-    flex-direction: row;
-
-    justify-content: center;
-    align-items: center;
-
-    padding: 0.5rem 1rem;
-    width: 100%;
-
-    text-align: center;
-    color: crimson;
-    border: 1px solid;
-    background-color: #fde4e4;
-
-    transition: all 250ms;
-
-    :hover {
-        cursor: pointer;
-        background-color: #a85656;
-        color: #fde4e4;
-        border: 1px solid #a85656;
-    }
-
-    svg {
-        margin-right: 0.2rem;
-        margin-bottom: 0rem;
     }
 `;

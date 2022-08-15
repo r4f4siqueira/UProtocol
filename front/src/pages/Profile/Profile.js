@@ -120,7 +120,7 @@ function Profile() {
     return (
         <ContainerPage>
             <PageHeader title="Perfil do usuário">
-                <FaUser className="icon" />
+                <FaUser size="2rem" color="#1498d5" />
             </PageHeader>
             <PanelPage>
                 <FormWrapper>

@@ -1,16 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-
+import Navbar from "../../components/Navbar/Navbar";
 import { AuthContext } from "../../context/auth.tsx";
-import api from "../../services/backendAPI";
-import { MdDashboardCustomize } from "react-icons/md";
-
-import AsyncImage from "../../components/AsyncImage/AsyncImage";
-import PageHeader from "../../components/PageHeader/PageHeader";
-
 import { ContainerPage } from "../../styles/styles";
 import { BtLogout } from "./styles";
-
 function Dashboard() {
     const { logout, user } = useContext(AuthContext);
 
@@ -21,11 +13,33 @@ function Dashboard() {
         logout();
     }
 
+    const AsyncImage = (props) => {
+        const [loadedSrc, setLoadedSrc] = useState(null);
+        React.useEffect(() => {
+            setLoadedSrc(null);
+            if (props.src) {
+                const handleLoad = () => {
+                    setLoadedSrc(props.src);
+                };
+                const image = new Image();
+                image.addEventListener("load", handleLoad);
+                image.src = props.src;
+                return () => {
+                    image.removeEventListener("load", handleLoad);
+                };
+            }
+        }, [props.src]);
+        if (loadedSrc === props.src) {
+            return <img {...props} />;
+        }
+        return null;
+    };
+
     return (
         <ContainerPage>
-            <PageHeader title="Dashboard">
-                <MdDashboardCustomize className="icon" />
-            </PageHeader>
+            <p>pagina dashboard</p>
+            <AsyncImage alt="imagem usuario" referrerPolicy="no-referrer" src={user.avatar} />
+            <BtLogout onClick={handleLogout}>Deslogar</BtLogout>
         </ContainerPage>
     );
 }
