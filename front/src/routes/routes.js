@@ -84,8 +84,9 @@ function RoutesApp() {
                         </PrivateRoute>
                     }
                 />
+
                 <Route
-                    path="/company"
+                    path="/company/:tab"
                     element={
                         <PrivateRoute>
                             <PagesContainer>
@@ -96,7 +97,7 @@ function RoutesApp() {
                     }
                 />
                 <Route
-                    path="/protocols"
+                    path="/protocols/:tab"
                     element={
                         <PrivateRoute>
                             <PagesContainer>
@@ -107,7 +108,7 @@ function RoutesApp() {
                     }
                 />
                 <Route
-                    path="/clients"
+                    path="/clients/:tab"
                     element={
                         <PrivateRoute>
                             <PagesContainer>
@@ -117,7 +118,7 @@ function RoutesApp() {
                         </PrivateRoute>
                     }
                 />
-                <Route
+                {/* {<Route
                     path="/sectors"
                     element={
                         <PrivateRoute>
@@ -127,7 +128,7 @@ function RoutesApp() {
                             </PagesContainer>
                         </PrivateRoute>
                     }
-                />
+                />} */}
                 <Route
                     path="/priorities"
                     element={

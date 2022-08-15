@@ -48,16 +48,16 @@ function Navbar(props) {
                     </Titles>
                 </UserWrapper>
                 <LinksWrapper>
-                    <NavOption isSelected={props?.opt === "protocols"} title="Protocolos" navto="/protocols">
+                    <NavOption isSelected={props?.opt === "protocols"} title="Protocolos" navto="/protocols/overview">
                         <AiOutlineBars />
                     </NavOption>
-                    <NavOption isSelected={props?.opt === "company"} title="Empresas" navto="/company">
+                    <NavOption isSelected={props?.opt === "company"} title="Empresa" navto="/company/overview">
                         <BiBuildings />
                     </NavOption>
-                    <NavOption isSelected={props?.opt === "sectors"} title="Setores" navto="/sectors">
+                    {/* {<NavOption isSelected={props?.opt === "sectors"} title="Setores" navto="/sectors">
                         <FiGrid />
-                    </NavOption>
-                    <NavOption isSelected={props?.opt === "clients"} title="Clientes" navto="/clients">
+                    </NavOption>} */}
+                    <NavOption isSelected={props?.opt === "clients"} title="Clientes" navto="/clients/overview">
                         <BsPersonFill />
                     </NavOption>
                     <NavOption isSelected={props?.opt === "priorities"} title="Prioridades" navto="/priorities">
