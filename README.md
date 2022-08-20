@@ -1,9 +1,9 @@
 # UProtocol
 
-### After install PostegreSQL 14.4-1
-### After install node 16.15.1
+### Instalar PostgreSQL 14.4-1
+### Instalar node 16.15.1
 
-## Step 1 : Install dependencies
+## Passo 1 : Dependencias
 ### 📂 back
 ```bash
 cd back/
@@ -15,22 +15,29 @@ npm install -g @adonisjs/cli
 cd front/
 npm install
 ```
-## Step 2 : Create bd struture
+## Passo 2 : Estrutura do banco
 
-### 1 - Create database in PostgreSQL: `uprotocol`
+### 1 - Criar o banco de dados no PostgreSQL: `uprotocol`
 
 ```SQL
 CREATE DATABASE uprotocol
 ```
 
-2 - Run commands in terminal:
+2 - Executar as migracoes no terminal
 
 📂 back
 ```bash
 adonis migration:run
 ```
 
-## Step 3 : Run system
+## Passo 3 : Configurar Firebase
+Para a conexao com o firebase funcionar é necessário o arquivo ´firebaseConnection.js´,
+Esse arquivo é disponibilizado junto com a entrega da etapa para os professores que avaliarao
+ele deverá ser inserido em: ´📂front/📂src/📂services/´
+
+
+
+## Passo 4 : Iniciar o sistema
 
 📂 back
 ```bash
@@ -40,17 +47,17 @@ npm start
 ```bash
 npm start
 ```
-### Open http://localhost:3000/ in your browser
+### Abrir http://127.0.0.1:3000/ no seu navegador
 
-## More info
+## MAis informacoes
 
 ### Firebase
-It may be that the system does not work because the firebaseConnection.js file is missing;
+O Arquivo ´firebaseConnection.js´ pode ser gerado ao iniciar um projeto no [Firebase](https://firebase.google.com/ "Firebase"), se for utilizar outro banco pelo firebase, é necessário ativar:
+ - Firebase Auth com autenticacao por email e senha e Google
+ - Firestore Database
+Em caso de dúvidas ( [cheque a documentacao do firebase](https://firebase.google.com/docs/web/setup "Documentation"));
 
-Inside `front/src/services` put the file named `firebaseConnection.js` this file can be generated when creating a project in [Firebase](https://firebase.google.com/ "Firebase") ( [check the documentation](https://firebase.google.com/docs/web/setup "Documentation"));
-
-
-FirebaseConnection.js file structure:
+FirebaseConnection.js estrutura do arquivo:
 ```javascript
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -75,6 +82,5 @@ if (!firebase.apps.length) {
 export default firebase;
 ```
 
-### Test
-If you want to run the tests, just go to the `back/` folder and run the command `adonis test` in terminal.
-
+### Tests
+Para executar Testes, vá para a pasta `back/` e execute o comando `adonis test` no terminal.
