@@ -6,7 +6,7 @@ function Tabs(props) {
     const navigate = useNavigate();
 
     function handleNavigate(navto) {
-        console.log(navto);
+        // console.log(navto);
         if (navto && typeof navto === "string") {
             navigate(navto);
         }
@@ -20,6 +20,7 @@ function Tabs(props) {
                         onClick={() => {
                             handleNavigate(tab.navto);
                         }}
+                        className={props?.active === tab.navto ? "active" : ""}
                     >
                         <Titles>
                             {tab.icon}

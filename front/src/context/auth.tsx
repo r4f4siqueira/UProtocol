@@ -1,7 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import firebase from "../services/firebaseConnection";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { GoogleAuthProvider } from "firebase/auth";
+import api from "../services/backendAPI";
 
 export const AuthContext = createContext({});
 
@@ -12,7 +13,7 @@ function AuthProvider({ children }) {
     const [signed, setSigned] = useState(false);
 
     useEffect(() => {
-        //Quando abre o programa tenta pegar o usuário guardado no storage para logoar automaticamente
+        //Quando abre o programa tenta pegar o usuário guardado no storage para logar automaticamente
         firebase.auth().languageCode = "pt";
         setLoading(true);
         // passando ts ignore porque preciso que a variavel userstorage seja null ou json
@@ -33,6 +34,7 @@ function AuthProvider({ children }) {
             // console.log("login");
         }
         setLoading(false);
+        // eslint-disable-next-line
     }, []);
 
     /**
@@ -127,6 +129,7 @@ function AuthProvider({ children }) {
                                 break;
                             case "auth/too-many-requests":
                                 toast.error("Muitas tentativas falhas, aguarde alguns segundos");
+                                break; // esqueci por que nao coloquei isso antes
                             default:
                                 toast.error(error);
                                 console.log(error.code);
@@ -250,20 +253,35 @@ function AuthProvider({ children }) {
             case true:
                 // adicionar usuario no LS e sistema
                 if (userData) {
-                    // se existir obj useerdata, sem essa verificacao o typescript reclama la embaixo
+                    // se existir o obj userdata, sem essa verificacao o typescript reclama la embaixo
                     localStorage.setItem("@UProtocolUser", JSON.stringify(userData));
                     if (userData.avatar === null) {
-                        // se nao possuir avatar, recebe o placeholder
+                        // se nao possuir avatar, recebe um placeholder
                         userData.avatar = require("../assets/placeholder.png");
                     }
                     setUser(userData);
                     setSigned(true);
                     // console.log(userData);
-
                     // se for uma atualizacao de usuário, ex: perfil.
                     if (isEdit) {
                         toast.success("Salvo com sucesso!");
                     } else {
+                        const data = new FormData();
+                        data.append("ativo", "1");
+                        data.append("nome", userData.name);
+                        data.append("email", userData.email);
+                        data.append("uid", userData.uid);
+                        data.append("avatarURL", userData.avatar);
+                        api.post("/funcionario", data)
+                            .then((resp) => {
+                                console.log(resp);
+                            })
+                            .catch((err) => {
+                                if (err.code !== "ERR_BAD_RESPONSE") {
+                                    console.log(err);
+                                }
+                            });
+
                         toast.success("Bem vindo " + userData.name + "!");
                     }
                 } else {
@@ -300,7 +318,7 @@ function AuthProvider({ children }) {
      * @param   {boolean} uid  UID do usuario
      */
     async function manageAccount(op: boolean, uid) {
-        // seta a conta como ativa ou inativa dependendo de OP
+        // muda o estado da conta como ativa ou inativa dependendo de OP
         firebase
             .firestore()
             .collection("usuarios")

@@ -1,12 +1,11 @@
 //react
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 
 import { AiOutlineBars, AiOutlinePoweroff } from "react-icons/ai";
 import { BiBuildings } from "react-icons/bi";
 import { BsPersonFill } from "react-icons/bs";
 import { ImSortNumbericDesc } from "react-icons/im";
-import { FiGrid } from "react-icons/fi";
 
 import { AuthContext } from "../../context/auth.tsx";
 import AsyncImage from "../AsyncImage/AsyncImage";

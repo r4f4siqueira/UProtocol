@@ -25,6 +25,14 @@ export const Tab = styled(OptionWrapper)`
         }
         box-shadow: 0 3px 0 #1498d5;
     }
+    &.active {
+        background-color: #d9f8ff;
+        span {
+            color: #1498d5;
+            margin-left: 0rem;
+        }
+        box-shadow: 0 3px 0 #1498d5;
+    }
     margin-right: 1.5rem;
     border-radius: 0rem;
 

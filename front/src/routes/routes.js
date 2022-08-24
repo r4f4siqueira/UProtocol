@@ -13,7 +13,6 @@ import DUser from "../pages/DUser/DUser";
 import Company from "../pages/Company/Company";
 import Protocols from "../pages/Protocols/Protocols";
 import Clients from "../pages/Clients/Clients";
-import Sectors from "../pages/Sectors/Sectors";
 
 import { PagesContainer } from "../styles/styles";
 //componentes

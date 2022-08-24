@@ -13,7 +13,7 @@ function RouteWrapper({ children }) {
 
     // console.log(signed);
     if (children.type.name === "Login" || children.type.name === "Register") {
-        return signed ? <Navigate to="/dashboard" /> : children;
+        return signed ? <Navigate to="/protocols/overview" /> : children;
     } else {
         if (children.type.name === "DUser") {
             return signed ? !user.active ? children : <Navigate to="/" /> : <Navigate to="/" />;
