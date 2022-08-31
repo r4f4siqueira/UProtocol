@@ -73,8 +73,13 @@ class EmpresaController {
     }else{
       //vai no banco e busca a primeira empresa vinculada ao funcionario
       const idEmpresa = await Database.select('empresa').table('funcionario_empresas').where('funcionario_uid',user.uid).first()
-      const empresa = await Empresa.find(idEmpresa.empresa)
-      return empresa
+      if(idEmpresa===''||idEmpresa===null||idEmpresa===undefined){
+        response?.status(404)
+        return {erro:{codigo:31,msg: 'Funcionario sem empresa'}}
+      }else{
+        const empresa = await Empresa.find(idEmpresa.empresa)
+        return empresa
+      }
     }
 // const user = request.only(["uid"])
 // const codFuncionario = await Database.select('id').table('funcionarios').where('uid',user.uid)
