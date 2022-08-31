@@ -1,9 +1,10 @@
 # UProtocol
+## Passo 1 : Instalar Depêndencias
 
-### After install PostegreSQL 14.4-1
-### After install node 16.15.1
+### Instalar PostegreSQL 14.4-1
+### Instalar node 16.15.1
 
-## Step 1 : Install dependencies
+Obs: temos duas pastas **back** e **front**, pois o **back** funciona separado do **front**, logo precisa instalar as dependências de forma separada ex:
 ### 📂 back
 ```bash
 cd back/
@@ -15,50 +16,56 @@ npm install -g @adonisjs/cli
 cd front/
 npm install
 ```
-## Step 2 : Create bd struture
+## Passo 2 : Criar estrutura do banco de dados
 
-### 1 - Create database in PostgreSQL: `uprotocol`
+### 1 - Criar banco de dados no PostgreSQL: `uprotocol`
 
 ```SQL
 CREATE DATABASE uprotocol
 ```
 
-### 2 - Review the .env file
+### 2 - Revise o arquivo **.env**
 
-in `back/.env` set `DB_USER` and `DB_PASSWORD` according to your database username and password, as shown in the example below
-
-```javascript
-HOST=127.0.0.1
-PORT=3333
-NODE_ENV=development
-APP_NAME=AdonisJs
-APP_URL=http://${HOST}:${PORT}
-CACHE_VIEWS=false
-APP_KEY=bHaSTp0PIkZKnLqKdWRj0sYEcLj61GaG
-DB_CONNECTION=pg
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_USER=myUser
-DB_PASSWORD=myPassword
-DB_DATABASE=uprotocol
-HASH_DRIVER=bcrypt
+O arquivo se encontra em `back/.env`, verifique se os parametros estão de acordo com a instalação do postgreSQL, atenção para as linhas 
+```
+10|DB_PORT
+11|DB_USER
+12|DB_PASSWORD
+13|DB_DATABASE
+```
+Exemplo de como o arquivo deve ficar:
+```
+01|HOST=127.0.0.1
+02|PORT=3333
+03|NODE_ENV=development
+04|APP_NAME=AdonisJs
+05|APP_URL=http://${HOST}:${PORT}
+06|CACHE_VIEWS=false
+07|APP_KEY=bHaSTp0PIkZKnLqKdWRj0sYEcLj61GaG
+08|DB_CONNECTION=pg
+09|DB_HOST=127.0.0.1
+10|DB_PORT=5432
+11|DB_USER=postgres
+12|DB_PASSWORD=postgres
+13|DB_DATABASE=uprotocol
+14|HASH_DRIVER=bcrypt
 ```
 
-### 3 - Run commands in terminal:
+### 3 - Execute as **migrations**
 
 📂 back
 ```bash
 adonis migration:run
 ```
 
-## Step 3 : Review the firebaseConnection.js file
+## Passo 3 : Revise o arquivo **firebaseConnection.js**
 
-It may be that the system does not work because the firebaseConnection.js file is missing;
+Pode ser que o sistema não funcione porque o arquivo `firebaseConnection.js` não está no projeto;
 
-Inside `front/src/services` put the file named `firebaseConnection.js` this file can be generated when creating a project in [Firebase](https://firebase.google.com/ "Firebase") ( [check the documentation](https://firebase.google.com/docs/web/setup "Documentation"));
+Coloque o arquivo `firebaseConnection.js` no seguinte caminho `front/src/services`  este arquivo pode ser gerado ao criar um projeto no [Firebase](https://firebase.google.com/ "Firebase") ( [Verificar documentação do Firebase](https://firebase.google.com/docs/web/setup "Documentation"));
 
 
-firebaseConnection.js file structure:
+Estrutura do arquivo `firebaseConnection.js` :
 ```javascript
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -83,8 +90,8 @@ if (!firebase.apps.length) {
 export default firebase;
 ```
 
-## Step 4 : Run system
-In the command line terminal run:
+## Passo 4 : Execute o sistema
+Abra dois terminais de linha de comando, um na pasta `back/` e outro na pasta `front/` e execute os seguintes comandos:
 
 📂 back
 ```bash
@@ -94,9 +101,10 @@ adonis serve
 ```bash
 npm start
 ```
-### Open http://127.0.0.1:3000 in your browser
+### Acesse o link http://127.0.0.1:3000 no seu navegador
+Normalmente ao executar o comando `npm start` o projeto já será aberto em seu navegador, caso não abra acesse o link acima
 
-## More info
+## Mais informações
 
-### Test
-If you want to run the tests, just go to the `back/` folder and run the command `adonis test` in terminal.
+### Teste
+Caso queira executar os testes, basta ir até a pasta `back/` e executar o comando `adonis test` no terminal.

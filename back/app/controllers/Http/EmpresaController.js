@@ -63,9 +63,26 @@ class EmpresaController {
     }
   }
 
-  async listarEmpresas() {
+  async listarEmpresas({request,response}) {
+    //exemplo de url
+    //http://127.0.0.1:3333/empresa?uid=nN4TfCisXFdapqgYzWdg29ohWHe
+    const user = request.only(["uid"])
+    if (user.uid===''||user.uid===undefined||user.uid===null){
+      response?.status(400)
+      return {erro:{codigo:29,msg: 'Parametros invalidos para buscar empresas vinculadas ao funcionario'}}
+    }else{
+      //vai no banco e busca a primeira empresa vinculada ao funcionario
+      const idEmpresa = await Database.select('empresa').table('funcionario_empresas').where('funcionario_uid',user.uid).first()
+      const empresa = await Empresa.find(idEmpresa.empresa)
+      return empresa
+    }
+// const user = request.only(["uid"])
+// const codFuncionario = await Database.select('id').table('funcionarios').where('uid',user.uid)
+// const idEmpresa = await Database.select('empresa').table('funcionarios_empresas').where('funcionario',codFuncionario)
+// const dados = await Empresa.find(idEmpresa)
+//return dados
     //Lista todas as empresas cadastradas
-    return await Empresa.all();
+    //return await Empresa.all();
   }
 
   async dadosEmpresa({ params, response }) {

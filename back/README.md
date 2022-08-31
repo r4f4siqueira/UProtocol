@@ -60,3 +60,5 @@ or
 |Empresa|[26](# "ver no codigo")|Funcionario nao encontrado no banco de dados para DELETAR os dados da empresa| 404
 |Empresa|[27](# "ver no codigo")|Funcionario nao vinculado a empresa para DELETAR| 404
 |Empresa|[28](# "ver no codigo")|Funcionario sem permissao para DELETAR empresa| 403
+|Empresa|[29](# "ver no codigo")|Parametros invalidos para buscar empresas vinculadas ao funcionario| 400
+|Setor|[30](# "ver no codigo")|Parametros invalidos para buscar setores vinculadas a empresa| 400
