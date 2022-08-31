@@ -20,6 +20,11 @@ export const ContainerR = styled(ContainerC)`
     flex-direction: row;
 `;
 
+export const ContainerBTW = styled(ContainerC)`
+    flex-direction: row;
+    justify-content: space-between;
+`;
+
 export const ContainerCenter = styled(ContainerC)`
     height: 100%;
 `;
@@ -150,6 +155,23 @@ export const BtSubmit = styled(GButton)`
         :active {
             margin: 1.5rem 0 0 0;
             box-shadow: 0.3rem 0.3rem 1px grey;
+        }
+    }
+`;
+
+export const BtCancel = styled(BtSubmit)`
+    color: crimson;
+    background-color: #fde4e4;
+    outline: 1px solid;
+    :hover {
+        background-color: #a85656;
+        outline: 1px solid #a85656;
+        color: #fde4e4;
+    }
+    :disabled {
+        :hover {
+            background-color: #fde4e4;
+            color: crimson;
         }
     }
 `;

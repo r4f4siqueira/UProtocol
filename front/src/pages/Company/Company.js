@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import { useParams } from "react-router";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Tabs from "../../components/Tabs/Tabs";
+import { AuthContext } from "../../context/auth.tsx";
 
 import { BiBuildings } from "react-icons/bi";
 import { FiGrid } from "react-icons/fi";
 import { BsPersonBadge } from "react-icons/bs";
 
-import { ContainerCenter, ContainerPage, PanelPage, Titles } from "../../styles/styles";
-import { CompanyFormWrapper, CompanyOverview } from "./styles";
+import { BtCancel, BtSubmit, ContainerBTW, ContainerC, ContainerCenter, ContainerPage, ContainerR, PanelPage, Titles } from "../../styles/styles";
+import { CompanyFormWrapper, CompanyOverview, FormButtonsWrapper } from "./styles";
 import api from "../../services/backendAPI";
 import Input from "../../components/Input/Input";
 
@@ -24,20 +25,42 @@ function Company() {
     const navTab = "/company/" + tab;
     // console.log(navTab);
 
+    const [originalValues, setOriginalValues] = useState();
     const [company, setCompany] = useState();
     const [sectors, setSectors] = useState();
+
     const [loading, setLoading] = useState(false);
     const [hasCompany, setHasCompany] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    const { user } = useContext(AuthContext);
+
+    // OBS - achei melhor deixar tudo em um state company e alterando diretamente lá
+    // const [razaoSocial, setRazaoSocial] = useState(company?.razaosocial);
+    // const [nomeFantasia, setNomeFantasia] = useState(company?.fantasia);
+    // const [cnpjCpf, setCnpjCpf] = useState(company?.CPF_CNPJ);
+    // const CNPJ_CPF_REX = /(^\d{3}\.\d{3}\.\d{3}\-\d{2}$)|(^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$)/;
+    const isDisabled =
+        originalValues?.razaosocial === company?.razaosocial &&
+        originalValues?.fantasia === company?.fantasia &&
+        originalValues?.CNPJ_CPF === company?.CNPJ_CPF &&
+        originalValues?.ativo === company?.ativo;
 
     useEffect(() => {
         setLoading(true);
-        async function LoadCompanyData() {
+        function LoadCompanyData() {
             //PENDENTE - buscar a empresa que o funcionário atualmente de encontra
             //TEMPORARIO - Buscando atualmente a empresa de id = 1 que será a criada pelo usuário
-            api.get("/empresa/1")
-                .then((resp) => {
-                    console.log(resp);
-                    setCompany(resp.data);
+            const data = new FormData();
+            api.get(`/empresas`, { params: { uid: user.uid } })
+                .then(async (resp) => {
+                    // console.log(resp);
+                    const tcompany = resp.data;
+                    tcompany.userc = await (await api.get(`/funcionario/${tcompany.userc}`)).data.nome;
+                    tcompany.created_at = tcompany.created_at.substring(0, 10);
+                    setOriginalValues(tcompany);
+                    setCompany(tcompany);
+
                     setHasCompany(true);
                     setLoading(false);
                 })
@@ -45,6 +68,7 @@ function Company() {
                     if (err.response.data.erro) {
                         console.log(err.response.data.erro?.msg);
                     }
+                    console.log(err.response.data.erro?.msg);
                     setHasCompany(false);
                     setLoading(false);
                 });
@@ -52,11 +76,16 @@ function Company() {
         LoadCompanyData();
     }, []);
 
-    function handleSubmit() {
+    function handleSubmit(evt) {
+        evt.preventDefault();
         alert("bomdia");
     }
 
-    console.log(hasCompany);
+    function handleCancel() {
+        setCompany(originalValues);
+    }
+
+    console.log(company);
 
     if (loading) {
         return (
@@ -67,11 +96,9 @@ function Company() {
                 <PanelPage>
                     <Tabs Tabs={tabs} active={navTab} />
                     <ContainerCenter>
-                        <CompanyOverview>
-                            <Titles>
-                                <h1>Carregando...</h1>
-                            </Titles>
-                        </CompanyOverview>
+                        <Titles>
+                            <h1>Carregando...</h1>
+                        </Titles>
                     </ContainerCenter>
                 </PanelPage>
             </ContainerPage>
@@ -93,9 +120,67 @@ function Company() {
                             <ContainerCenter>
                                 <CompanyOverview>
                                     <CompanyFormWrapper>
-                                        <form onSubmit={handleSubmit}>
-                                            <Input label="Rasão social:" placeholder="Razão social" inputValue={company?.razaosocial} isValid={null} />
-                                            <Input label="Fantasia:" placeholder="Nome fantasia" inputValue={company?.fantasia} isValid={null} />
+                                        <form
+                                            onSubmit={(evt) => {
+                                                handleSubmit(evt);
+                                            }}
+                                        >
+                                            <Titles>
+                                                <ContainerBTW>
+                                                    <span>
+                                                        <h3>ID: {company?.id}</h3>
+                                                    </span>
+                                                    <span>
+                                                        <ContainerR>
+                                                            <h3>Ativo: </h3>
+                                                            <input
+                                                                title="ativo"
+                                                                type="checkbox"
+                                                                checked={company?.ativo}
+                                                                onChange={(e) => {
+                                                                    setCompany({ ...company, ativo: e.target.checked });
+                                                                }}
+                                                            />
+                                                        </ContainerR>
+                                                    </span>
+                                                </ContainerBTW>
+                                            </Titles>
+                                            <Input
+                                                label="Razão social:"
+                                                placeholder="Razão social"
+                                                inputValue={company?.razaosocial}
+                                                isValid={null}
+                                                ocHandler={(e) => {
+                                                    setCompany({ ...company, razaosocial: e.target.value });
+                                                }}
+                                            />
+                                            <Input
+                                                label="Fantasia:"
+                                                placeholder="Nome fantasia"
+                                                inputValue={company?.fantasia}
+                                                isValid={null}
+                                                ocHandler={(e) => {
+                                                    setCompany({ ...company, fantasia: e.target.value });
+                                                }}
+                                            />
+                                            <Input
+                                                label="CPNJ/CPF:"
+                                                placeholder="CPNJ/CPF"
+                                                inputValue={company?.CNPJ_CPF}
+                                                isValid={null}
+                                                ocHandler={(e) => {
+                                                    setCompany({ ...company, CNPJ_CPF: e.target.value });
+                                                }}
+                                            />
+
+                                            <FormButtonsWrapper>
+                                                <BtCancel disabled={saving ? true : isDisabled} type="button" onClick={handleCancel}>
+                                                    Cancelar
+                                                </BtCancel>
+                                                <BtSubmit disabled={saving ? true : isDisabled} type="submit">
+                                                    Salvar mudanças
+                                                </BtSubmit>
+                                            </FormButtonsWrapper>
                                         </form>
                                     </CompanyFormWrapper>
                                 </CompanyOverview>
