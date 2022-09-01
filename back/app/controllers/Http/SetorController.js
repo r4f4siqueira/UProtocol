@@ -8,8 +8,16 @@ const funcionarioEmpresaC = new FuncionarioEmpresaController()
 
 class SetorController {
     async criarSetor({request}){
-        const dataToCreate = request.only(['ativo','nome','userc','empresa',])
-        return await Setor.create(dataToCreate);
+        const dadosEnviados = request.only(['ativo','nome','empresa','uid'])
+        const idUser = await Database.select('id').table('funcionarios').where('uid',dadosEnviados.uid)
+        const novoSetor = await Setor.create({
+            ativo:dadosEnviados.ativo,
+            nome:dadosEnviados.nome,
+            empresa:dadosEnviados.empresa,
+            userc:idUser[0].id
+          });
+          Database.close(['pg'])
+        return novoSetor
     }
 
     async listarSetores({request,response}){
