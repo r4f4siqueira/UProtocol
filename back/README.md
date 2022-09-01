@@ -62,3 +62,5 @@ or
 |Empresa|[28](# "ver no codigo")|Funcionario sem permissao para DELETAR empresa| 403
 |Empresa|[29](# "ver no codigo")|Parametros invalidos para buscar empresas vinculadas ao funcionario| 400
 |Setor|[30](# "ver no codigo")|Parametros invalidos para buscar setores vinculadas a empresa| 400
+|Setor|[31](# "ver no codigo")|Setor não encontrado| 404
+|Setor|[32](# "ver no codigo")|Usuario não encontrado para alterar setor| 404

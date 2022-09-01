@@ -9,12 +9,12 @@ const funcionarioEmpresaC = new FuncionarioEmpresaController()
 class SetorController {
     async criarSetor({request}){
         const dadosEnviados = request.only(['ativo','nome','empresa','uid'])
-        const idUser = await Database.select('id').table('funcionarios').where('uid',dadosEnviados.uid)
+        const idUserC = await Database.select('id').table('funcionarios').where('uid',dadosEnviados.uid)
         const novoSetor = await Setor.create({
             ativo:dadosEnviados.ativo,
             nome:dadosEnviados.nome,
             empresa:dadosEnviados.empresa,
-            userc:idUser[0].id
+            userc:idUserC[0].id
           });
           Database.close(['pg'])
         return novoSetor
@@ -31,6 +31,7 @@ class SetorController {
             //vai no banco e busca a primeira empresa vinculada ao funcionario
             const idEmpresa = await Database.select('empresa').table('funcionario_empresas').where('funcionario_uid',user.uid).first()
             const setores = await Database.select('*').table('setors').where('empresa',idEmpresa.empresa)
+            Database.close(['pg'])
             return setores
         }
     }
@@ -39,14 +40,31 @@ class SetorController {
         return await Setor.findOrFail(params.id)
     }
 
-    async alterarSetor({params, request}){
-        const setor = await Setor.findOrFail(params.id);//Retorna erro caso nao encontrar
-        const atualizaSetor = request.only(['ativo','nome','userm'])
-
-        setor.merge(atualizaSetor);
-
-        await setor.save();
-        return setor
+    async alterarSetor({params, request,response}){
+        const setor = await Setor.find(params.id);//Retorna erro caso nao encontrar
+        if(setor===null || setor===undefined||setor===''){
+            response?.status(404)
+            Database.close(['pg'])
+            return {erro:{codigo:31,msg:'Setor não encontrado'}}
+        }else{
+            const dadosEnviados = request.only(['ativo','nome','uid'])
+            const idUserM = await Database.select('id').table('funcionarios').where('uid',dadosEnviados.uid)
+            if(idUserM[0]?.id===null||idUserM[0]?.id===''||idUserM[0]?.id===undefined){
+                response?.status(404)
+                Database.close(['pg'])
+                return {erro:{codigo:32,msg:'Usuario não encontrado para alterar setor'}}
+            }else{
+                const setorAtualizado = {
+                    ativo:dadosEnviados.ativo,
+                    nome:dadosEnviados.nome,
+                    userm:idUserM[0].id
+                  }
+                setor.merge(setorAtualizado)
+                await setor.save();
+                Database.close(['pg'])
+                return setor
+            }
+        }
     }
 
     async deletarSetor({params}){
