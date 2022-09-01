@@ -153,10 +153,27 @@ export const BtSubmit = styled(GButton)`
             background-color: #73c685;
         }
         :active {
-            margin: 1.5rem 0 0 0;
-            box-shadow: 0.3rem 0.3rem 1px grey;
         }
     }
+`;
+
+export const GBTable = styled(GButton)`
+    margin-top: 0rem;
+    transition: all 100ms;
+    :active {
+        transform: translate(0, 3px);
+        box-shadow: 0px 0px 0px #7c7c7c;
+    }
+`;
+
+export const TBEdit = styled(GBTable)`
+    background-color: #ffc831;
+    box-shadow: 0px 3px 0px #be8c00;
+`;
+
+export const TBRemove = styled(GBTable)`
+    background-color: #dc143c;
+    box-shadow: 0px 3px 0px #a70a29;
 `;
 
 export const BtCancel = styled(BtSubmit)`

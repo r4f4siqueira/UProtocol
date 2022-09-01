@@ -5,7 +5,13 @@ import { OptionWrapper } from "../NavOption/styles";
 
 export const TabsWrapper = styled(ContainerR)`
     justify-content: flex-start;
+
     border-bottom: 1px solid #a9c5db;
+
+    @media screen and (max-width: 700px) {
+        padding-bottom: 0.2rem;
+        overflow-x: auto;
+    }
 `;
 
 export const Tab = styled(OptionWrapper)`
