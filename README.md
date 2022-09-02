@@ -64,6 +64,8 @@ Pode ser que o sistema não funcione porque o arquivo `firebaseConnection.js` n�
 
 Coloque o arquivo `firebaseConnection.js` no seguinte caminho `front/src/services`  este arquivo pode ser gerado ao criar um projeto no [Firebase](https://firebase.google.com/ "Firebase") ( [Verificar documentação do Firebase](https://firebase.google.com/docs/web/setup "Documentation"));
 
+Esse arquivo é disponibilizado na entrega do módulo no classroom para os professores que irão avaliar 
+
 
 Estrutura do arquivo `firebaseConnection.js` :
 ```javascript
