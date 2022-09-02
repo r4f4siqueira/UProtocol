@@ -6,7 +6,12 @@ import { BsPencilFill, BsTrashFill } from "react-icons/bs";
 function TableSectors({ sectorList, setSector, handleRemoveSector }) {
     // console.log(sectorList);
 
-    sectorList = sectorList === undefined ? [{ id: "placeholder" }] : sectorList;
+    if(sectorList === undefined ||sectorList.length === 0 ){
+        sectorList =  [{ id: "ops!", nome:"Você não tem setores cadastrados!" }];
+    } else {
+        console.log(sectorList);
+    }
+    
 
     function handleSelectSector(index) {
         // console.log(sectorList[index]);
@@ -36,6 +41,11 @@ function TableSectors({ sectorList, setSector, handleRemoveSector }) {
                                 <td>{sector.nome}</td>
                                 <td>{sector.userc}</td>
                                 <td>{sector.ativo === "1" ? "Sim" : "Não"}</td>
+                                
+                                {sector.id === "ops!" 
+                                ? 
+                                "" 
+                                : 
                                 <td>
                                     <TBEdit
                                         onClick={() => {
@@ -51,7 +61,8 @@ function TableSectors({ sectorList, setSector, handleRemoveSector }) {
                                     >
                                         <BsTrashFill />
                                     </TBRemove>
-                                </td>
+                                </td>}
+                                
                             </tr>
                         );
                     })}

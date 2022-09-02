@@ -63,6 +63,7 @@ function Company() {
                 .then(async (resp) => {
                     // console.log(resp);
                     await setCompanyData(resp.data);
+                    loadSectorData();
                     setLoading(false);
                 })
                 .catch((err) => {
@@ -74,8 +75,6 @@ function Company() {
                 });
         }
         loadCompanyData();
-
-        loadSectorData();
     }, []);
 
     function loadSectorData() {

@@ -1,5 +1,6 @@
 'use strict'
 
+const Database = use('Database')
 const Funcionario = use("App/Models/Funcionario");
 
 class FuncionarioController {
@@ -12,20 +13,27 @@ class FuncionarioController {
         //Se tudo estiver ok cadastra o funcionario
         if (dataToCreate.uid === '' || dataToCreate.uid===null || dataToCreate.uid===undefined){
             response?.status(400)
+            Database.close(['pg'])
             return {erro:{codigo:18,msg:'UID inválida para criar funcionario'}}
+            
         }else{
             if (dataToCreate.nome===''||dataToCreate.nome===null|| dataToCreate.uid===undefined){
                 response?.status(400)
+                Database.close(['pg'])
                 return {erro:{codigo:19,msg:'Nome invalido para criar funcionario'}}
             }else{
                 if(dataToCreate.email===''||dataToCreate.email===null||dataToCreate.email===undefined){
                     response?.status(400)
+                    Database.close(['pg'])
                     return {erro:{codigo:20,msg:'Email invalido para criar funcionario'}}
                 }else{
-                    return await Funcionario.create(dataToCreate);
+                    const novoFuncionario = await Funcionario.create(dataToCreate);
+                    Database.close(['pg'])
+                    return novoFuncionario
                 }
             }
         }
+        
     }
 
     async listarFuncionario(){
