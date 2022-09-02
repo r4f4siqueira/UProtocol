@@ -1,10 +1,12 @@
 # UProtocol
 ## Passo 1 : Instalar Depêndencias
 
+
 ### Instalar PostegreSQL 14.4-1
 ### Instalar node 16.15.1
 
 Obs: temos duas pastas **back** e **front**, pois o **back** funciona separado do **front**, logo precisa instalar as dependências de forma separada ex:
+
 ### 📂 back
 ```bash
 cd back/
@@ -16,6 +18,7 @@ npm install -g @adonisjs/cli
 cd front/
 npm install
 ```
+
 ## Passo 2 : Criar estrutura do banco de dados
 
 ### 1 - Criar banco de dados no PostgreSQL: `uprotocol`
@@ -23,6 +26,7 @@ npm install
 ```SQL
 CREATE DATABASE uprotocol
 ```
+
 
 ### 2 - Revise o arquivo **.env**
 
@@ -51,12 +55,14 @@ Exemplo de como o arquivo deve ficar:
 14|HASH_DRIVER=bcrypt
 ```
 
+
 ### 3 - Execute as **migrations**
 
 📂 back
 ```bash
 adonis migration:run
 ```
+
 
 ## Passo 3 : Revise o arquivo **firebaseConnection.js**
 
@@ -68,6 +74,7 @@ Esse arquivo é disponibilizado na entrega do módulo no classroom para os profe
 
 
 Estrutura do arquivo `firebaseConnection.js` :
+
 ```javascript
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -92,6 +99,7 @@ if (!firebase.apps.length) {
 export default firebase;
 ```
 
+
 ## Passo 4 : Execute o sistema
 Abra dois terminais de linha de comando, um na pasta `back/` e outro na pasta `front/` e execute os seguintes comandos:
 
@@ -110,3 +118,4 @@ Normalmente ao executar o comando `npm start` o projeto já será aberto em seu 
 
 ### Teste
 Caso queira executar os testes, basta ir até a pasta `back/` e executar o comando `adonis test` no terminal.
+
