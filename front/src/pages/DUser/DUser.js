@@ -10,13 +10,13 @@ function DUser() {
     const { logout, manageAccount, user } = useContext(AuthContext);
 
     function handleLogout() {
-        console.log(user);
+        // console.log(user);
         logout();
     }
 
     function handleActivateAccount() {
         if (window.confirm("Você tem certeza que deseja reativar sua conta?")) {
-            console.log(user);
+            // console.log(user);
             manageAccount(true, user.uid);
         }
     }

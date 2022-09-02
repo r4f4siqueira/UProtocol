@@ -1,45 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import { AuthContext } from "../../context/auth.tsx";
+// import React, { useContext, useEffect, useState } from "react";
+// import { toast } from "react-toastify";
+
+// import { AuthContext } from "../../context/auth.tsx";
+// import api from "../../services/backendAPI";
+import { MdDashboardCustomize } from "react-icons/md";
+
+// import AsyncImage from "../../components/AsyncImage/AsyncImage";
+import PageHeader from "../../components/PageHeader/PageHeader";
+
 import { ContainerPage } from "../../styles/styles";
-import { BtLogout } from "./styles";
+// import { BtLogout } from "./styles";
+
 function Dashboard() {
-    const { logout, user } = useContext(AuthContext);
+    // const { logout, user } = useContext(AuthContext);
 
     // console.log(user);
 
-    function handleLogout() {
-        // console.log(user);
-        logout();
-    }
-
-    const AsyncImage = (props) => {
-        const [loadedSrc, setLoadedSrc] = useState(null);
-        React.useEffect(() => {
-            setLoadedSrc(null);
-            if (props.src) {
-                const handleLoad = () => {
-                    setLoadedSrc(props.src);
-                };
-                const image = new Image();
-                image.addEventListener("load", handleLoad);
-                image.src = props.src;
-                return () => {
-                    image.removeEventListener("load", handleLoad);
-                };
-            }
-        }, [props.src]);
-        if (loadedSrc === props.src) {
-            return <img {...props} />;
-        }
-        return null;
-    };
+    // function handleLogout() {
+    //     // console.log(user);
+    //     logout();
+    // }
 
     return (
         <ContainerPage>
-            <p>pagina dashboard</p>
-            <AsyncImage alt="imagem usuario" referrerPolicy="no-referrer" src={user.avatar} />
-            <BtLogout onClick={handleLogout}>Deslogar</BtLogout>
+            <PageHeader title="Dashboard">
+                <MdDashboardCustomize className="icon" />
+            </PageHeader>
         </ContainerPage>
     );
 }

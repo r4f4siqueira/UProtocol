@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.tsx";
 import DUser from "../pages/DUser/DUser";
-import Loading from "../pages/Loading/loading.js";
+import Loading from "../pages/Loading/Loading.js";
 
 function RouteWrapper({ children }) {
     const { signed, loading, user } = useContext(AuthContext);
@@ -13,7 +13,7 @@ function RouteWrapper({ children }) {
 
     // console.log(signed);
     if (children.type.name === "Login" || children.type.name === "Register") {
-        return signed ? <Navigate to="/dashboard" /> : children;
+        return signed ? <Navigate to="/protocols/overview" /> : children;
     } else {
         if (children.type.name === "DUser") {
             return signed ? !user.active ? children : <Navigate to="/" /> : <Navigate to="/" />;

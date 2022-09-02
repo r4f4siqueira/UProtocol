@@ -1,7 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import firebase from "../services/firebaseConnection";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { GoogleAuthProvider } from "firebase/auth";
+import api from "../services/backendAPI";
 
 export const AuthContext = createContext({});
 
@@ -12,12 +13,16 @@ function AuthProvider({ children }) {
     const [signed, setSigned] = useState(false);
 
     useEffect(() => {
+        //Quando abre o programa tenta pegar o usuário guardado no storage para logar automaticamente
         firebase.auth().languageCode = "pt";
         setLoading(true);
+        // passando ts ignore porque preciso que a variavel userstorage seja null ou json
         // @ts-ignore
         const userStorage = JSON.parse(localStorage.getItem("@UProtocolUser"));
         if (userStorage) {
+            // caso exista um usuario no local storage, irá realizar o processo de colocar no sistema
             if (userStorage.avatar === null) {
+                // se o usuario nao tiver avatar ele recebe um placeholder
                 userStorage.avatar = require("../assets/placeholder.png");
             }
             setUser(userStorage);
@@ -29,6 +34,7 @@ function AuthProvider({ children }) {
             // console.log("login");
         }
         setLoading(false);
+        // eslint-disable-next-line
     }, []);
 
     /**
@@ -42,12 +48,14 @@ function AuthProvider({ children }) {
             .auth()
             .createUserWithEmailAndPassword(data.email, data.password)
             .then(async (response) => {
+                // após criar o usuário no auth, coloca seus dados no firestore
                 await firebase
                     .firestore()
                     .collection("usuarios")
                     .doc(response.user?.uid)
                     .set({ name: data.name, avatar: null, email: response.user?.email, active: true })
                     .then(() => {
+                        // depois de salvar no firestore, salva no sistema o usuario atual
                         let userData = { uid: response.user?.uid, name: data.name, email: response.user?.email, avatar: null, active: true };
                         handleUser(userData, true, false);
                         setLoadAuth(false);
@@ -59,6 +67,7 @@ function AuthProvider({ children }) {
                     });
             })
             .catch((error) => {
+                // Sobreescrevendo alguns codigos comuns de erro
                 switch (error.code) {
                     case "auth/email-already-in-use":
                         toast.error("Email informado já está em uso");
@@ -81,19 +90,22 @@ function AuthProvider({ children }) {
      */
     async function login(userData: { email: string; password: string } | null, isGoogle: boolean) {
         setLoadAuth(true);
-
         if (!isGoogle) {
+            //se for login sem google, com email e senha
             if (userData) {
+                //se existir o obj userdata, loga com os dados da conta
                 await firebase
                     .auth()
                     .signInWithEmailAndPassword(userData.email, userData.password)
                     .then(async (response) => {
+                        //após logar, pega os dados no firestore
                         const firebaseUser = await firebase
                             .firestore()
                             .collection("usuarios")
                             .doc(response.user?.uid)
                             .get()
                             .catch((err) => console.log("erro ao buscar o usuario firebase auth:" + err));
+
                         const userData = {
                             uid: response.user?.uid,
                             name: firebaseUser?.data()?.name,
@@ -107,6 +119,7 @@ function AuthProvider({ children }) {
                     .catch((error) => {
                         handleUser(null, false, false);
                         setLoadAuth(false);
+                        // sobrescrevendo erros comuns
                         switch (error.code) {
                             case "auth/user-not-found":
                                 toast.error("Usuário não encontrado ou inexistente");
@@ -116,6 +129,7 @@ function AuthProvider({ children }) {
                                 break;
                             case "auth/too-many-requests":
                                 toast.error("Muitas tentativas falhas, aguarde alguns segundos");
+                                break; // esqueci por que nao coloquei isso antes
                             default:
                                 toast.error(error);
                                 console.log(error.code);
@@ -124,11 +138,13 @@ function AuthProvider({ children }) {
                     });
             }
         } else {
+            // se for login com o google
             const provider = new GoogleAuthProvider();
             await firebase
                 .auth()
                 .signInWithPopup(provider)
                 .then(async (response) => {
+                    // após login com o google, busca o usuario no firestore
                     const firebaseUser = await firebase.firestore().collection("usuarios").doc(response.user?.uid).get();
                     if (firebaseUser.exists) {
                         // const avatar = firebaseUser.data()?.avatar !== null ? firebaseUser.data()?.avatarUrl : response.user?.photoURL;
@@ -142,6 +158,7 @@ function AuthProvider({ children }) {
                                 .doc(response.user?.uid)
                                 .update({ avatar })
                                 .then(async () => {
+                                    // após atualizar o avatar, pega os dados atualizados do usuario no firestore
                                     const snapshot = await firebase.firestore().collection("usuarios").doc(response.user?.uid).get();
                                     const userData = {
                                         uid: response.user?.uid,
@@ -213,6 +230,7 @@ function AuthProvider({ children }) {
     }
 
     async function logout() {
+        //desloga do sistema
         firebase.auth().signOut();
         handleUser(null, false, false);
     }
@@ -227,23 +245,43 @@ function AuthProvider({ children }) {
     function handleUser(userData: { uid; name; email; avatar; active } | null, op: boolean, isEdit: boolean) {
         switch (op) {
             case false:
+                //remover usuario do LS e do sistema
                 localStorage.removeItem("@UProtocolUser");
                 setUser({});
                 setSigned(false);
                 break;
             case true:
+                // adicionar usuario no LS e sistema
                 if (userData) {
+                    // se existir o obj userdata, sem essa verificacao o typescript reclama la embaixo
                     localStorage.setItem("@UProtocolUser", JSON.stringify(userData));
                     if (userData.avatar === null) {
+                        // se nao possuir avatar, recebe um placeholder
                         userData.avatar = require("../assets/placeholder.png");
                     }
                     setUser(userData);
                     setSigned(true);
-                    console.log(userData);
-
+                    // console.log(userData);
+                    // se for uma atualizacao de usuário, ex: perfil.
                     if (isEdit) {
                         toast.success("Salvo com sucesso!");
                     } else {
+                        const data = new FormData();
+                        data.append("ativo", "1");
+                        data.append("nome", userData.name);
+                        data.append("email", userData.email);
+                        data.append("uid", userData.uid);
+                        data.append("avatarURL", userData.avatar);
+                        api.post("/funcionario", data)
+                            .then((resp) => {
+                                console.log(resp);
+                            })
+                            .catch((err) => {
+                                if (err.code !== "ERR_BAD_RESPONSE") {
+                                    console.log(err);
+                                }
+                            });
+
                         toast.success("Bem vindo " + userData.name + "!");
                     }
                 } else {
@@ -260,6 +298,7 @@ function AuthProvider({ children }) {
     }
 
     async function forgotPassword(email) {
+        // envia um email para a inbox do usuario para alterar sua senha
         await firebase
             .auth()
             .sendPasswordResetEmail(email)
@@ -279,6 +318,7 @@ function AuthProvider({ children }) {
      * @param   {boolean} uid  UID do usuario
      */
     async function manageAccount(op: boolean, uid) {
+        // muda o estado da conta como ativa ou inativa dependendo de OP
         firebase
             .firestore()
             .collection("usuarios")
@@ -298,6 +338,7 @@ function AuthProvider({ children }) {
                 console.log(err);
             })
             .finally(() => {
+                //atualiza o usuario no sistema idependente do que aconteceu
                 //@ts-ignore
                 handleUser({ ...user, active: op }, true);
             });

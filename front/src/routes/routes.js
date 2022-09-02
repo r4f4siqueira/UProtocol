@@ -4,16 +4,20 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./privateRoute";
 
 //paginas
-import Login from "../pages/Login/login";
-import Register from "../pages/Register/register";
-import Dashboard from "../pages/Dashboard/dashboard";
-import { PagesContainer } from "../styles/styles";
-import Navbar from "../components/Navbar/Navbar";
+import Login from "../pages/Login/Login";
+import Register from "../pages/Register/Register";
+import Dashboard from "../pages/Dashboard/Dashboard";
 import Profile from "../pages/Profile/Profile";
 import Error from "../pages/Error/Error";
 import DUser from "../pages/DUser/DUser";
+import Company from "../pages/Company/Company";
+import Protocols from "../pages/Protocols/Protocols";
+import Clients from "../pages/Clients/Clients";
 
+import { PagesContainer } from "../styles/styles";
 //componentes
+import Navbar from "../components/Navbar/Navbar";
+import Priorities from "../pages/Priorities/Priorities";
 
 function RoutesApp() {
     return (
@@ -50,6 +54,14 @@ function RoutesApp() {
                     }
                 />
                 <Route
+                    path="/inactiveAccount"
+                    element={
+                        <PrivateRoute>
+                            <DUser />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
                     path="/dashboard"
                     element={
                         <PrivateRoute>
@@ -61,20 +73,68 @@ function RoutesApp() {
                     }
                 />
                 <Route
-                    path="/inactiveAccount"
-                    element={
-                        <PrivateRoute>
-                            <DUser />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
                     path="/profile"
                     element={
                         <PrivateRoute>
                             <PagesContainer>
                                 <Navbar />
                                 <Profile />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/company/:tab"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar opt="company" />
+                                <Company />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/protocols/:tab"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar opt="protocols" />
+                                <Protocols />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/clients/:tab"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar opt="clients" />
+                                <Clients />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+                {/* {<Route
+                    path="/sectors"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar opt="sectors" />
+                                <Sectors />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />} */}
+                <Route
+                    path="/priorities"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar opt="priorities" />
+                                <Priorities />
                             </PagesContainer>
                         </PrivateRoute>
                     }
