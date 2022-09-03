@@ -41,7 +41,7 @@ class SetorController {
     }
 
     async alterarSetor({params, request,response}){
-        const setor = await Setor.find(params.id);//Retorna erro caso nao encontrar
+        const setor = await Setor.find(params.id);
         if(setor===null || setor===undefined||setor===''){
             response?.status(404)
             Database.close(['pg'])

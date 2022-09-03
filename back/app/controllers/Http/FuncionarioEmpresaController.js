@@ -5,6 +5,14 @@ const FuncionarioEmpresa = use("App/Models/FuncionarioEmpresa")
 
 class FuncionarioEmpresaController {
     async criarFuncionarioEmpresa({request}){
+        //Parametros nescessários para funcionar
+        //UID de quem ta querendo fazer o vinculo
+        //EMAIL da pessoa que o Administrador deseja vincular
+        //ID da empresa do administrador
+
+        //Com o UID e o ID da empresa eu verifico a permissão do usuário
+        //Com o email busco no banco o funcionario e realizo o vinculo
+        
         const dataToCreate = request.only(['empresa','funcionario'])
         return await FuncionarioEmpresa.create(dataToCreate);
     }

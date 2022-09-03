@@ -18,7 +18,7 @@ const Route = use("Route");
 
 //ROTAS PARA PEGAR DADOS "get"
 Route.get("/", () => {
-  return { msg: "Api FUNCIONA!!!" };
+  return { msg: "TODAS AS ROTAS PRECISAM DE UID!!!",api: 'OK'};
 }); //desativar esta rota assim que possivel
 
 Route.get('/empresa','EmpresaController.listarEmpresas')
@@ -30,8 +30,8 @@ Route.get("/conta/:id", "ContaController.dadosConta");
 Route.get("/setor", "SetorController.listarSetores");
 Route.get("/setor/:id", "SetorController.dadosSetor");
 
-Route.get("/funcionario", "FuncionarioController.listarFuncionario");
-Route.get("/funcionario/:id", "FuncionarioController.dadosFuncionario");
+Route.get("/funcionario", "FuncionarioController.dadosFuncionario");
+//Route.get("/funcionario/:id", "FuncionarioController.dadosFuncionario");
 
 Route.get("/funcionarioempresa", "FuncionarioEmpresaController.listarFuncionarioEmpresas");
 Route.get("/funcionarioempresa/:id", "FuncionarioEmpresaController.dadosFuncionarioEmpresa");

@@ -64,3 +64,7 @@ or
 |Setor|[30](# "ver no codigo")|Parametros invalidos para buscar setores vinculadas a empresa| 400
 |Setor|[31](# "ver no codigo")|Setor não encontrado| 404
 |Setor|[32](# "ver no codigo")|Usuario não encontrado para alterar setor| 404
+|Funcionario|[33](# "ver no codigo")|`uid` do usuário não informada| 400
+|Funcionario|[34](# "ver no codigo")|Nenhum funcionário encontrado| 404
+
+

@@ -36,31 +36,45 @@ class FuncionarioController {
         
     }
 
-    async listarFuncionario(){
-        return await Funcionario.all();
-    }
-
-    async dadosFuncionario({params, response}){
-        //Verifica se a id passada esta preenchida
-        //Se estiver preenchida verifica se encontrou o funcionario
-        //Se encontrar o funcionario retorna o funcionario encontrado
-        if(params.id===null||params.id===''||params.id===undefined){
+    //async listarFuncionarios(){
+    async dadosFuncionario({request,response}){
+        let retorno = null
+        const user = request.only(["uid"])
+        if (user.uid===''||user.uid===undefined||user.uid===null){
             response?.status(400)
-            return {erro:{codigo:21,msg:'Parametro invalido para consultar funcionario'}}
+            retorno = {erro:{codigo:33,msg: 'uid do usuário não informada'}}
         }else{
-            const dados = await Funcionario.find(params.id)
-            if(dados===null){
-                response?.status(400)
-                return {erro:{codigo:22,msg:'Funcionaro com ID:'+params.id+' nao encontrado'}}
-            }else{
-                return dados
+            retorno = await Database.select('*').table('funcionarios').where('uid',user.uid)
+            if(retorno.length===0){
+                response?.status(404)
+                retorno = {erro:{codigo:34,msg: 'Nenhum funcionário encontrado'}}
             }
-        }        
+        }
+        Database.close(['pg'])
+        return retorno
     }
 
-    async buscaPorUID({params,response}){
-        return await Funcionario.find(params.uid)
-    }
+    // async dadosFuncionario({params, response}){
+    //     //Verifica se a id passada esta preenchida
+    //     //Se estiver preenchida verifica se encontrou o funcionario
+    //     //Se encontrar o funcionario retorna o funcionario encontrado
+    //     if(params.id===null||params.id===''||params.id===undefined){
+    //         response?.status(400)
+    //         return {erro:{codigo:21,msg:'Parametro invalido para consultar funcionario'}}
+    //     }else{
+    //         const dados = await Funcionario.find(params.id)
+    //         if(dados===null){
+    //             response?.status(400)
+    //             return {erro:{codigo:22,msg:'Funcionaro com ID:'+params.id+' nao encontrado'}}
+    //         }else{
+    //             return dados
+    //         }
+    //     }        
+    // }
+
+    // async buscaPorUID({params,response}){
+    //     return await Funcionario.find(params.uid)
+    // }
 
     async alterarFuncionario({params, request}){
         //verificar se esta passando userm
