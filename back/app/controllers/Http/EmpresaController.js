@@ -6,6 +6,8 @@ const LogController = require("./LogController");
 const logC = new LogController()
 const FuncionarioEmpresaController = require('./FuncionarioEmpresaController')
 const funcionarioEmpresaC = new FuncionarioEmpresaController()
+const SetorController = require('./SetorController')
+const setorC = new SetorController()
 //const FuncionarioController = require('./FuncionarioController')
 //const funcionarioC = new FuncionarioController()
 
@@ -14,6 +16,7 @@ const Empresa = use("App/Models/Empresa");
 
 class EmpresaController {
   async criarEmpresa({ request,response }) {
+    let retorno = ''
     //userc = ID fornecida pelo firebase
     const dataToCreate = request.only(["ativo","CNPJ_CPF","razaosocial","fantasia","uid"]);
     
@@ -22,7 +25,7 @@ class EmpresaController {
     //Se USERC tiver preenchido cria a empresa
     if(dataToCreate.uid===null){
       response?.status(400)
-      return {erro:{codigo:0,msg: 'UID vazio para cadastrar nova empresa'}}
+      retorno = {erro:{codigo:0,msg: 'UID vazio para cadastrar nova empresa'}}
     }else{
       //variavel recebe a funcao para consultar a ID do usuario no banco de dados
       //funcao retorna um array de objetos
@@ -30,11 +33,10 @@ class EmpresaController {
       //no caso para usar o id retornado preciso utilizar a variavel da seguinte forma:
       //idUser[0].id desta forma ira pegar somente o numero da id
       const idUser = await Database.select('*').table('funcionarios').where('uid',dataToCreate.uid)
-      Database.close(['pg'])
       //verifica se encontrou o usuario no banco de dados
       if (idUser.length===0){
         response?.status(404)
-        return {erro:{codigo:22,msg:'Funcionario nao encontrado no banco de dados'}}
+        retorno = {erro:{codigo:22,msg:'Funcionario nao encontrado no banco de dados'}}
       }else{
 
         //verifica se o parametro fantasia esta preenchido
@@ -42,13 +44,13 @@ class EmpresaController {
         //se tiver preenchido cadastra a empresa no bd e retorna os dados que foram cadastrados
         if(dataToCreate.fantasia ===null || dataToCreate.fantasia===undefined){
           response?.status(400)
-          return {erro:{codigo:1,msg:'Nome ou Fantasia não preenchido para criar empresa'}}
+          retorno =  {erro:{codigo:1,msg:'Nome ou Fantasia não preenchido para criar empresa'}}
         } else{
           
           
           //salvar a empresa para depois fazer o vinculo da empresa com o usuario que criou
           //variavel idEmpresa recebe o retorno dos dados salvos no banco para poder pegar o id da empresa cadastrada
-          const novaEmpresa = await Empresa.create({
+          retorno = await Empresa.create({
             ativo:dataToCreate.ativo,
             CNPJ_CPF:dataToCreate.CNPJ_CPF,
             razaosocial:dataToCreate.razaosocial,
@@ -56,33 +58,49 @@ class EmpresaController {
             userc:idUser[0].id
           });
           //Fazer o vinculo do ususario na empresa criada
-          await funcionarioEmpresaC.vinculaFuncionarioEmpresa({request:{funcionario:idUser[0].id,empresa:novaEmpresa.id,cargo:'A',userc:idUser[0].id,funcionario_uid:idUser[0].uid}})
-          //retrnando os dados da empresa cadastrada
-          Database.close(['pg'])
-          return novaEmpresa
+          
+          const idSetor = await setorC.criarSetorEmpresa({request:{
+                                            ativo: 1,
+                                            nome: 'Geral',
+                                            empresa:retorno.id,
+                                            uid:idUser[0].uid
+          }})
+          await funcionarioEmpresaC.vinculaFuncionarioEmpresa({request:{
+                                                                        funcionario:idUser[0].id,
+                                                                        empresa:retorno.id,
+                                                                        cargo:'A',
+                                                                        userc:idUser[0].id,
+                                                                        funcionario_uid:idUser[0].uid,
+                                                                        setor: idSetor
+                                                                      }})
         }
       }
     }
+    Database.close(['pg'])
+    return retorno
   }
 
   async listarEmpresas({request,response}) {
     //exemplo de url
     //http://127.0.0.1:3333/empresa?uid=nN4TfCisXFdapqgYzWdg29ohWHe
+    let retorno =''
     const user = request.only(["uid"])
     if (user.uid===''||user.uid===undefined||user.uid===null){
       response?.status(400)
-      return {erro:{codigo:29,msg: 'Parametros invalidos para buscar empresas vinculadas ao funcionario'}}
+      retorno = {erro:{codigo:29,msg: 'Parametros invalidos para buscar empresas vinculadas ao funcionario'}}
     }else{
       //vai no banco e busca a primeira empresa vinculada ao funcionario
       const idEmpresa = await Database.select('empresa').table('funcionario_empresas').where('funcionario_uid',user.uid).first()
       if(idEmpresa===''||idEmpresa===null||idEmpresa===undefined){
         response?.status(404)
-        return {erro:{codigo:31,msg: 'Funcionario sem empresa'}}
+        retorno = {erro:{codigo:31,msg: 'Funcionario sem empresa'}}
       }else{
         const empresa = await Empresa.find(idEmpresa.empresa)
-        return empresa
+        retorno = empresa
       }
     }
+    Database.close(['pg'])
+    return retorno
 // const user = request.only(["uid"])
 // const codFuncionario = await Database.select('id').table('funcionarios').where('uid',user.uid)
 // const idEmpresa = await Database.select('empresa').table('funcionarios_empresas').where('funcionario',codFuncionario)
@@ -92,24 +110,43 @@ class EmpresaController {
     //return await Empresa.all();
   }
 
-  async dadosEmpresa({ params, response }) {
+  async dadosEmpresa({ params,request, response }) {
     //Verifica se os parametros de ID são validos
     //se for válido busca a empresa no banco
     //se não encontre retorna null
     //Se encontrar retorna os dados da empresa
+    let retorno = ''
 
     if(params.id===null||params.id ==='' || parseInt(params.id)===undefined){
       response?.status(400)
-      return {erro:{codigo:2,msg: 'Parametros invalidos para buscar dados, parametro passado:'+params.id}}
+      retorno = {erro:{codigo:2,msg: 'Parametros invalidos para buscar dados, parametro passado:'+params.id}}
     } else {
       const dados = await Empresa.find(params.id)
-      if (dados === null){
+      if (dados===null){
         response?.status(404)
-        return {erro:{codigo:3,msg: 'Empresa com ID:'+params.id+" Nao encontrada para buscar os dados"}}
+        retorno =  {erro:{codigo:3,msg: 'Empresa com ID:'+params.id+" Nao encontrada para buscar os dados"}}
       }else{
-        return dados
+        const user = request.only(["uid"])
+        const verificador = await Database.select('funcionario').table('funcionario_empresas').where('funcionario_uid',user.uid).where('empresa',params.id)
+        if(verificador.length<=0){
+          response?.status(404)
+          retorno = {erro:{codigo:35,msg:'Funcionário não vinculado a empresa'}}
+        }else{
+          retorno = await Empresa.find(params.id)
+        }
       }
     }
+    Database.close(['pg'])
+    return retorno
+    
+    //   const dados = await Empresa.find(params.id)
+    //   if (dados === null){
+    //     response?.status(404)
+    //     return {erro:{codigo:3,msg: 'Empresa com ID:'+params.id+" Nao encontrada para buscar os dados"}}
+    //   }else{
+    //     return dados
+    //   }
+    // }
 
     //return await Empresa.findOrFail(params.id);
     //find or Fail retorna coisa desnescessária, find é melhor para tratar

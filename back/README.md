@@ -8,8 +8,26 @@ or
 
 `adonis serve`
 
+## 📚 Funções:
+
+### 🏭 Empresa:
+| Nome | Parametros | Descrição | Sucesso |
+| ---- | ---------- | --------- | ------- |
+|criarEmpresa|`({request,response})`|A função obriga a passar as seguintes informações através da request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String,fantasia: String, uid:String`;|Retorna a empresa cadastrada;
+|listarEmpresas|`({request,response})`|Necessita que seja passado o `uid` do usuario que está solicitando as informações da emrpresa;|Retorna uma lista de empresas que o usuário está vinculado;
+|~~dadosEmpresa~~|`({params,request,response})`|Passa o codigo da empresa por parametro da URL;|Retorna os dados da empresa;
+|alterarEmpresa| `({params,request,response})`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String, fantasia: String, criador: int, uid: String`;|Atualiza os dados da empresa
+
+### 👷‍♂️ Funcionário:
+| Nome | Parametros | Descrição | Sucesso |
+| ---- | ---------- | --------- | ------- |
+|criarFuncionario|`({request,response})`|Por padrão o usuário é criado assim que é realizado o primeiro login no sistema, a função obriga a passar na request os seguintes dados: `ativo: boolean, nome: String, email: String, uid: String, avatarURL: String`;|Retorna os dados do usuário criado
+|dadosFuncionario|`({request,response})`|Necessita passar a `uid` através da request;|Retorna os dados do Funcionário;
+|~~dadosFuncionario~~|`({params,response})`|Informa a `id` por parametro da URL|Retorna os dados do Funcionário;
+
+
 ##  🚫 Permissoes:
-### 📄 Permissions Table
+### 📄 Tabela de Permissões
 | Codigo | Descricao |
 | ------ | --------- |
 | **A** | **Administrador:** quem criou a empresa ou que tenha poder de convidar funcionarios e alterar dados sobre a empresa
@@ -66,5 +84,5 @@ or
 |Setor|[32](# "ver no codigo")|Usuario não encontrado para alterar setor| 404
 |Funcionario|[33](# "ver no codigo")|`uid` do usuário não informada| 400
 |Funcionario|[34](# "ver no codigo")|Nenhum funcionário encontrado| 404
-
-
+|Empresa|[35](# "ver no codigo")|Funcionário não vinculado a empresa| 404
+|Setor|[36](# "ver no codigo")|Funcionário não encontrado no sistema| 404

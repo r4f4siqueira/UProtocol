@@ -19,6 +19,26 @@ class SetorController {
           Database.close(['pg'])
         return novoSetor
     }
+    
+    //Esta funcao é usada no controller da empresa para criar um setor assim que a empresa é criada
+    //Retorna a ID do setor para poder vincular no FuncionarioEmpresa
+    async criarSetorEmpresa({request,response}){
+        let retorno =''
+        const idUserC = await Database.select('id').table('funcionarios').where('uid',request.uid)
+        if (idUserC===null){
+            response?.(404)
+            retorno = {erro:{codigo:36,msg:'Funcionário não encontrado no sistema'}}
+        }else{
+            retorno = await Setor.create({
+                ativo:request.ativo,
+                nome:request.nome,
+                empresa:request.empresa,
+                userc:idUserC[0].id
+              });
+        }
+        Database.close(['pg'])
+        return retorno.id
+    }
 
     async listarSetores({request,response}){
         //exemplo de url
