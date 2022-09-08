@@ -27,8 +27,8 @@ Route.get("/empresa/:id", "EmpresaController.dadosEmpresa");
 Route.get("/conta", "ContaController.listarConta");
 Route.get("/conta/:id", "ContaController.dadosConta");
 
-Route.get("/setor", "SetorController.listarSetores");
-Route.get("/setor/:id", "SetorController.dadosSetor");
+Route.get("/setor/:empresa", "SetorController.listarSetores");
+//Route.get("/setor/:id", "SetorController.dadosSetor");
 
 Route.get("/funcionario", "FuncionarioController.dadosFuncionario");
 //Route.get("/funcionario/:id", "FuncionarioController.dadosFuncionario");

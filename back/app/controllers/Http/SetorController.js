@@ -2,22 +2,34 @@
 
 const Database = use('Database')
 
-const Setor = use('App/Models/Setor')
-const FuncionarioEmpresaController = require('./FuncionarioEmpresaController')
-const funcionarioEmpresaC = new FuncionarioEmpresaController()
+const LogController = require("./LogController");
+const logC = new LogController()
 
+const Setor = use('App/Models/Setor')
 class SetorController {
-    async criarSetor({request}){
+    async criarSetor({request,response}){
+        let retorno =''
         const dadosEnviados = request.only(['ativo','nome','empresa','uid'])
         const idUserC = await Database.select('id').table('funcionarios').where('uid',dadosEnviados.uid)
-        const novoSetor = await Setor.create({
-            ativo:dadosEnviados.ativo,
-            nome:dadosEnviados.nome,
-            empresa:dadosEnviados.empresa,
-            userc:idUserC[0].id
-          });
-          Database.close(['pg'])
-        return novoSetor
+        if(idUserC===null||idUserC===undefined||idUserC===[]){
+            response?.status(404)
+            retorno = {erro:{codigo:37,msg:'Funcionário não encontrado no sistema para criar setor'}}
+        }else{
+            const funcionarioEmpresa = await Database.select('*').table('funcionario_empresas').where('funcionario_uid',dadosEnviados.uid).where('empresa',dadosEnviados.empresa)
+            if(funcionarioEmpresa[0]?.cargo ==='F'||funcionarioEmpresa[0]?.cargo===undefined||funcionarioEmpresa[0]?.cargo===null){
+                response?.status(403)
+                retorno = {erro:{codigo:38,msg:'Funcionário sem permissão ou não vinculado a empresa para criar setor'}}
+            }else{
+                retorno = await Setor.create({
+                    ativo:dadosEnviados.ativo,
+                    nome:dadosEnviados.nome,
+                    empresa:dadosEnviados.empresa,
+                    userc:idUserC[0].id
+                });
+            }
+        }        
+        Database.close(['pg'])
+        return retorno
     }
     
     //Esta funcao é usada no controller da empresa para criar um setor assim que a empresa é criada
@@ -40,57 +52,102 @@ class SetorController {
         return retorno.id
     }
 
-    async listarSetores({request,response}){
+    async listarSetores({request,params,response}){
         //exemplo de url
-        //http://127.0.0.1:3333/setor?uid=nN4TfCisXFdapqgYzWdg29ohWHe
+        //http://127.0.0.1:3333/setor/1
+        let retorno = ''
         const user = request.only(["uid"])
         if (user.uid===''||user.uid===undefined||user.uid===null){
             response?.status(400)
-            return {erro:{codigo:30,msg: 'Parametros invalidos para buscar setores vinculadas a empresa'}}
+            retorno = {erro:{codigo:30,msg: 'Não informado uid para buscar setores vinculadas a empresa'}}
         }else{
-            //vai no banco e busca a primeira empresa vinculada ao funcionario
-            const idEmpresa = await Database.select('empresa').table('funcionario_empresas').where('funcionario_uid',user.uid).first()
-            const setores = await Database.select('*').table('setors').where('empresa',idEmpresa.empresa)
-            Database.close(['pg'])
-            return setores
+            //verifica se o funcionario esta vinculado a empresa
+            const verificaVinculo = await Database.select('*').table('funcionario_empresas').where('empresa',params.empresa).where('funcionario_uid',user.uid)
+            if(verificaVinculo[0]?.empresa===undefined||verificaVinculo[0]?.empresa===null){
+                response?.status(404)
+                retorno = {erro:{codigo:39,msg: 'Funcionario não vinculado a empresa'}}
+            }else{
+                retorno = await Database.select('*').table('setors').where('empresa',params.empresa).orWhere('empresa',null)
+            }
         }
+        Database.close(['pg'])
+        return retorno
     }
 
     async dadosSetor({params}){
         return await Setor.findOrFail(params.id)
     }
 
-    async alterarSetor({params, request,response}){
+    async alterarSetor({params,request,response}){
+        //exemplo de url
+        //http://127.0.0.1:3333/setor/1
+        let retorno =''
         const setor = await Setor.find(params.id);
         if(setor===null || setor===undefined||setor===''){
             response?.status(404)
-            Database.close(['pg'])
-            return {erro:{codigo:31,msg:'Setor não encontrado'}}
+            retorno = {erro:{codigo:31,msg:'Setor não encontrado'}}
         }else{
-            const dadosEnviados = request.only(['ativo','nome','uid'])
-            const idUserM = await Database.select('id').table('funcionarios').where('uid',dadosEnviados.uid)
-            if(idUserM[0]?.id===null||idUserM[0]?.id===''||idUserM[0]?.id===undefined){
-                response?.status(404)
-                Database.close(['pg'])
-                return {erro:{codigo:32,msg:'Usuario não encontrado para alterar setor'}}
+            if(setor.empresa===null){
+                response?.status(403)
+                retorno = {erro:{codigo:43,msg:'Setor '+ setor.nome +' não pode ser alterado'}}
             }else{
-                const setorAtualizado = {
-                    ativo:dadosEnviados.ativo,
-                    nome:dadosEnviados.nome,
-                    userm:idUserM[0].id
-                  }
-                setor.merge(setorAtualizado)
-                await setor.save();
-                Database.close(['pg'])
-                return setor
-            }
+                const dadosEnviados = request.only(['ativo','nome','uid','empresa'])
+                //busca no banco de dados as informacoes de vinculo do funcionario com a empresa para poder verificar se o funcionario tem permissao para alterar a empresa
+                const funcionario_empresas = await Database.select('*').table('funcionario_empresas').where('funcionario_uid',dadosEnviados.uid).where('empresa',dadosEnviados.empresa)
+                if(funcionario_empresas[0]?.empresa===undefined||funcionario_empresas[0]?.empresa===null){
+                    response?.status(404)
+                    retorno = {erro:{codigo:32,msg:'Funcionario não vinculado a empresa para alterar setor'}}
+                }else{
+                    if(funcionario_empresas[0]?.cargo==='F'){
+                        response?.status(403)
+                        retorno = {erro:{codigo:40,msg:'Funcionario sem permissão para alterar setor'}}
+                    }else{
+                        const novosDados = {
+                                    ativo:dadosEnviados.ativo,
+                                    nome:dadosEnviados.nome,
+                                    userm:funcionario_empresas[0].funcionario
+                        }
+                        await logC.novoLog({request:{operacao:'ALTERAR',tabela:'SETOR',coluna:'',valorantigo:JSON.stringify(setor),valornovo:JSON.stringify(setor),funcionario:funcionario_empresas[0].funcionario, empresa:funcionario_empresas[0].empresa}})
+                        setor.merge(novosDados)
+                        await setor.save();
+                        retorno = setor
+                    }
+                }
+            } 
         }
+        Database.close(['pg'])
+        return retorno
     }
 
-    async deletarSetor({params}){
-        const setor = await Setor.findOrFail(params.id)
-        await setor.delete();
-        return{mensagem: 'Setor deletado'}
+    async deletarSetor({params,request,response}){
+        let retorno =''
+        const setor = await Setor.find(params.id);
+        if(setor===null || setor===undefined||setor===''){
+            response?.status(400)
+            retorno = {erro:{codigo: 41,msg:'Parametros informados inválidos ou não informados'}}
+        }else{
+            const dadosEnviados = request.only(['uid'])
+            const funcionario_empresas = await Database.select('*').table('funcionario_empresas').where('funcionario_uid',dadosEnviados.uid).where('setor',params.id)
+            if(funcionario_empresas[0]?.empresa===undefined||funcionario_empresas[0]?.empresa===null){
+                response?.status(404)
+                retorno = {erro:{codigo:42,msg:'Funcionario não vinculado a empresa para excluir setor'}}
+            }else{
+                if(funcionario_empresas[0]?.cargo==='F'){
+                    response?.status(403)
+                    retorno = {erro:{codigo:40,msg:'Funcionario sem permissão para excluir setor'}}
+                }else{
+                    
+                    
+                    retorno = setor
+
+                    await setor.delete()
+                }
+            }
+        }
+        
+        // const setor = await Setor.findOrFail(params.id)
+        // await setor.delete();
+        // return{mensagem: 'Setor deletado'}
     }
 }
 

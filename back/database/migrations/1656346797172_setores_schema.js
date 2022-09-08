@@ -14,7 +14,7 @@ class SetoresSchema extends Schema {
       table.integer('empresa')
       table.timestamps()
     })
-  }
+  }  
 
   down () {
     this.drop('setors')

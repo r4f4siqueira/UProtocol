@@ -16,15 +16,25 @@ or
 |criarEmpresa|`({request,response})`|A função obriga a passar as seguintes informações através da request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String,fantasia: String, uid:String`;|Retorna a empresa cadastrada;
 |listarEmpresas|`({request,response})`|Necessita que seja passado o `uid` do usuario que está solicitando as informações da emrpresa;|Retorna uma lista de empresas que o usuário está vinculado;
 |~~dadosEmpresa~~|`({params,request,response})`|Passa o codigo da empresa por parametro da URL;|Retorna os dados da empresa;
-|alterarEmpresa| `({params,request,response})`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String, fantasia: String, criador: int, uid: String`;|Atualiza os dados da empresa
+|alterarEmpresa| `({params,request,response})`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String, fantasia: String, criador: int, uid: String`;|Atualiza os dados da empresa;
+|~~deletarEmpresa~~|`({params,request,response})`|Informar a id da empresa por parametro URL e a `uid` para verificar permissões;|Retorna os dados da empresa excluida
 
 ### 👷‍♂️ Funcionário:
 | Nome | Parametros | Descrição | Sucesso |
 | ---- | ---------- | --------- | ------- |
 |criarFuncionario|`({request,response})`|Por padrão o usuário é criado assim que é realizado o primeiro login no sistema, a função obriga a passar na request os seguintes dados: `ativo: boolean, nome: String, email: String, uid: String, avatarURL: String`;|Retorna os dados do usuário criado
 |dadosFuncionario|`({request,response})`|Necessita passar a `uid` através da request;|Retorna os dados do Funcionário;
-|~~dadosFuncionario~~|`({params,response})`|Informa a `id` por parametro da URL|Retorna os dados do Funcionário;
+|~~dadosFuncionario~~|`({params,response})`|Informa a `id` por parametro da URL;|Retorna os dados do Funcionário;
 
+### Setores:
+| Nome | Parametros | Descrição | Sucesso |
+| ---- | ---------- | --------- | ------- |
+|criarSetor|`({request,response})`|A função obriga a passar as seguintes informações: `ativo: int, nome: String, empresa: int, uid: String`;
+|~~dadosSetor~~|`({params})`|Informa o ID do setor por parametro URL|Retorna os dados do setor informado;
+|listarSetores|`({request,params,response})`|Informa o `id` da empresa por parametro URL e a `uid` para verificar vinculo do funcionario com a empresa;|Retorna uma lista com todos os setores da empresa;
+|criarSetorEmpresa|`({request,response})`|Função utilizada apenas para vincular o criador da empresa a um setor padrão;|Vincula o criador a um setor;
+|alterarSetor|`({params,request,response})`|Altera os dados do setor e necessita que seja informado a `id` do setor por parametro da URL e passar as seguintes informações: `ativo: int, nome: String, uid: String, empresa: int`;|Retorna o setor com os dados alterados;
+|deletarSetor|`({params,respose})`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor|Retorna os dados do setor deletado
 
 ##  🚫 Permissoes:
 ### 📄 Tabela de Permissões
@@ -45,7 +55,7 @@ or
 | 404 | Nao encontrado retorno para requisicao|
 
 
-### 📩 Errors Messages
+### 📩 Mensagens de erros
 | Entidade | Codigo | Mensagem | response
 | -------- | ------ | -------- | --------
 |Empresa|[0](# "ver no codigo")|UID vazio para cadastrar nova empresa | 400
@@ -79,10 +89,17 @@ or
 |Empresa|[27](# "ver no codigo")|Funcionario nao vinculado a empresa para DELETAR| 404
 |Empresa|[28](# "ver no codigo")|Funcionario sem permissao para DELETAR empresa| 403
 |Empresa|[29](# "ver no codigo")|Parametros invalidos para buscar empresas vinculadas ao funcionario| 400
-|Setor|[30](# "ver no codigo")|Parametros invalidos para buscar setores vinculadas a empresa| 400
+|Setor|[30](# "ver no codigo")|Não informado uid para buscar setores vinculadas a empresa| 400
 |Setor|[31](# "ver no codigo")|Setor não encontrado| 404
-|Setor|[32](# "ver no codigo")|Usuario não encontrado para alterar setor| 404
+|Setor|[32](# "ver no codigo")|Funcionario não vinculado a empresa para alterar setor| 404
 |Funcionario|[33](# "ver no codigo")|`uid` do usuário não informada| 400
 |Funcionario|[34](# "ver no codigo")|Nenhum funcionário encontrado| 404
 |Empresa|[35](# "ver no codigo")|Funcionário não vinculado a empresa| 404
 |Setor|[36](# "ver no codigo")|Funcionário não encontrado no sistema| 404
+|Setor|[37](# "ver no codigo")|Funcionário não encontrado no sistema para criar setor| 404
+|Setor|[38](# "ver no codigo")|Funcionário sem permissão ou não vinculado a empresa para criar setor| 403
+|Setor|[39](# "ver no codigo")|Funcionario não vinculado a empresa| 404
+|Setor|[40](# "ver no codigo")|Funcionario sem permissão para alterar setor| 403
+|Setor|[41](# "ver no codigo")|Parametros informados inválidos ou não informados| 400
+|Setor|[42](# "ver no codigo")|Funcionario não vinculado a empresa para excluir setor| 400
+|Setor|[43](# "ver no codigo")|Setor `setor.nome` não pode ser alterado'| 400
