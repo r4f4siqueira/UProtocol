@@ -16,8 +16,16 @@ import Input from "../../components/Input/Input";
 import { toast } from "react-toastify";
 import { FormWrapper } from "../Profile/styles";
 import TableSectors from "./TableSectors";
+import Employees from "./employees";
+import Sectors from "./sectors";
+
+import { useSelector, useDispatch } from "react-redux";
+import { getCompany } from "../../store/actions/company.tsx";
 
 function Company() {
+    const testCompany = useSelector((state) => state.Company);
+    const dispatch = useDispatch();
+
     const tabs = [
         { icon: <BiBuildings />, name: "Visão geral", navto: "/company/overview" },
         { icon: <FiGrid />, name: "Setores", navto: "/company/sectors" },
@@ -26,6 +34,7 @@ function Company() {
 
     const { tab } = useParams();
     const navTab = "/company/" + tab;
+    let selectedTab;
     // console.log(navTab);
     // empresa
     const [originalCompanyValues, setOriginalCompanyValues] = useState();
@@ -50,25 +59,22 @@ function Company() {
     const CNPJ_CPF_REX = /(^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$)|(^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}$)/;
     const hasError = company?.CNPJ_CPF === "" ? false : !CNPJ_CPF_REX.test(company?.CNPJ_CPF);
 
-    //setores
-    const [sectors, setSectors] = useState();
-    const [selectedSector, setSelectedSector] = useState();
-
     //PENDENTE - separar cada tab em um componente separado
     useEffect(() => {
         setLoading(true);
         //PENDENTE - separar essas funcoes em cada componente
+        dispatch(getCompany(user.uid));
         function loadCompanyData() {
             api.get(`/empresa`, { params: { uid: user.uid } })
                 .then(async (resp) => {
-                    // console.log(resp);
+                    console.log(resp);
                     await setCompanyData(resp.data);
-                    loadSectorData();
                     setLoading(false);
                 })
                 .catch((err) => {
                     if (err.response.data) {
-                        console.log(err.response.data.erro?.msg);
+                        console.log(err);
+                        console.log(err.response.data);
                     }
                     setHasCompany(false);
                     setLoading(false);
@@ -77,46 +83,8 @@ function Company() {
         loadCompanyData();
     }, []);
 
-    function loadSectorData() {
-        console.log(user.uid);
-        api.get("/setor", { params: { uid: user.uid } })
-            .then(async (resp) => {
-                // console.log(resp);
-                setSectorsData(resp.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                if (err.response.data) {
-                    console.log(err.response.data.erro?.msg);
-                }
-                setLoading(false);
-            });
-    }
-
-    async function setSectorsData(data) {
-        const tsectorlist = data;
-        tsectorlist.every((sector) => {
-            if (company?.id === sector.empresa) {
-                sector.empresa = company?.fantasia;
-            }
-            if (typeof sector.ativo === "boolean") {
-                if (sector.ativo === true) {
-                    sector.ativo = "1";
-                } else {
-                    sector.ativo = "0";
-                }
-            }
-            return true;
-        });
-
-        tsectorlist.sort((a, b) => b.id - a.id);
-
-        setSectors(tsectorlist);
-    }
-
     async function setCompanyData(data) {
         const tcompany = data;
-        tcompany.userc = await (await api.get(`/funcionario/${tcompany.userc}`)).data.nome;
         tcompany.created_at = tcompany.created_at.substring(0, 10);
         tcompany.CNPJ_CPF = tcompany.CNPJ_CPF === null ? "" : tcompany.CNPJ_CPF;
 
@@ -127,7 +95,7 @@ function Company() {
                 tcompany.ativo = "0";
             }
         }
-
+        console.log(tcompany);
         setOriginalCompanyValues(tcompany);
         setCompany(tcompany);
 
@@ -213,8 +181,7 @@ function Company() {
             case "overview":
                 //PENDENTE - trocar o formulário e esse modelo para apenas um display, criar uma
                 //pagina de cadastro/edição de empresas para lidar com isso.
-                //PENDENTE - trocar a tela de acordo com o state hasCompany, mostrando uma mensagem
-                //na tela se possui uma empresa ou nao e entao se quer cadastrar uma nova
+
                 return (
                     <ContainerPage>
                         <PageHeader title="Empresas">
@@ -350,160 +317,26 @@ function Company() {
                     </ContainerPage>
                 );
             case "sectors":
-                //PENDENTE - fazer a tela de listagem de setores (tabela ou lista) de acordo com o
-                //mockup, também criar uma tela de cadastro ou componente que vai ser utilizado com
-                //as outras entidades
-                function handleSector(evt) {
-                    evt.preventDefault();
-
-                    // se existir ID, editar setor
-                    if (selectedSector?.id) {
-                        const data = {
-                            id: selectedSector?.id,
-                            ativo: selectedSector?.ativo ? selectedSector?.ativo : "0",
-                            nome: selectedSector?.nome,
-                            uid: user.uid,
-                            empresa: company.id,
-                        };
-                        api.put(`/setor/${data.id}`, data)
-                            .then((resp) => {
-                                // console.log(resp);
-                                loadSectorData();
-                                toast.info("Setor editado com sucesso!");
-                                handleCancelSector();
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            });
-                    } else {
-                        // se nao existir ID, criar setor
-                        const data = {
-                            ativo: selectedSector?.ativo ? selectedSector?.ativo : "0",
-                            nome: selectedSector?.nome,
-                            empresa: company.id,
-                            uid: user.uid,
-                        };
-                        console.log("criar");
-                        console.log(data);
-                        api.post(`/setor`, data)
-                            .then((resp) => {
-                                console.log(resp);
-                                // addSector(resp.data);
-                                loadSectorData();
-                                toast.success("Setor criado com sucesso!");
-                                handleCancelSector();
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            });
-                    }
-                }
-
-                // function addSector(data) {
-                //     const tsector = data;
-                //     if (company?.id === tsector.empresa) {
-                //         tsector.empresa = company?.fantasia;
-                //     }
-                //     if (typeof tsector.ativo === "boolean") {
-                //         if (tsector.ativo === true) {
-                //             tsector.ativo = "1";
-                //         } else {
-                //             tsector.ativo = "0";
-                //         }
-                //     }
-                //     setSectors([...sectors, tsector]);
-                // }
-
-                function handleCancelSector() {
-                    setSelectedSector(null);
-                }
-                function handleRemoveSector(id) {
-                    if (window.confirm("Tem certeza?") === true) {
-                        api.delete(`/setor/${id}`)
-                            .then(() => {
-                                loadSectorData();
-                                toast.success("Setor deletado com sucesso!");
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            });
-                    }
-                }
-
-                const disableSubmit = selectedSector?.nome === undefined || selectedSector?.nome === "" || selectedSector === null;
-                return (
-                    <ContainerPage>
-                        <PageHeader title="Empresas">
-                            <BiBuildings className="icon" />
-                        </PageHeader>
-                        <PanelPage>
-                            <Tabs Tabs={tabs} active={navTab} />
-                            <FormSectors className={selectedSector?.id ? "edit" : ""}>
-                                <SectorFormWrapper>
-                                    <form
-                                        onSubmit={(evt) => {
-                                            handleSector(evt);
-                                        }}
-                                    >
-                                        <div className="center inputs">
-                                            <Input
-                                                label="Nome setor"
-                                                placeholder="Nome do setor"
-                                                inputValue={selectedSector?.nome}
-                                                isValid={null}
-                                                ocHandler={(e) => {
-                                                    setSelectedSector({ ...selectedSector, nome: e.target.value });
-                                                }}
-                                            />
-                                            <ContainerR className="detailsWrapper">
-                                                <Titles>{selectedSector?.id && `Selecionado: id - ${selectedSector?.id}`}</Titles>
-                                                <Titles className="ativoWrapper">
-                                                    <label>Ativo:</label>
-                                                    <input
-                                                        className="ativo"
-                                                        type="checkbox"
-                                                        checked={selectedSector?.ativo === "1" ? true : false}
-                                                        onChange={(e) => {
-                                                            setSelectedSector({ ...selectedSector, ativo: e.target.checked ? "1" : "0" });
-                                                        }}
-                                                    />
-                                                </Titles>
-                                            </ContainerR>
-                                        </div>
-                                        <div className="center submit">
-                                            <BtCancel disabled={disableSubmit} type="button" onClick={handleCancelSector}>
-                                                Cancelar
-                                            </BtCancel>
-                                            <BtSubmit disabled={disableSubmit} type="submit">
-                                                Gravar
-                                            </BtSubmit>
-                                        </div>
-                                    </form>
-                                </SectorFormWrapper>
-                            </FormSectors>
-                            <ListSectors>
-                                <TableSectors sectorList={sectors} setSector={setSelectedSector} handleRemoveSector={handleRemoveSector} />
-                            </ListSectors>
-                        </PanelPage>
-                    </ContainerPage>
-                );
+                selectedTab = <Sectors />;
+                break;
             case "employees":
-                return (
-                    <ContainerPage>
-                        <PageHeader title="Empresas">
-                            <BiBuildings className="icon" />
-                        </PageHeader>
-                        <PanelPage>
-                            <Tabs Tabs={tabs} active={navTab} />
-                            <Titles>
-                                <h1>Funcionarios</h1>
-                            </Titles>
-                        </PanelPage>
-                    </ContainerPage>
-                );
+                selectedTab = <Employees />;
+                break;
             default:
                 break;
         }
+
+        return (
+            <ContainerPage>
+                <PageHeader title="Empresas">
+                    <BiBuildings className="icon" />
+                </PageHeader>
+                <PanelPage>
+                    <Tabs Tabs={tabs} active={navTab} />
+                    {selectedTab}
+                </PanelPage>
+            </ContainerPage>
+        );
     }
 }
 

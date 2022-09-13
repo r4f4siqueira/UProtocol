@@ -141,10 +141,7 @@ export const BtSubmit = styled(GButton)`
     }
 
     :active {
-        margin-top: 1.7rem;
-        margin-bottom: -0.2rem;
-        margin-left: 0.3rem;
-
+        transform: translate(4px, 4px);
         box-shadow: 0.1rem 0.1rem 1px grey;
     }
 

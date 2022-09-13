@@ -5,23 +5,28 @@ import { GlobalStyle } from "./styles/global";
 import RoutesApp from "./routes/routes";
 import AuthProvider from "./context/auth.tsx";
 
+import { store } from "./store/store";
+import { Provider } from "react-redux";
+
 function App() {
     return (
         <AuthProvider>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-            />
-            <GlobalStyle />
-            <RoutesApp />
+            <Provider store={store}>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="colored"
+                />
+                <GlobalStyle />
+                <RoutesApp />
+            </Provider>
         </AuthProvider>
     );
 }

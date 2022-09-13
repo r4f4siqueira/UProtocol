@@ -118,7 +118,7 @@ export const SectorFormWrapper = styled(FormWrapper)`
 
 export const FormSectors = styled(Panel)`
     &.edit {
-        background-color: #fffac5;
+        background-color: #ffdf89;
     }
     padding: 1rem;
     margin-top: 1rem;
