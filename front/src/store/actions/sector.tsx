@@ -1,30 +1,32 @@
 import { toast } from "react-toastify";
 import api from "../../services/backendAPI";
-import { SET_ACTIVE, SET_COMPANY, SET_LOADING } from "../types/company";
+import { SET_SECTOR, SET_LOADING } from "../types/sector";
 
 /**
- * Pega os dados da empresa que o usuário se encontra
+ * Pega a lista de setores da empresa que o usuário se encontra
  * @param   {String} uid  UID do usuário que irá realizar a operação
+ * @param   {number} companyId  ID da empresa que o usuário está tentando buscar os dados
  */
-export const getCompany = (uid: String) => async (dispatch) => {
+export const getSectors = (uid: String, companyId: number) => async (dispatch) => {
     dispatch(setLoading(true));
-    console.log("buscando empresa");
+    console.log("buscando setores");
 
-    api.get(`/empresa`, { params: { uid } })
+    api.get(`/setor/${companyId}`, { params: { uid: uid } })
         .then(async (resp) => {
             // console.log(resp);
-            console.log("empresa encontrada");
+            console.log("setores encontrados");
             dispatch({
-                type: SET_COMPANY,
-                companyData: resp.data,
+                type: SET_SECTOR,
+                sectorList: resp.data,
             });
             dispatch(setLoading(false));
         })
         .catch((err) => {
-            if (err.response?.data) {
-                console.log(err.response.data);
+            if (err.response.data?.erro) {
+                console.log(err.response.data.erro.msg);
+            } else {
+                console.log(err);
             }
-            console.log(err);
             dispatch(setLoading(false));
         });
 };
@@ -32,11 +34,11 @@ export const getCompany = (uid: String) => async (dispatch) => {
 /**
  * Cria uma nova empresa no banco
  * @param   {String} uid  UID do usuário que irá realizar a operação
- * @param   {Object} company  Objeto com os dados da empresa  a ser criada
+ * @param   {Object} sector  Objeto com os dados da empresa  a ser criada
  */
-export const createCompany =
+export const createSector =
     (
-        company: {
+        sector: {
             ativo: String;
             CNPJ_CPF: String;
             razaosocial: String;
@@ -46,17 +48,17 @@ export const createCompany =
     ) =>
     async (dispatch) => {
         dispatch(setSaving(true));
-        if (!(company.ativo === "1" || company.ativo === "0")) {
+        if (!(sector.ativo === "1" || sector.ativo === "0")) {
             throw new Error("Campo ativo deve ser '0' ou '1'");
         }
         try {
-            api.post("/empresa", { ...company, uid }).then(async (resp) => {
+            api.post("/empresa", { ...sector, uid }).then(async (resp) => {
                 if (resp.status === 200) {
                     toast.success("Empresa criada com sucesso!");
 
                     dispatch({
-                        type: SET_COMPANY,
-                        companyData: resp.data,
+                        type: SET_SECTOR,
+                        sectorData: resp.data,
                     });
 
                     dispatch(setSaving(false));
@@ -71,12 +73,12 @@ export const createCompany =
 /**
  * Atualiza os dados da empresa atual
  * @param   {String} uid  UID do usuário que irá realizar a operação
- * @param   {Object} companyData  Objeto com os dados a serem alterados da empresa
+ * @param   {Object} sectorData  Objeto com os dados a serem alterados da empresa
  */
-export const updateCompany =
+export const updateSector =
     (
-        // OBS: Atualmente, companyData deve estar preenchido com todos os dados da empresa atual, junto com a mudança
-        companyData: {
+        // OBS: Atualmente, sectorData deve estar preenchido com todos os dados da empresa atual, junto com a mudança
+        sectorData: {
             id: Number;
             ativo: String;
             CNPJ_CPF: String;
@@ -90,14 +92,14 @@ export const updateCompany =
     ) =>
     async (dispatch) => {
         try {
-            api.put(`/empresa/${companyData.id}`, { ...companyData, uid })
+            api.put(`/empresa/${sectorData.id}`, { ...sectorData, uid })
                 .then(async (resp) => {
                     // console.log(resp);
                     if (resp.status === 200) {
                         toast.success("Empresa editada com sucesso!");
                         dispatch({
-                            type: SET_COMPANY,
-                            companyData: resp.data,
+                            type: SET_SECTOR,
+                            sectorData: resp.data,
                         });
                         dispatch(setSaving(false));
                     }
@@ -117,14 +119,14 @@ export const updateCompany =
 /**
  * Desativa/Ativa a empresa
  * @deprecated Não é necessário desativar/ativar empresa em uma chamada separada até que exista uma
- * rota dedicada da API para fazer o mesmo, por enquanto o updateCompany faz a mesma coisa
+ * rota dedicada da API para fazer o mesmo, por enquanto o updateSector faz a mesma coisa
  * @param   {String} uid  UID do usuário que irá realizar a operação
  * @param   {Boolean} operation  Estado que irá colocar a empresa
  */
-export const manageCompany = (uid: String, operation: boolean) => async (dispatch) => {
+export const manageSector = (uid: String, operation: boolean) => async (dispatch) => {
     dispatch(setSaving(true));
     try {
-        // api.put(`/empresa/${companyData.id}`, { ...companyData, uid })
+        // api.put(`/empresa/${sectorData.id}`, { ...sectorData, uid })
         // dispatch({
         //     type: SET_ACTIVE,
         //     active: operation,
@@ -139,7 +141,7 @@ export const manageCompany = (uid: String, operation: boolean) => async (dispatc
 };
 
 /**
- * Muda o estado de carregando da empresa
+ * Muda o estado de carregando
  * @param   {boolean} loading  Booleano que indica para qual estado vai mudar, carregando ou nao carregando
  */
 export const setLoading = (loading: Boolean) => (dispatch) => {
@@ -150,7 +152,7 @@ export const setLoading = (loading: Boolean) => (dispatch) => {
 };
 
 /**
- * Muda o estado de salvando da empresa
+ * Muda o estado de salvando
  * @param   {boolean} saving  Booleano que indica para qual estado vai mudar, salvando ou nao salvando
  */
 export const setSaving = (saving: Boolean) => (dispatch) => {

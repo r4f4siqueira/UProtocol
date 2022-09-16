@@ -2,7 +2,7 @@ import { SET_ACTIVE, SET_COMPANY, SET_LOADING, SET_SAVING } from "../types/compa
 
 export default function reducer(
     state = {
-        company: null,
+        companyData: null,
         hasCompany: false,
         isSaving: false,
         isLoading: false,
@@ -15,7 +15,7 @@ export default function reducer(
             // --------------------------------------------------------------
 
             // Tratando (formatando) os dados da empresa
-            const tcompany = action.company;
+            const tcompany = action.companyData;
             tcompany.created_at = tcompany.created_at.substring(0, 10);
             tcompany.CNPJ_CPF = tcompany.CNPJ_CPF === null ? "" : tcompany.CNPJ_CPF;
 
@@ -29,7 +29,7 @@ export default function reducer(
 
             return {
                 ...state,
-                company: tcompany,
+                companyData: tcompany,
                 hasCompany: true,
             };
         case SET_LOADING:
@@ -45,8 +45,8 @@ export default function reducer(
         case SET_ACTIVE:
             return {
                 ...state,
-                company: {
-                    ...state.company,
+                companyData: {
+                    ...state.companyData,
                     ativo: action.active,
                 },
             };
