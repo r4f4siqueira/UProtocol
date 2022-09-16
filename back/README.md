@@ -1,6 +1,6 @@
 # 📃Api DOC
 ## ▶ Start Server
-After performing the steps on the repository homepage:
+Depois de executar as etapas na página inicial do repositório, execute os comandos abaixo para iniciar o servidor:
 
 `adonis serve --dev`
 
@@ -8,41 +8,43 @@ or
 
 `adonis serve`
 
-## 📚 Funções:
-
-### 🏭 Empresa:
-| Nome | Parametros | Descrição | Sucesso |
-| ---- | ---------- | --------- | ------- |
-|criarEmpresa|`({request,response})`|A função obriga a passar as seguintes informações através da request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String,fantasia: String, uid:String`;|Retorna a empresa cadastrada;
-|listarEmpresas|`({request,response})`|Necessita que seja passado o `uid` do usuario que está solicitando as informações da emrpresa;|Retorna uma lista de empresas que o usuário está vinculado;
-|~~dadosEmpresa~~|`({params,request,response})`|Passa o codigo da empresa por parametro da URL;|Retorna os dados da empresa;
-|alterarEmpresa| `({params,request,response})`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String, fantasia: String, criador: int, uid: String`;|Atualiza os dados da empresa;
-|~~deletarEmpresa~~|`({params,request,response})`|Informar a id da empresa por parametro URL e a `uid` para verificar permissões;|Retorna os dados da empresa excluida
-
-### 👷‍♂️ Funcionário:
-| Nome | Parametros | Descrição | Sucesso |
-| ---- | ---------- | --------- | ------- |
-|criarFuncionario|`({request,response})`|Por padrão o usuário é criado assim que é realizado o primeiro login no sistema, a função obriga a passar na request os seguintes dados: `ativo: boolean, nome: String, email: String, uid: String, avatarURL: String`;|Retorna os dados do usuário criado
-|dadosFuncionario|`({request,response})`|Necessita passar a `uid` através da request;|Retorna os dados do Funcionário;
-|~~dadosFuncionario~~|`({params,response})`|Informa a `id` por parametro da URL;|Retorna os dados do Funcionário;
-
-### Setores:
-| Nome | Parametros | Descrição | Sucesso |
-| ---- | ---------- | --------- | ------- |
-|criarSetor|`({request,response})`|A função obriga a passar as seguintes informações: `ativo: int, nome: String, empresa: int, uid: String`;
-|~~dadosSetor~~|`({params})`|Informa o ID do setor por parametro URL|Retorna os dados do setor informado;
-|listarSetores|`({request,params,response})`|Informa o `id` da empresa por parametro URL e a `uid` para verificar vinculo do funcionario com a empresa;|Retorna uma lista com todos os setores da empresa;
-|criarSetorEmpresa|`({request,response})`|Função utilizada apenas para vincular o criador da empresa a um setor padrão;|Vincula o criador a um setor;
-|alterarSetor|`({params,request,response})`|Altera os dados do setor e necessita que seja informado a `id` do setor por parametro da URL e passar as seguintes informações: `ativo: int, nome: String, uid: String, empresa: int`;|Retorna o setor com os dados alterados;
-|deletarSetor|`({params,respose})`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor|Retorna os dados do setor deletado
-
-##  🚫 Permissoes:
+##  🚫 Permissões:
+Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis diferentes conforme mostra a tabela abaixo:
 ### 📄 Tabela de Permissões
 | Codigo | Descricao |
 | ------ | --------- |
-| **A** | **Administrador:** quem criou a empresa ou que tenha poder de convidar funcionarios e alterar dados sobre a empresa
+| **A** | **Administrador:** quem criou a empresa, essa permissão também pode ser concedida a um funcionário através de um administrador, com essa permissão o funcionario pode gerenciar a empresa por inteiro;
 | **G** | **Gerente:** tem poder de remover funcionarios da empresa, mas não pode alterar os dados da empresa
 | **F** | **Funcionario:** Apenas meche com os protocolos
+## 📚 Funções:
+
+### 🏭 Empresa:
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarEmpresa|`({request,response})`|A função obriga a passar as seguintes informações através da request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String,fantasia: String, uid:String`;|A|Retorna a empresa cadastrada;
+|listarEmpresas|`({request,response})`|Necessita que seja passado o `uid` do usuario que está solicitando as informações da emrpresa;|F|Retorna uma lista de empresas que o usuário está vinculado;
+|~~dadosEmpresa~~|`({params,request,response})`|Passa o codigo da empresa por parametro da URL;|F|Retorna os dados da empresa;
+|alterarEmpresa| `({params,request,response})`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String, fantasia: String, criador: int, uid: String`;|A|Atualiza os dados da empresa;
+|~~deletarEmpresa~~|`({params,request,response})`|Informar a id da empresa por parametro URL e a `uid` para verificar permissões;|A|Retorna os dados da empresa excluida
+
+### 👷‍♂️ Funcionário:
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarFuncionario|`({request,response})`|Por padrão o usuário é criado assim que é realizado o primeiro login no sistema, a função obriga a passar na request os seguintes dados: `ativo: boolean, nome: String, email: String, uid: String, avatarURL: String`;|-|Retorna os dados do usuário criado
+|dadosFuncionario|`({request,response})`|Necessita passar a `uid` através da request;|F|Retorna os dados do Funcionário;
+|~~dadosFuncionario~~|`({params,response})`|Informa a `id` por parametro da URL;|F|Retorna os dados do Funcionário;
+
+### 🦾 Setor:
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarSetor|`({request,response})`|A função obriga a passar as seguintes informações: `ativo: int, nome: String, empresa: int, uid: String`;|G|Retorna os dados do setor criado;
+|~~dadosSetor~~|`({params})`|Informa o ID do setor por parametro URL|F|Retorna os dados do setor informado;
+|listarSetores|`({request,params,response})`|Informa o `id` da empresa por parametro URL e a `uid` para verificar vinculo do funcionario com a empresa;|F|Retorna uma lista com todos os setores da empresa;
+|criarSetorEmpresa|`({request,response})`|Função utilizada apenas para vincular o criador da empresa a um setor padrão;|A|Vincula o criador a um setor;
+|alterarSetor|`({params,request,response})`|Altera os dados do setor e necessita que seja informado a `id` do setor por parametro da URL e passar as seguintes informações: `ativo: int, nome: String, uid: String, empresa: int`;|G|Retorna o setor com os dados alterados;
+|deletarSetor|`({params,respose})`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor;|G|Retorna os dados do setor deletado;
+
+
 
 ## ⛔ Erros:
 
@@ -103,3 +105,5 @@ or
 |Setor|[41](# "ver no codigo")|Parametros informados inválidos ou não informados| 400
 |Setor|[42](# "ver no codigo")|Funcionario não vinculado a empresa para excluir setor| 400
 |Setor|[43](# "ver no codigo")|Setor `setor.nome` não pode ser alterado'| 400
+|Setor|[44](# "ver no codigo")|Setor não encontrado'| 404
+|Setor|[45](# "ver no codigo")|Setor Geral não pode ser excluido ou alterado'| 401

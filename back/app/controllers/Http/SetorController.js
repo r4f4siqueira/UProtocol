@@ -46,7 +46,7 @@ class SetorController {
                 nome:request.nome,
                 empresa:request.empresa,
                 userc:idUserC[0].id
-              });
+            });
         }
         Database.close(['pg'])
         return retorno.id
@@ -103,9 +103,9 @@ class SetorController {
                         retorno = {erro:{codigo:40,msg:'Funcionario sem permissão para alterar setor'}}
                     }else{
                         const novosDados = {
-                                    ativo:dadosEnviados.ativo,
-                                    nome:dadosEnviados.nome,
-                                    userm:funcionario_empresas[0].funcionario
+                            ativo:dadosEnviados.ativo,
+                            nome:dadosEnviados.nome,
+                            userm:funcionario_empresas[0].funcionario
                         }
                         await logC.novoLog({request:{operacao:'ALTERAR',tabela:'SETOR',coluna:'',valorantigo:JSON.stringify(setor),valornovo:JSON.stringify(setor),funcionario:funcionario_empresas[0].funcionario, empresa:funcionario_empresas[0].empresa}})
                         setor.merge(novosDados)
@@ -121,30 +121,43 @@ class SetorController {
 
     async deletarSetor({params,request,response}){
         let retorno =''
-        const setor = await Setor.find(params.id);
-        if(setor===null || setor===undefined||setor===''){
-            response?.status(400)
-            retorno = {erro:{codigo: 41,msg:'Parametros informados inválidos ou não informados'}}
+        if(params.id==1){
+            response?.status(401)
+            retorno = {erro:{codigo: 45,msg:'Setor Geral não pode ser excluido ou alterado'}}
         }else{
-            const dadosEnviados = request.only(['uid'])
-            const funcionario_empresas = await Database.select('*').table('funcionario_empresas').where('funcionario_uid',dadosEnviados.uid).where('setor',params.id)
-            if(funcionario_empresas[0]?.empresa===undefined||funcionario_empresas[0]?.empresa===null){
-                response?.status(404)
-                retorno = {erro:{codigo:42,msg:'Funcionario não vinculado a empresa para excluir setor'}}
+            if(params.id===undefined||params.id===null||params.id===''){
+                response?.status(400)
+                retorno = {erro:{codigo: 41,msg:'Parametros informados inválidos ou não informados'}}
             }else{
-                if(funcionario_empresas[0]?.cargo==='F'){
-                    response?.status(403)
-                    retorno = {erro:{codigo:40,msg:'Funcionario sem permissão para excluir setor'}}
+                const setor = await Setor.find(params.id);
+                if(setor===null || setor===undefined||setor===''){
+                    response?.status(404)
+                retorno = {erro:{codigo: 44,msg:'Setor não encontrado'}}
                 }else{
-                    
-                    
-                    retorno = setor
-
-                    await setor.delete()
+                    const dadosEnviados = request.only(['uid'])
+                    const funcionario_empresas = await Database.select('*').table('funcionario_empresas').where('funcionario_uid',dadosEnviados.uid).where('empresa',setor.empresa)
+                    if(funcionario_empresas[0]?.empresa===undefined||funcionario_empresas[0]?.empresa===null){
+                        response?.status(404)
+                        retorno = {erro:{codigo:42,msg:'Funcionario não vinculado a empresa para excluir setor'}}
+                    }else{
+                        if(funcionario_empresas[0]?.cargo==='F'){
+                            response?.status(403)
+                            retorno = {erro:{codigo:40,msg:'Funcionario sem permissão para excluir setor'}}
+                        }else{
+                            await Database.table('funcionario_empresas')
+                                .where('setor',setor.id)
+                                .update('setor','1')
+                            retorno = setor
+                            await setor.delete()
+                        }
+                    }
                 }
             }
+            //Fecha a conexão aqui pois primeiro precisa requisitar algo no banco de dados para poder usar o Database.close
+            //caso coloque fora desse if o servidor retorna um erro informando que close não é uma função de Database;
+            Database.close(['pg'])
         }
-        
+        return retorno
         // const setor = await Setor.findOrFail(params.id)
         // await setor.delete();
         // return{mensagem: 'Setor deletado'}

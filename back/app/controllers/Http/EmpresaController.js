@@ -58,13 +58,14 @@ class EmpresaController {
             userc:idUser[0].id
           });
           //Fazer o vinculo do ususario na empresa criada
-          await funcionarioEmpresaC.vinculaFuncionarioEmpresa({request:{
-                                                                        funcionario:idUser[0].id,
-                                                                        empresa:retorno.id,
-                                                                        cargo:'A',
-                                                                        userc:idUser[0].id,
-                                                                        funcionario_uid:idUser[0].uid,
-                                                                        setor: 1
+          await funcionarioEmpresaC.vinculaFuncionarioEmpresa({
+            request:{
+              funcionario:idUser[0].id,
+              empresa:retorno.id,
+              cargo:'A',
+              userc:idUser[0].id,
+              funcionario_uid:idUser[0].uid,
+              setor: 1
           }})
         }
       }
