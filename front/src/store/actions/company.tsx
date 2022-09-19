@@ -25,6 +25,10 @@ export const getCompany = (uid: String) => async (dispatch) => {
                 console.log(err.response.data);
             }
             console.log(err);
+            dispatch({
+                type: SET_COMPANY,
+                companyData: null,
+            });
             dispatch(setLoading(false));
         });
 };

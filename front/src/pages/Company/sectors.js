@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 
 import api from "../../services/backendAPI";
 import { AuthContext } from "../../context/auth.tsx";
-import { getSectors } from "../../store/actions/sector.tsx";
 
 import { FormSectors, ListSectors, SectorFormWrapper } from "./styles";
 import { BtCancel, BtSubmit, ContainerR, Titles } from "../../styles/styles";
@@ -13,6 +12,7 @@ import { BtCancel, BtSubmit, ContainerR, Titles } from "../../styles/styles";
 import Input from "../../components/Input/Input";
 import TableSectors from "./TableSectors";
 import Loading from "../Loading/Loading";
+import { createSector, deleteSector, updateSector, getSectors } from "../../store/actions/sector.tsx";
 
 function Sectors() {
     const dispatch = useDispatch();
@@ -30,9 +30,9 @@ function Sectors() {
         if (originalSectors.sectorList.length > 0) {
             setSectors(originalSectors.sectorList);
         }
-    }, []);
+    }, [originalSectors.sectorList]);
 
-    function handleSector(evt) {
+    async function handleSector(evt) {
         evt.preventDefault();
 
         // se existir ID, editar setor
@@ -44,16 +44,8 @@ function Sectors() {
                 uid: user.uid,
                 empresa: company.id,
             };
-            api.put(`/setor/${data.id}`, data)
-                .then((resp) => {
-                    // console.log(resp);
-                    // loadSectorData();
-                    toast.info("Setor editado com sucesso!");
-                    handleCancelSector();
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            await dispatch(updateSector(data, user.uid));
+            handleCancelSector();
         } else {
             // se nao existir ID, criar setor
             const data = {
@@ -64,17 +56,8 @@ function Sectors() {
             };
             console.log("criar");
             console.log(data);
-            api.post(`/setor`, data)
-                .then((resp) => {
-                    console.log(resp);
-                    // addSector(resp.data);
-                    // loadSectorData();
-                    toast.success("Setor criado com sucesso!");
-                    handleCancelSector();
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            await dispatch(createSector(data, user.uid));
+            handleCancelSector();
         }
     }
 
@@ -83,14 +66,7 @@ function Sectors() {
     }
     function handleRemoveSector(id) {
         if (window.confirm("Tem certeza?") === true) {
-            api.delete(`/setor/${id}`)
-                .then(() => {
-                    // loadSectorData();
-                    toast.success("Setor deletado com sucesso!");
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            dispatch(deleteSector(id, user.uid, company.id));
         }
     }
 

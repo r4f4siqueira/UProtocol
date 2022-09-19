@@ -5,9 +5,9 @@ import { SET_SECTOR, SET_LOADING } from "../types/sector";
 /**
  * Pega a lista de setores da empresa que o usuário se encontra
  * @param   {String} uid  UID do usuário que irá realizar a operação
- * @param   {number} companyId  ID da empresa que o usuário está tentando buscar os dados
+ * @param   {Number} companyId  ID da empresa que o usuário está tentando buscar os dados
  */
-export const getSectors = (uid: String, companyId: number) => async (dispatch) => {
+export const getSectors = (uid: String, companyId: Number) => async (dispatch) => {
     dispatch(setLoading(true));
     console.log("buscando setores");
 
@@ -33,37 +33,37 @@ export const getSectors = (uid: String, companyId: number) => async (dispatch) =
 
 /**
  * Cria uma nova empresa no banco
+ * @param   {Object} sectorData  Objeto com os dados da empresa  a ser criada
  * @param   {String} uid  UID do usuário que irá realizar a operação
- * @param   {Object} sector  Objeto com os dados da empresa  a ser criada
  */
 export const createSector =
     (
-        sector: {
+        sectorData: {
+            id: Number;
             ativo: String;
-            CNPJ_CPF: String;
-            razaosocial: String;
-            fantasia: String;
+            nome: String;
+            uid: String;
+            empresa: Number;
         },
         uid: String
     ) =>
     async (dispatch) => {
         dispatch(setSaving(true));
-        if (!(sector.ativo === "1" || sector.ativo === "0")) {
+        if (!(sectorData.ativo === "1" || sectorData.ativo === "0")) {
             throw new Error("Campo ativo deve ser '0' ou '1'");
         }
         try {
-            api.post("/empresa", { ...sector, uid }).then(async (resp) => {
-                if (resp.status === 200) {
-                    toast.success("Empresa criada com sucesso!");
-
-                    dispatch({
-                        type: SET_SECTOR,
-                        sectorData: resp.data,
-                    });
-
-                    dispatch(setSaving(false));
-                }
-            });
+            api.post(`/setor`, { ...sectorData, uid })
+                .then(async (resp) => {
+                    console.log(resp.data);
+                    await dispatch(getSectors(uid, resp.data.empresa));
+                    // addSector(resp.data);
+                    // loadSectorData();
+                    toast.success("Setor criado com sucesso!");
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         } catch (err) {
             console.error(err);
             dispatch(setSaving(false));
@@ -71,45 +71,32 @@ export const createSector =
     };
 
 /**
- * Atualiza os dados da empresa atual
+ * Atualiza os dados do setor atual
+ * @param   {Object} sectorData  Objeto com os dados a serem alterados do setor
  * @param   {String} uid  UID do usuário que irá realizar a operação
- * @param   {Object} sectorData  Objeto com os dados a serem alterados da empresa
  */
 export const updateSector =
     (
-        // OBS: Atualmente, sectorData deve estar preenchido com todos os dados da empresa atual, junto com a mudança
         sectorData: {
             id: Number;
             ativo: String;
-            CNPJ_CPF: String;
-            razaosocial: String;
-            fantasia: String;
-            // PENDENTE - verificar posteriormente se o campo criador é removido do banco se remover
-            // ele da request 👇
-            criador: Number;
+            nome: String;
+            uid: String;
+            empresa: Number;
         },
         uid: String
     ) =>
     async (dispatch) => {
         try {
-            api.put(`/empresa/${sectorData.id}`, { ...sectorData, uid })
-                .then(async (resp) => {
+            api.put(`/setor/${sectorData.id}`, sectorData)
+                .then(async () => {
                     // console.log(resp);
-                    if (resp.status === 200) {
-                        toast.success("Empresa editada com sucesso!");
-                        dispatch({
-                            type: SET_SECTOR,
-                            sectorData: resp.data,
-                        });
-                        dispatch(setSaving(false));
-                    }
+                    // loadSectorData();
+                    await dispatch(getSectors(uid, sectorData.empresa));
+                    toast.info("Setor editado com sucesso!");
                 })
                 .catch((err) => {
-                    if (err.response?.data?.erro) {
-                        toast.error(err.response.data.erro.msg);
-                    }
-                    console.error(err);
-                    dispatch(setSaving(false));
+                    console.log(err);
                 });
         } catch (error) {
             console.log(error);
@@ -117,22 +104,25 @@ export const updateSector =
     };
 
 /**
- * Desativa/Ativa a empresa
- * @deprecated Não é necessário desativar/ativar empresa em uma chamada separada até que exista uma
- * rota dedicada da API para fazer o mesmo, por enquanto o updateSector faz a mesma coisa
+ * Deleta o setor
+ * @param   {Number} sectorID  Id do setor a ser deletado
  * @param   {String} uid  UID do usuário que irá realizar a operação
- * @param   {Boolean} operation  Estado que irá colocar a empresa
+ * @param   {String} companyId  Id da empresa que o setor de encontra, utilizado para buscar os
+ * setores após a operação
  */
-export const manageSector = (uid: String, operation: boolean) => async (dispatch) => {
+export const deleteSector = (sectorID: Number, uid: String, companyId: Number) => async (dispatch) => {
     dispatch(setSaving(true));
-    try {
-        // api.put(`/empresa/${sectorData.id}`, { ...sectorData, uid })
-        // dispatch({
-        //     type: SET_ACTIVE,
-        //     active: operation,
-        // });
-        console.log("Funcão não está em funcionamento agora");
+    console.log(sectorID + " - " + companyId + " - " + uid);
 
+    try {
+        api.delete(`/setor/${sectorID}`, { params: { uid: uid, empresa: companyId } })
+            .then(async () => {
+                await dispatch(getSectors(uid, companyId));
+                toast.success("Setor deletado com sucesso!");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
         dispatch(setSaving(false));
     } catch (error) {
         dispatch(setSaving(false));

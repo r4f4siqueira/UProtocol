@@ -28,8 +28,13 @@ function Overview() {
     useEffect(() => {
         if (OriginalCompany.hasCompany) {
             setCompany(OriginalCompany.companyData);
+        } else {
+            setCompany({});
         }
-    }, [OriginalCompany.hasCompany]);
+        return () => {
+            setCompany({});
+        };
+    }, [OriginalCompany.companyData]);
 
     function handleCancel() {
         setCompany(OriginalCompany.companyData);
@@ -38,15 +43,16 @@ function Overview() {
     function handleSubmit(evt) {
         evt.preventDefault();
 
-        const data = new FormData();
-        data.append("ativo", company.ativo ? company.ativo : "1");
-        data.append("CNPJ_CPF", company.CNPJ_CPF);
-        data.append("razaosocial", company.razaosocial);
-        data.append("fantasia", company.fantasia);
-        data.append("uid", user.uid);
+        const data = {
+            ...company,
+        };
 
         if (!OriginalCompany.hasCompany) {
             // se não possuir empresa, cadastrar
+            // empresa sempre será criada ativa
+            data.ativo = "1";
+            console.log("criar");
+            console.log(data);
             dispatch(createCompany(data, user.uid));
         } else {
             if (company.ativo === "0") {
@@ -56,6 +62,7 @@ function Overview() {
                 }
             }
             //se possuir empresa. editar
+            console.log("editar");
             dispatch(updateCompany(data, user.uid));
         }
     }

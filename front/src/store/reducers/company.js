@@ -16,21 +16,25 @@ export default function reducer(
 
             // Tratando (formatando) os dados da empresa
             const tcompany = action.companyData;
-            tcompany.created_at = tcompany.created_at.substring(0, 10);
-            tcompany.CNPJ_CPF = tcompany.CNPJ_CPF === null ? "" : tcompany.CNPJ_CPF;
+            let hasCompany = false;
+            if (tcompany !== null) {
+                hasCompany = true;
 
-            if (typeof tcompany.ativo === "boolean") {
-                if (tcompany.ativo === true) {
-                    tcompany.ativo = "1";
-                } else {
-                    tcompany.ativo = "0";
+                tcompany.created_at = tcompany.created_at.substring(0, 10);
+                tcompany.CNPJ_CPF = tcompany.CNPJ_CPF === null ? "" : tcompany.CNPJ_CPF;
+
+                if (typeof tcompany.ativo === "boolean") {
+                    if (tcompany.ativo === true) {
+                        tcompany.ativo = "1";
+                    } else {
+                        tcompany.ativo = "0";
+                    }
                 }
             }
-
             return {
                 ...state,
                 companyData: tcompany,
-                hasCompany: true,
+                hasCompany: hasCompany,
             };
         case SET_LOADING:
             return {

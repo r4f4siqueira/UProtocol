@@ -6,20 +6,19 @@ import { BsPencilFill, BsTrashFill } from "react-icons/bs";
 function TableSectors({ sectorList, setSector, handleRemoveSector }) {
     // console.log(sectorList);
 
-    if(sectorList === undefined ||sectorList.length === 0 ){
-        sectorList =  [{ id: "ops!", nome:"Você não tem setores cadastrados!" }];
+    if (sectorList === undefined || sectorList.length === 0) {
+        sectorList = [{ id: "ops!", nome: "Você não tem setores cadastrados!" }];
     } else {
-        console.log(sectorList);
+        // console.log(sectorList);
     }
-    
 
     function handleSelectSector(index) {
         // console.log(sectorList[index]);
         setSector(sectorList[index]);
     }
-    function handleExclude() {
-        // console.log(sectorList[index]);
-    }
+    // function handleExclude() {
+    //     // console.log(sectorList[index]);
+    // }
 
     return (
         <SectorTableWrapper>
@@ -41,28 +40,27 @@ function TableSectors({ sectorList, setSector, handleRemoveSector }) {
                                 <td>{sector.nome}</td>
                                 <td>{sector.userc}</td>
                                 <td>{sector.ativo === "1" ? "Sim" : "Não"}</td>
-                                
-                                {sector.id === "ops!" 
-                                ? 
-                                "" 
-                                : 
-                                <td>
-                                    <TBEdit
-                                        onClick={() => {
-                                            handleSelectSector(index);
-                                        }}
-                                    >
-                                        <BsPencilFill />
-                                    </TBEdit>{" "}
-                                    <TBRemove
-                                        onClick={() => {
-                                            handleRemoveSector(sector.id);
-                                        }}
-                                    >
-                                        <BsTrashFill />
-                                    </TBRemove>
-                                </td>}
-                                
+
+                                {sector.id === "ops!" ? (
+                                    ""
+                                ) : (
+                                    <td>
+                                        <TBEdit
+                                            onClick={() => {
+                                                handleSelectSector(index);
+                                            }}
+                                        >
+                                            <BsPencilFill />
+                                        </TBEdit>{" "}
+                                        <TBRemove
+                                            onClick={() => {
+                                                handleRemoveSector(sector.id);
+                                            }}
+                                        >
+                                            <BsTrashFill />
+                                        </TBRemove>
+                                    </td>
+                                )}
                             </tr>
                         );
                     })}

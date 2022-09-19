@@ -37,15 +37,19 @@ function Company() {
     // console.log(navTab);
 
     useEffect(() => {
-        dispatch(getCompany(user.uid));
+        async function loadCompanyData() {
+            await dispatch(getCompany(user.uid));
+        }
+        loadCompanyData();
     }, []);
 
     useEffect(() => {
-        if (company.hasCompany === true) {
-            setTimeout(() => {
-                dispatch(getSectors(user.uid, company.companyData.id));
-            }, 100);
+        async function loadSectorData() {
+            if (company.hasCompany === true && company.companyData !== null) {
+                await dispatch(getSectors(user.uid, company.companyData.id));
+            }
         }
+        loadSectorData();
     }, [company.hasCompany]);
 
     switch (tab) {
