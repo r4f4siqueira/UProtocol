@@ -1,4 +1,15 @@
 # 📃Api DOC
+
+- [Start Server](#▶-start-server)
+- [Permissões](#🚫-permissões)
+    - [Tabela de Permissões](#📄-tabela-de-permissões)
+- [Funções](#📚-funções)
+    - [Empresa](#🏭-empresa)
+    - [Funcionários](#👷‍♂️-funcionário)
+    - [Funcionário Empresa](#👷‍♂️-funcionáirio-empresa)
+- [Erros](#⛔-erros)
+    - [Server Response](#🟡-server-response)
+    - [Mensagens de Erros](#📩-mensagens-de-erros)
 ## ▶ Start Server
 Depois de executar as etapas na página inicial do repositório, execute os comandos abaixo para iniciar o servidor:
 
@@ -44,10 +55,13 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |alterarSetor|`({params,request,response})`|Altera os dados do setor e necessita que seja informado a `id` do setor por parametro da URL e passar as seguintes informações: `ativo: int, nome: String, uid: String, empresa: int`;|G|Retorna o setor com os dados alterados;
 |deletarSetor|`({params,respose})`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor;|G|Retorna os dados do setor deletado;
 
-### 👷‍♂️ Funcionáirio Empresa
+### 👷‍♂️ Funcionário Empresa
 | Nome | Parametros | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarFuncionarioEmpresa|`({request,response})`|A função obriga a passar as seguitnes informações `uid: String, email: String, empresa: int`;|G|Convida um funcionário para a empresa|
+|criarFuncionarioEmpresa|`({request,response})`|A função obriga a passar as seguitnes informações `uid: String, email: String, empresa: int, cargo: char`;|G|Convida um funcionário para a empresa|
+|listarFuncionarioEmpresas|`({request,response})`|A função retorna uma lista de funcionários vinculados a empresa, a função requer que seja passado as seguintes informações na request `uid: String, empresa: int`;|F|Retorna uma lista de funcionários vinculados a empresa;
+|~~dadosFuncionarioEmpresa~~|`({params})`|Requer a `ID` do `funcionarioEmpresa` através da parametro URL|F|Retorna os dados do registro `funcionarioEmpresa`
+|verificaVinculo|`(uid,empresa)`|Verifica se o funcionario está vinculado a empresa (uso interno)|-|Retorna `true` ou `false`
 
 ## ⛔ Erros:
 
@@ -109,6 +123,11 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Setor|[42](# "ver no codigo")|Funcionario não vinculado a empresa para excluir setor| 400
 |Setor|[43](# "ver no codigo")|Setor `setor.nome` não pode ser alterado'| 400
 |Setor|[44](# "ver no codigo")|Setor não encontrado'| 404
-|Setor|[45](# "ver no codigo")|Setor Geral não pode ser excluido ou alterado| 401
+|Setor|[45](# "ver no codigo")|Setor Geral não pode ser excluido ou alterado| 403
 |Funcionario Empresa|[46](# "ver no codigo")|Funcionário não encontrado no sistema para Convidar funcionário| 404
-|Funcionario Empresa|[47](# "ver no codigo")|Funcionario sem permissão para convidar funcionario| 401
+|Funcionario Empresa|[47](# "ver no codigo")|Funcionário sem permissão para convidar funcionario| 403
+|Funcionario Empresa|[48](# "ver no codigo")|Funcionário Não Encontrado| 404
+|Funcionario Empresa|[49](# "ver no codigo")|Funcionário já vinculado a empresa ou pendente de resposta| 403
+|Funcionario Empresa|[50](# "ver no codigo")|Funcionário Não vinculado a empresa para listar os funcionários| 404
+|Funcionario Empresa|[51](# "ver no codigo")|Funcionário Não vinculado a empresa para alterar funcionários| 404
+|Funcionario Empresa|[52](# "ver no codigo")|Funcionário sem permissão para alterar funcionários| 403

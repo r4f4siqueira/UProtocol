@@ -80,7 +80,7 @@ Route.put("/empresa/:id", "EmpresaController.alterarEmpresa");
 Route.put("/conta/:id", "ContaController.alterarConta");
 Route.put("/setor/:id", "SetorController.alterarSetor");
 Route.put("/funcionario/:id", "FuncionarioController.alterarFuncionario");
-Route.put("/funcionarioempresa/:id", "FuncionarioEmpresaController.alterarFuncionarioEmpresa");
+Route.put("/funcionarioempresa", "FuncionarioEmpresaController.alterarFuncionarioEmpresa");
 Route.put("/cliente/:id", "ClienteController.alterarCliente");
 Route.put("/prioridade/:id", "PrioridadeController.alterarPrioridade");
 Route.put("/protocolo/:id", "ProtocoloController.alterarProtocolo");
