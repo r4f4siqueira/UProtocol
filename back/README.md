@@ -44,7 +44,10 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |alterarSetor|`({params,request,response})`|Altera os dados do setor e necessita que seja informado a `id` do setor por parametro da URL e passar as seguintes informações: `ativo: int, nome: String, uid: String, empresa: int`;|G|Retorna o setor com os dados alterados;
 |deletarSetor|`({params,respose})`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor;|G|Retorna os dados do setor deletado;
 
-
+### 👷‍♂️ Funcionáirio Empresa
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarFuncionarioEmpresa|`({request,response})`|A função obriga a passar as seguitnes informações `uid: String, email: String, empresa: int`;|G|Convida um funcionário para a empresa|
 
 ## ⛔ Erros:
 
@@ -106,4 +109,6 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Setor|[42](# "ver no codigo")|Funcionario não vinculado a empresa para excluir setor| 400
 |Setor|[43](# "ver no codigo")|Setor `setor.nome` não pode ser alterado'| 400
 |Setor|[44](# "ver no codigo")|Setor não encontrado'| 404
-|Setor|[45](# "ver no codigo")|Setor Geral não pode ser excluido ou alterado'| 401
+|Setor|[45](# "ver no codigo")|Setor Geral não pode ser excluido ou alterado| 401
+|Funcionario Empresa|[46](# "ver no codigo")|Funcionário não encontrado no sistema para Convidar funcionário| 404
+|Funcionario Empresa|[47](# "ver no codigo")|Funcionario sem permissão para convidar funcionario| 401

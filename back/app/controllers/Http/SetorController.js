@@ -184,7 +184,7 @@ class SetorController {
                                 tabela: "SETOR",
                                 coluna: "",
                                 valorantigo: JSON.stringify(setor),
-                                valornovo: JSON.stringify(setor),
+                                valornovo: JSON.stringify(novosDados),
                                 funcionario:
                                     funcionario_empresas[0].funcionario,
                                 empresa: funcionario_empresas[0].empresa,

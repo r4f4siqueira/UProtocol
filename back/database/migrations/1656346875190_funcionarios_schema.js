@@ -9,7 +9,7 @@ class FuncionariosSchema extends Schema {
       table.increments('id').primary()
       table.boolean('ativo')
       table.string('nome', 100)
-      table.string('email', 100).unique()
+      table.string('email', 100).unique().notNullable()
       table.string('uid').unique()
       table.string('avatarURL')
       table.timestamps()
