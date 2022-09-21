@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getCompany, createCompany, updateCompany } from "../../store/actions/company.tsx";
-import { AuthContext } from "../../context/auth.tsx";
+import { getCompany, createCompany, updateCompany } from "../../../store/actions/company.tsx";
+import { AuthContext } from "../../../context/auth.tsx";
 
-import { BtCancel, BtSubmit, ContainerBTW, ContainerCenter, ContainerR, PanelPage, Titles } from "../../styles/styles";
-import { CompanyFormWrapper, CompanyOverview, Details, FormButtonsWrapper } from "./styles";
-import Input from "../../components/Input/Input";
+import { BtCancel, BtSubmit, ContainerBTW, ContainerCenter, ContainerR, PanelPage, Titles } from "../../../styles/styles";
+import { CompanyFormWrapper, CompanyOverview, Details, FormButtonsWrapper } from "../styles";
+import Input from "../../../components/Input/Input";
 
 function Overview() {
     const dispatch = useDispatch();

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react";
-
 import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Tabs from "../../components/Tabs/Tabs";
-import { useDispatch, useSelector } from "react-redux";
 
 import { BiBuildings } from "react-icons/bi";
 import { FiGrid } from "react-icons/fi";
@@ -11,14 +11,15 @@ import { BsPersonBadge } from "react-icons/bs";
 
 import { ContainerPage, PanelPage } from "../../styles/styles";
 
-import Employees from "./employees";
-import Sectors from "./sectors";
-import Overview from "./overview";
+import Employees from "./Employees/employees";
+import Sectors from "./Sectors/sectors";
+import Overview from "./Overview/overview";
 import Loading from "../Loading/Loading";
 
-import { getCompany } from "../../store/actions/company.tsx";
 import { AuthContext } from "../../context/auth.tsx";
+import { getCompany } from "../../store/actions/company.tsx";
 import { getSectors } from "../../store/actions/sector.tsx";
+import { getEmployees } from "../../store/actions/employee.tsx";
 
 function Company() {
     const tabs = [
@@ -44,12 +45,13 @@ function Company() {
     }, []);
 
     useEffect(() => {
-        async function loadSectorData() {
+        async function loadData() {
             if (company.hasCompany === true && company.companyData !== null) {
                 await dispatch(getSectors(user.uid, company.companyData.id));
+                await dispatch(getEmployees(user.uid, company.companyData.id));
             }
         }
-        loadSectorData();
+        loadData();
     }, [company.hasCompany]);
 
     switch (tab) {
@@ -74,8 +76,14 @@ function Company() {
                 <BiBuildings className="icon" />
             </PageHeader>
             <PanelPage>
-                <Tabs Tabs={tabs} active={navTab} />
-                {selectedTab}
+                {company.isLoading ? (
+                    <Loading />
+                ) : (
+                    <>
+                        <Tabs Tabs={tabs} active={navTab} />
+                        {selectedTab}
+                    </>
+                )}
             </PanelPage>
         </ContainerPage>
     );

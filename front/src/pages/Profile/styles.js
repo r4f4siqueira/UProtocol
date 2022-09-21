@@ -1,21 +1,5 @@
 import styled from "styled-components";
-import { ContainerC, GButton } from "../../styles/styles";
-
-export const FormWrapper = styled(ContainerC)`
-    form {
-        align-self: center;
-        min-width: 60%;
-    }
-    .loading {
-        width: 2.4rem;
-
-        position: absolute;
-        margin-top: 0.7rem;
-        margin-left: 4.5rem;
-
-        fill: lightgray;
-    }
-`;
+import { GButton } from "../../styles/styles";
 
 export const AvatarWrapper = styled.label`
     display: flex;

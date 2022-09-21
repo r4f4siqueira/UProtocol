@@ -193,3 +193,65 @@ export const BtCancel = styled(BtSubmit)`
 export const BtsContainer = styled(ContainerR)`
     justify-content: space-evenly;
 `;
+
+export const FormWrapper = styled(ContainerC)`
+    form {
+        align-self: center;
+        min-width: 60%;
+    }
+    .loading {
+        width: 2.4rem;
+
+        position: absolute;
+        margin-top: 0.7rem;
+        margin-left: 4.5rem;
+
+        fill: lightgray;
+    }
+`;
+
+export const TableWrapper = styled.div`
+    min-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    table {
+        min-width: 100%;
+        border-collapse: collapse;
+        font-size: 13pt;
+        td,
+        th {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+        }
+        thead {
+            tr {
+                border-bottom: solid 2px #1498d5;
+
+                th {
+                    border-right: 1px solid #a5bdb5;
+                    padding-left: 0.5rem;
+                    min-width: 150px;
+                    text-align: start;
+                }
+            }
+        }
+        tbody {
+            tr {
+                border-bottom: 1px solid #a5bdb5;
+                transition: all 100ms;
+                :hover {
+                    background-color: #bfe0ff;
+                    color: #0072a7;
+                }
+                :last-of-type {
+                    border-bottom: 0px solid #a5bdb5 !important;
+                }
+            }
+            td {
+                padding-left: 0.5rem;
+                border-right: 1px solid #a5bdb5;
+            }
+        }
+    }
+`;

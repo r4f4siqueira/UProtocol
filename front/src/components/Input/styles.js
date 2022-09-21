@@ -3,7 +3,7 @@ import { ContainerC } from "../../styles/styles";
 
 export const InputContainer = styled(ContainerC)`
     align-items: flex-start;
-    margin-top: 1.2rem;
+    margin-top: ${(props) => (props.noMargin === true ? "0rem" : "1.2rem")};
 
     label {
         margin-bottom: 0.2rem;

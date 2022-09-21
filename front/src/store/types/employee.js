@@ -1,0 +1,7 @@
+const PREFIX = "@EMPLOYEE/";
+
+export const SET_EMPLOYEE = `${PREFIX}SET_EMPLOYEE`;
+export const SET_SELECTED_EMPLOYEE = `${PREFIX}SET_SELECTED_EMPLOYEE`;
+export const SET_LOADING = `${PREFIX}SET_LOADING`;
+export const SET_SAVING = `${PREFIX}SET_SAVING`;
+// export const DELETE = `${PREFIX}DELETE`;

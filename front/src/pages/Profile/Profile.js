@@ -11,8 +11,8 @@ import { ReactComponent as Loading } from "../../assets/Loading/Gear.svg";
 import { FaUser } from "react-icons/fa";
 import { BsUpload } from "react-icons/bs";
 
-import { BtsContainer, BtSubmit, ContainerC, ContainerPage, ContainerR, PanelPage, Titles } from "../../styles/styles";
-import { AvatarImg, AvatarWrapper, BtDAccount, FormWrapper } from "./styles";
+import { BtsContainer, BtSubmit, ContainerC, ContainerPage, ContainerR, PanelPage, Titles, FormWrapper } from "../../styles/styles";
+import { AvatarImg, AvatarWrapper, BtDAccount } from "./styles";
 import { LinkPassword } from "../Login/styles";
 
 function Profile() {

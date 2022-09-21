@@ -1,5 +1,5 @@
 import React from "react";
-import { TBEdit, TBRemove } from "../../styles/styles";
+import { TBEdit, TBRemove } from "../../../styles/styles";
 import { SectorTableWrapper } from "./styles";
 import { BsPencilFill, BsTrashFill } from "react-icons/bs";
 

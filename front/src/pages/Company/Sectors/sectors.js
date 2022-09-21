@@ -1,18 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
-import api from "../../services/backendAPI";
-import { AuthContext } from "../../context/auth.tsx";
+import { AuthContext } from "../../../context/auth.tsx";
 
-import { FormSectors, ListSectors, SectorFormWrapper } from "./styles";
-import { BtCancel, BtSubmit, ContainerR, Titles } from "../../styles/styles";
+import { FormSectors, PanelSectors, SectorFormWrapper } from "./styles";
+import { BtCancel, BtSubmit, ContainerR, Titles } from "../../../styles/styles";
 
-import Input from "../../components/Input/Input";
+import Input from "../../../components/Input/Input";
 import TableSectors from "./TableSectors";
-import Loading from "../Loading/Loading";
-import { createSector, deleteSector, updateSector, getSectors } from "../../store/actions/sector.tsx";
+import Loading from "../../Loading/Loading";
+import { createSector, deleteSector, updateSector, getSectors } from "../../../store/actions/sector.tsx";
 
 function Sectors() {
     const dispatch = useDispatch();
@@ -22,7 +20,6 @@ function Sectors() {
 
     const [sectors, setSectors] = useState();
     const [selectedSector, setSelectedSector] = useState();
-    const [loading, setLoading] = useState(false);
 
     const { user } = useContext(AuthContext);
 
@@ -120,9 +117,9 @@ function Sectors() {
                         </form>
                     </SectorFormWrapper>
                 </FormSectors>
-                <ListSectors>
+                <PanelSectors>
                     <TableSectors sectorList={sectors} setSector={setSelectedSector} handleRemoveSector={handleRemoveSector} />
-                </ListSectors>
+                </PanelSectors>
             </>
         );
     }

@@ -36,7 +36,7 @@ function Input(props) {
     }
     // console.log("render");
     return (
-        <InputContainer>
+        <InputContainer noMargin={props.noMargin ? props.noMargin : false}>
             <Titles>
                 <label>{props.label}</label>
             </Titles>
