@@ -61,7 +61,12 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |criarFuncionarioEmpresa|`({request,response})`|A função obriga a passar as seguitnes informações `uid: String, email: String, empresa: int, cargo: char`;|G|Convida um funcionário para a empresa|
 |listarFuncionarioEmpresas|`({request,response})`|A função retorna uma lista de funcionários vinculados a empresa, a função requer que seja passado as seguintes informações na request `uid: String, empresa: int`;|F|Retorna uma lista de funcionários vinculados a empresa;
 |~~dadosFuncionarioEmpresa~~|`({params})`|Requer a `ID` do `funcionarioEmpresa` através da parametro URL|F|Retorna os dados do registro `funcionarioEmpresa`
-|verificaVinculo|`(uid,empresa)`|Verifica se o funcionario está vinculado a empresa (uso interno)|-|Retorna `true` ou `false`
+|verificaVinculo|`(uid,empresa)`|Verifica se o funcionario está vinculado a empresa (uso interno)|-|Retorna `true` ou `false`;
+|alterarFuncionarioEmpresa|`({request,response})`|Altera Cargo e Setor do funcionário vinculado a empresa, requer que seja informado `uid: String, empresa: integer, funcionario: integer, setor: integer, cargo: char, id: integer`;|G|Altera as informaçoes do funcionário vinculado a empresa;
+|deletarFuncionarioEmpresa|({params,request,response})|Requer que informe a `id` do vinculo do funcionário empresa por parametro url e as seguintes informações na request `uid: string, empresa: integer`;|G|Retorna os dados do funcionario desvinculado;
+|aceitarConvite|({params,request,response})|Rota para aceitar os convites, requer que informe o `id` da relação funcionário empresa por parametro URL mais as seguintes informações na request `uid: string, resposta: boolean`;|F|Caso aceite retorna os dados do registro funcionarioEmpresa, caso recusar retorna uma mensagem `{msg:"convite recusado"}`;
+|listarConvite|({request})|Lista todos os convites pendentes de resposta|F|Retorna os dados do registro fruncionario empresa;
+
 
 ## ⛔ Erros:
 
@@ -131,3 +136,8 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Funcionario Empresa|[50](# "ver no codigo")|Funcionário Não vinculado a empresa para listar os funcionários| 404
 |Funcionario Empresa|[51](# "ver no codigo")|Funcionário Não vinculado a empresa para alterar funcionários| 404
 |Funcionario Empresa|[52](# "ver no codigo")|Funcionário sem permissão para alterar funcionários| 403
+|Funcionario Empresa|[53](# "ver no codigo")|Funcionário não vinculado a empresa para remover funcionario| 404
+|Funcionario Empresa|[54](# "ver no codigo")|Funcionário sem permissão para remover funcionario| 403
+|Funcionario Empresa|[55](# "ver no codigo")|O vinculo de Funcionário e empresa não foi encontrado para ser removido| 404
+|Funcionario Empresa|[56](# "ver no codigo")|Não pode remover o criador da empresa| 403
+|Funcionario Empresa|[57](# "ver no codigo")|Sem permissão para aceitar convite de outro funcionário| 403

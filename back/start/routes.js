@@ -35,6 +35,7 @@ Route.get("/funcionario", "FuncionarioController.dadosFuncionario");
 
 Route.get("/funcionarioempresa", "FuncionarioEmpresaController.listarFuncionarioEmpresas");
 Route.get("/funcionarioempresa/:id", "FuncionarioEmpresaController.dadosFuncionarioEmpresa");
+Route.get("/convite", "FuncionarioEmpresaController.listarConvite");
 
 Route.get("/cliente", "ClienteController.listarClientes");
 Route.get("/cliente/:id", "ClienteController.dadosCliente");
@@ -81,6 +82,7 @@ Route.put("/conta/:id", "ContaController.alterarConta");
 Route.put("/setor/:id", "SetorController.alterarSetor");
 Route.put("/funcionario/:id", "FuncionarioController.alterarFuncionario");
 Route.put("/funcionarioempresa", "FuncionarioEmpresaController.alterarFuncionarioEmpresa");
+Route.put("/convite/:id", "FuncionarioEmpresaController.aceitarConvite");
 Route.put("/cliente/:id", "ClienteController.alterarCliente");
 Route.put("/prioridade/:id", "PrioridadeController.alterarPrioridade");
 Route.put("/protocolo/:id", "ProtocoloController.alterarProtocolo");

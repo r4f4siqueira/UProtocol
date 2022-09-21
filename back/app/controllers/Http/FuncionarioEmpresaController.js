@@ -3,6 +3,9 @@
 const Database = use('Database')
 const FuncionarioEmpresa = use("App/Models/FuncionarioEmpresa")
 
+const LogController = require("./LogController");
+const logC = new LogController();
+
 class FuncionarioEmpresaController {
     async criarFuncionarioEmpresa({request, response}){
         let retorno =''
@@ -44,7 +47,7 @@ class FuncionarioEmpresaController {
                             funcionario: funcionario[0].id,
                             funcionario_uid: funcionario[0].uid,
                             cargo: dados.cargo,
-                            userc: userc[0].id
+                            userc: userc[0].funcionario
                         });
                     }
                 }
@@ -95,7 +98,7 @@ class FuncionarioEmpresaController {
 
     async alterarFuncionarioEmpresa({request,response}){
         let retorno = ''
-        const dadosRequest = request.only(['uid','empresa','funcionario','setor','cargo'])
+        const dadosRequest = request.only(['uid','empresa','funcionario','setor','cargo','id'])
         const userm = await Database.select('*').table('funcionario_empresas').where('funcionario_uid',dadosRequest.uid).where('empresa',dadosRequest.empresa)
         if(userm[0]?.cargo===undefined){
             response?.status(404)
@@ -105,6 +108,26 @@ class FuncionarioEmpresaController {
                 response?.status(403)
                 retorno = {erro:{codigo:52,msg:"Funcionário sem permissão para alterar funcionários"}}
             }else{
+                const funcionario = await FuncionarioEmpresa.find(dadosRequest.id)
+                await logC.novoLog({
+                    request: {
+                        operacao: "ALTERAR",
+                        tabela: "funcionario_empresas",
+                        coluna: "",
+                        valorantigo:
+                            JSON.stringify({
+                                setor: funcionario.setor,
+                                cargo: funcionario.cargo
+                            }),
+                        valornovo:
+                            JSON.stringify({
+                                setor: dadosRequest.setor,
+                                cargo: dadosRequest.cargo
+                            }),
+                        funcionario: userm[0].funcionario,
+                        empresa: dadosRequest.empresa,
+                    },
+                });
                 
                 // const funcionario = await Database.select('*')
                 // .table('funcionario_empresas')
@@ -113,7 +136,7 @@ class FuncionarioEmpresaController {
                 //merge não é a melhor função para realizar esta operação(minha opinião)
                 funcionario.merge({
                     id: funcionario.id,
-                    empresa: funcionario.id,
+                    empresa: funcionario.empresa,
                     funcionario: funcionario.funcionario,
                     funcionario_uid: funcionario.funcionario_uid,
                     setor: dadosRequest.setor,
@@ -121,26 +144,82 @@ class FuncionarioEmpresaController {
                     userc: funcionario.userc,
                     userm: userm.funcionario
                 })
+                await funcionario.save()
+                retorno = funcionario
             }
         }
-        
-        
-        // const funcionarioEmpresa = await FuncionarioEmpresa.findOrFail(params.id);//Retorna erro caso nao encontrar
-        // 
-
-        // funcionarioEmpresa.merge(atualizaFuncionarioEmpresa);
-
-        // await funcionarioEmpresa.save();
-        // return funcionarioEmpresa
         return retorno
-
     }
 
-    async deletarFuncionarioEmpresa({params}){
-        const funcionarioEmpresa = await FuncionarioEmpresa.findOrFail(params.id)
-        await funcionarioEmpresa.delete();
-        return{mensagem: 'Funcionario relacionado a Empresa deletado'}
+    async deletarFuncionarioEmpresa({params,request,response}){
+        let retorno = ''
+        const dadosRequest = request.only(['uid','empresa'])
+        const userm = await Database.select('*').table('funcionario_empresas').where('funcionario_uid',dadosRequest.uid).where('empresa',dadosRequest.empresa)
+        if(userm[0]?.cargo===undefined){
+            response?.status(404)
+            retorno = {erro:{codigo:53,msg:"Funcionário não vinculado a empresa para remover funcionario"}}
+        }else{
+            if(userm[0]?.cargo==="F"){
+                response?.status(403)
+                retorno = {erro:{codigo:54,msg:"Funcionário sem permissão para remover funcionário"}}
+            }else{
+                const funcionarioEmpresa = await FuncionarioEmpresa.find(params.id)
+                if(funcionarioEmpresa===null){
+                    response?.status(404)
+                    retorno = {erro:{codigo:55,msg:"O vinculo de Funcionário e empresa não foi encontrado para ser removido"}}
+                }else{
+                    const criadorEmpresa = await Database.select('userc').table('empresas').where('id',dadosRequest.empresa)
+                    if(funcionarioEmpresa.funcionario===criadorEmpresa[0].userc){
+                        response?.status(403)
+                        retorno = {erro:{codigo:56,msg:"Criador da empresa não pode ser removido"}}
+                    }else{
+                        retorno = funcionarioEmpresa
+                        await logC.novoLog({
+                            request: {
+                                operacao: "EXCLUIR",
+                                tabela: "funcionario_empresas",
+                                coluna: "",
+                                valorantigo: JSON.stringify(funcionarioEmpresa),
+                                valornovo: JSON.stringify("Deletado"),
+                                funcionario: userm[0].funcionario,
+                                empresa: dadosRequest.empresa,
+                            },
+                        });
+                        await funcionarioEmpresa.delete();
+                    }
+                }
+            }
+        }
+        return retorno
     }
+
+    async aceitarConvite({params,request,response}){
+        let retorno=''
+        const dadosRequest = request.only(['uid','resposta'])
+        const funcionario_empresa = await FuncionarioEmpresa.find(params.id)
+        if(funcionario_empresa?.funcionario_uid !== dadosRequest.uid){
+            response?.status(403)
+            retorno = {erro:{codigo:57,msg:"Sem permissão para aceitar convite de outro funcionário"}}
+        }else{
+            if(dadosRequest.resposta){
+                funcionario_empresa.merge({
+                    setor: 1
+                })
+                await funcionario_empresa.save()
+                retorno = funcionario_empresa
+            }else{
+                await funcionario_empresa.delete()
+                retorno = {msg:"convite recusado"}
+            }
+        }
+        return retorno
+    }
+
+    async listarConvite({request}){
+        const dadosRequest = request.only(['uid'])
+        return await Database.select('*').table("funcionario_empresas").where("funcionario_uid",dadosRequest.uid).whereNull("setor")
+    }
+
 }
 
 module.exports = FuncionarioEmpresaController
