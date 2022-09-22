@@ -45,6 +45,14 @@ class SetorController {
                     empresa: dadosEnviados.empresa,
                     userc: idUserC[0].id,
                 });
+
+                const nomeUser = await Database.select("nome")
+                .table("funcionarios")
+                .where("id", retorno.userc)
+                retorno.userc = {
+                    id: retorno.userc,
+                    nome:nomeUser[0].nome
+                }
             }
         }
         // Database.close(['pg'])
@@ -109,10 +117,18 @@ class SetorController {
                     },
                 };
             } else {
-                retorno = await Database.select("*")
+                retorno = await Database.select("setors.*","funcionarios.nome as nomeUserc")
                     .table("setors")
+                    .innerJoin('funcionarios','funcionarios.id','setors.userc')
                     .where("empresa", params.empresa)
-                    .orWhere("empresa", null);
+                
+                // const nomeUser = await Database.select("nome")
+                // .table("funcionarios")
+                // .where("id", retorno.userc)
+                // retorno.userc = {
+                //     id: retorno.userc,
+                //     nome:nomeUser[0].nome
+                // }
             }
         }
         // Database.close(['pg'])

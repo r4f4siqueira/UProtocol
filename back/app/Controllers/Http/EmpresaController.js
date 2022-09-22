@@ -90,6 +90,14 @@ class EmpresaController {
                             setor: 1,
                         },
                     });
+
+                    const nomeUser = await Database.select("nome")
+                    .table("funcionarios")
+                    .where("id", retorno.userc)
+                    retorno.userc = {
+                        id: retorno.userc,
+                        nome:nomeUser[0].nome
+                    }
                 }
             }
         }
@@ -115,18 +123,25 @@ class EmpresaController {
             const idEmpresa = await Database.select("empresa")
                 .table("funcionario_empresas")
                 .where("funcionario_uid", user.uid)
+                .whereNotNull('setor')
                 .first();
             if (
                 idEmpresa === "" ||
                 idEmpresa === null ||
                 idEmpresa === undefined
             ) {
-                response?.status(404);
                 retorno = {
                     erro: { codigo: 31, msg: "Funcionario sem empresa" },
                 };
             } else {
                 const empresa = await Empresa.find(idEmpresa.empresa);
+                const nomeUser = await Database.select("nome")
+                .table("funcionarios")
+                .where("id", empresa.userc)
+                empresa.userc = {
+                    id: empresa.userc,
+                    nome:nomeUser[0].nome
+                }
                 retorno = empresa;
             }
         }
@@ -191,6 +206,13 @@ class EmpresaController {
                     };
                 } else {
                     retorno = await Empresa.find(params.id);
+                    const nomeUser = await Database.select("nome")
+                    .table("funcionarios")
+                    .where("id", retorno.userc)
+                    retorno.userc = {
+                        id: retorno.userc,
+                        nome:nomeUser[0].nome
+                    }
                 }
             }
         }
@@ -347,6 +369,14 @@ class EmpresaController {
                                     //Depois persiste os dados da variavel empresa no banco de dados
                                     await empresa.save();
                                     //retorna os dados atualizados
+
+                                    const nomeUser = await Database.select("nome")
+                                        .table("funcionarios")
+                                        .where("id", empresa.userc)
+                                        empresa.userc = {
+                                            id: empresa.userc,
+                                            nome:nomeUser[0].nome
+                                        }
                                     retorno = empresa;
                                 }
                             }
