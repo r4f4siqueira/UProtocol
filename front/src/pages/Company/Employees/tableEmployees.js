@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-
 import { BsPencilFill, BsTrashFill } from "react-icons/bs";
 
 import { TBEdit, TBRemove } from "../../../styles/styles";
 import { EmployeeTableWrapper } from "./styles";
+
+import { AuthContext } from "../../../context/auth.tsx";
 import { deleteEmployee, setSelectedEmployee } from "../../../store/actions/employee.tsx";
 
 function TableEmployees() {
     const dispatch = useDispatch();
+
+    const { user } = useContext(AuthContext);
     const Employees = useSelector((state) => state.Employee);
+
     const [localList, setLocalList] = useState([]);
 
     useEffect(() => {
@@ -22,13 +26,14 @@ function TableEmployees() {
     }, [Employees?.employeeList]);
 
     function handleSelectEmployee(index) {
-        console.log(localList[index]);
+        // console.log(localList[index]);
         dispatch(setSelectedEmployee(localList[index]));
     }
 
     function handleRemoveEmployee(index) {
-        console.log(localList[index]);
-        dispatch(deleteEmployee(localList[index].id));
+        if (window.confirm("Tem certeza? essa acao nao pode ser revertida")) {
+            dispatch(deleteEmployee(localList[index].id, user.uid, localList[index].empresa));
+        }
     }
 
     return (
@@ -69,7 +74,7 @@ function TableEmployees() {
                                         </TBEdit>{" "}
                                         <TBRemove
                                             onClick={() => {
-                                                handleRemoveEmployee(Employee.id);
+                                                handleRemoveEmployee(index);
                                             }}
                                         >
                                             <BsTrashFill />

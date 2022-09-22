@@ -11,9 +11,9 @@ import { BsPersonBadge } from "react-icons/bs";
 
 import { ContainerPage, PanelPage } from "../../styles/styles";
 
-import Employees from "./Employees/employees";
-import Sectors from "./Sectors/sectors";
-import Overview from "./Overview/overview";
+import Employees from "./Employees/Employees";
+import Sectors from "./Sectors/Sectors";
+import Overview from "./Overview/Overview";
 import Loading from "../Loading/Loading";
 
 import { AuthContext } from "../../context/auth.tsx";

@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AuthContext } from "../../../context/auth.tsx";
-import { createEmployee } from "../../../store/actions/employee.tsx";
+import { createEmployee, setSelectedEmployee, updateEmployee } from "../../../store/actions/employee.tsx";
 
 import Input from "../../../components/Input/Input";
 import Dropbox from "../../../components/Dropbox/dropbox";
@@ -14,29 +14,67 @@ function FormEmployees() {
     const dispatch = useDispatch();
 
     const companyId = useSelector((state) => state.Company.companyData?.id);
-    //const originalEmployees = useSelector((state) => state.Employee);
+    const selectedEmployee = useSelector((state) => state.Employee.selectedEmployee);
+    const sectorList = useSelector((state) => state.Sector.sectorList);
+
     const { user } = useContext(AuthContext);
 
     const [Employees, setEmployees] = useState();
-    const [selectedEmployee, setSelectedEmployee] = useState();
+    const [localSelectedEmployee, setLocalSelectedEmployee] = useState();
     const emailREX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     const disableSubmit =
-        selectedEmployee?.email === undefined ||
-        selectedEmployee?.email === "" ||
-        !selectedEmployee?.email?.match(emailREX) ||
-        selectedEmployee === null ||
-        selectedEmployee?.cargo === undefined ||
-        selectedEmployee?.cargo === "" ||
-        selectedEmployee.cargo === null;
+        localSelectedEmployee?.email === undefined ||
+        localSelectedEmployee?.email === "" ||
+        !localSelectedEmployee?.email?.match(emailREX) ||
+        localSelectedEmployee === null ||
+        localSelectedEmployee?.cargo === undefined ||
+        localSelectedEmployee?.cargo === "" ||
+        localSelectedEmployee.cargo === null;
 
     const cargoOptions = [
         { value: "G", label: "Gerente" },
         { value: "F", label: "Funcionário" },
     ];
 
+    // preenchendo a dropbox de setores
+    const sectorOptions = [];
+    sectorList.every((sector, index) => {
+        if (sector.ativo === "1") {
+            sectorOptions[index] = { value: sector.id, label: sector.nome };
+        }
+        return true;
+    });
+
+    var selectedEmployeeCargo;
+    switch (selectedEmployee.cargo) {
+        case "A":
+            selectedEmployeeCargo = "Administrador";
+            break;
+        case "G":
+            selectedEmployeeCargo = "Gerente";
+            break;
+        case "F":
+            selectedEmployeeCargo = "Funcionário";
+            break;
+        default:
+            break;
+    }
+    const selectedEmployeeSetor = sectorList.filter((sector) => sector.id === selectedEmployee.setor)[0]?.nome;
+
+    // console.log(selectedEmployeeSetor);
+
+    useEffect(() => {
+        setLocalSelectedEmployee({
+            ...selectedEmployee,
+            cargo: { value: selectedEmployee.cargo, label: selectedEmployeeCargo },
+            setor: { value: selectedEmployee.setor, label: selectedEmployeeSetor },
+        });
+    }, [selectedEmployee]);
+
     function handleCancelEmployee() {
-        setSelectedEmployee({ email: null, cargo: null });
+        setLocalSelectedEmployee({ email: null, cargo: null, setor: null });
+        dispatch(setSelectedEmployee({ email: null, cargo: null, setor: null }));
     }
     function handleRemoveEmployee(id) {
         if (window.confirm("Tem certeza?") === true) {
@@ -48,23 +86,24 @@ function FormEmployees() {
         evt.preventDefault();
 
         // se existir ID, editar
-        if (selectedEmployee?.id) {
-            // const data = {
-            //     id: selectedEmployee?.id,
-            //     ativo: selectedEmployee?.ativo ? selectedEmployee?.ativo : "0",
-            //     nome: selectedEmployee?.nome,
-            //     uid: user.uid,
-            //     empresa: company.id,
-            // };
-            // await dispatch(updateEmployee(data, user.uid));
+        if (localSelectedEmployee?.id) {
+            const data = {
+                uid: user.uid,
+                empresa: companyId,
+                funcionario: localSelectedEmployee.funcionario,
+                setor: selectedEmployee.setor === null ? null : localSelectedEmployee.setor.value,
+                cargo: localSelectedEmployee.cargo.value ? localSelectedEmployee.cargo.value : localSelectedEmployee.cargo,
+                id: localSelectedEmployee.id,
+            };
+            await dispatch(updateEmployee(data));
             handleCancelEmployee();
         } else {
             // se nao existir ID, criar
             const data = {
                 uid: user.uid,
-                email: selectedEmployee.email,
+                email: localSelectedEmployee.email,
                 empresa: companyId,
-                cargo: selectedEmployee.cargo.value,
+                cargo: localSelectedEmployee.cargo.value,
             };
             // console.log("criar");
             // console.log(data);
@@ -73,11 +112,11 @@ function FormEmployees() {
         }
     }
 
-    // console.log(selectedEmployee);
+    // console.log(localSelectedEmployee);
 
     return (
-        <EmployeesForm className={selectedEmployee?.id ? "edit" : ""}>
-            <Titles>{selectedEmployee?.id && `Selecionado: id - ${selectedEmployee?.id}`}</Titles>
+        <EmployeesForm className={localSelectedEmployee?.id ? "edit" : ""}>
+            <Titles>{localSelectedEmployee?.id && `Selecionado: id - ${localSelectedEmployee?.id} | ${localSelectedEmployee?.nome} `}</Titles>
             <EmployeeFormWrapper>
                 <form
                     onSubmit={(evt) => {
@@ -85,29 +124,42 @@ function FormEmployees() {
                     }}
                 >
                     <div className="center inputs">
-                        <div className="input">
-                            <Input
-                                label="Email do funcionário"
-                                noMargin={true}
-                                placeholder="insira o email do funcionário"
-                                inputValue={selectedEmployee?.email}
-                                isValid={null}
-                                ocHandler={(e) => {
-                                    setSelectedEmployee({ ...selectedEmployee, email: e.target.value });
-                                }}
-                            />
-                        </div>
+                        {!localSelectedEmployee?.id && (
+                            <div className="input">
+                                <Input
+                                    label="Email do funcionário"
+                                    noMargin={true}
+                                    placeholder="insira o email do funcionário"
+                                    inputValue={localSelectedEmployee?.email}
+                                    isValid={null}
+                                    ocHandler={(e) => {
+                                        setLocalSelectedEmployee({ ...localSelectedEmployee, email: e.target.value });
+                                    }}
+                                />
+                            </div>
+                        )}
                         <div className="input">
                             <Dropbox
                                 label="Cargo:"
                                 options={cargoOptions}
                                 ocHandler={(value) => {
-                                    setSelectedEmployee({ ...selectedEmployee, cargo: value });
+                                    setLocalSelectedEmployee({ ...localSelectedEmployee, cargo: value });
                                 }}
-                                inputValue={selectedEmployee?.cargo}
+                                inputValue={localSelectedEmployee?.cargo}
                             />
                         </div>
-                        <div className="input">{selectedEmployee?.id && <Dropbox label="Setor:" options="" />}</div>
+                        <div className="input">
+                            {localSelectedEmployee?.id && (
+                                <Dropbox
+                                    label="Setor:"
+                                    options={sectorOptions}
+                                    ocHandler={(value) => {
+                                        setLocalSelectedEmployee({ ...localSelectedEmployee, setor: value });
+                                    }}
+                                    inputValue={localSelectedEmployee?.setor}
+                                />
+                            )}
+                        </div>
                     </div>
                     <div className="center submit">
                         <BtCancel type="button" onClick={handleCancelEmployee}>

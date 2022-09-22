@@ -2,9 +2,11 @@
 import Company from "./company";
 import Sector from "./sector";
 import Employee from "./employee";
+import Customer from "./customer";
 
 export default {
     Company,
     Sector,
     Employee,
+    Customer,
 };

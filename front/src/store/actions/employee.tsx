@@ -44,7 +44,8 @@ export const setSelectedEmployee = (employeeData) => async (dispatch) => {
 };
 
 /**
- * Cria uma nova empresa no banco
+ * Cria um fucnionario empresa com setor vazio nessa empresa, fica pendente do funcionário aceitar o
+ * convite para ser aceito
  * @param   {Object} employeeData  Objeto com os dados da empresa  a ser criada
  * @param   {String} uid  UID do usuário que irá realizar a operação
  */
@@ -57,13 +58,13 @@ export const createEmployee = (employeeData: { uid: String; email: String; empre
                 await dispatch(getEmployees(employeeData.uid, resp.data.empresa));
                 // addEmployee(resp.data);
                 // loadEmployeeData();
-                toast.success("Funcionario criado com sucesso!");
+                toast.success("Funcionario convidado com sucesso!");
             })
             .catch((err) => {
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                console.log(err);
+                toast.error(err);
             });
     } catch (err) {
         console.error(err);
@@ -76,22 +77,37 @@ export const createEmployee = (employeeData: { uid: String; email: String; empre
  * @param   {Object} employeeData  Objeto com os dados a serem alterados do funcionario
  * @param   {String} uid  UID do usuário que irá realizar a operação
  */
-export const updateEmployee = (employeeData: {}, uid: String) => async (dispatch) => {
-    try {
-        // api.put(`/funcionario/${employeeData.id}`, employeeData)
-        //     .then(async () => {
-        //         // console.log(resp);
-        //         // loadEmployeeData();
-        //         await dispatch(getEmployees(uid, employeeData.empresa));
-        //         toast.info("Funcionario editado com sucesso!");
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-    } catch (error) {
-        console.log(error);
-    }
-};
+export const updateEmployee =
+    (
+        employeeData: {
+            uid: String;
+            empresa: Number;
+            funcionario: Number;
+            setor: Number;
+            cargo: Number;
+            id: Number;
+        },
+        uid: String
+    ) =>
+    async (dispatch) => {
+        try {
+            api.put(`/funcionarioempresa`, employeeData)
+                .then(async () => {
+                    // console.log(resp);
+                    // loadEmployeeData();
+                    await dispatch(getEmployees(uid, employeeData.empresa));
+                    toast.info("Funcionario atualizado com sucesso!");
+                })
+                .catch((err) => {
+                    if (err.response?.data?.erro) {
+                        toast.error(err.response.data.erro.msg);
+                    }
+                    toast.error(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
 /**
  * Deleta o funcionario
@@ -102,8 +118,6 @@ export const updateEmployee = (employeeData: {}, uid: String) => async (dispatch
  */
 export const deleteEmployee = (employeeID: Number, uid: String, companyId: Number) => async (dispatch) => {
     dispatch(setSaving(true));
-    console.log(employeeID + " - " + companyId + " - " + uid);
-
     try {
         api.delete(`/funcionarioempresa/${employeeID}`, { params: { uid: uid, empresa: companyId } })
             .then(async () => {
@@ -111,7 +125,10 @@ export const deleteEmployee = (employeeID: Number, uid: String, companyId: Numbe
                 toast.success("Funcionario deletado com sucesso!");
             })
             .catch((err) => {
-                console.log(err);
+                if (err.response?.data?.erro) {
+                    toast.error(err.response.data.erro.msg);
+                }
+                toast.error(err);
             });
         dispatch(setSaving(false));
     } catch (error) {
