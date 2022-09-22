@@ -1,15 +1,15 @@
 # 📃Api DOC
 
-- [Start Server](#▶-start-server)
-- [Permissões](#🚫-permissões)
-    - [Tabela de Permissões](#📄-tabela-de-permissões)
-- [Funções](#📚-funções)
-    - [Empresa](#🏭-empresa)
-    - [Funcionários](#👷‍♂️-funcionário)
-    - [Funcionário Empresa](#👷‍♂️-funcionáirio-empresa)
-- [Erros](#⛔-erros)
-    - [Server Response](#🟡-server-response)
-    - [Mensagens de Erros](#📩-mensagens-de-erros)
+- [Start Server](#-start-server)
+- [Permissões](#-permissões)
+    - [Tabela de Permissões](#-tabela-de-permissões)
+- [Funções](#-funções)
+    - [Empresa](#-empresa)
+    - [Funcionários](#-funcionário)
+    - [Funcionário Empresa](#-funcionáirio-empresa)
+- [Erros](#-erros)
+    - [Server Response](#-server-response)
+    - [Mensagens de Erros](#-mensagens-de-erros)
 ## ▶ Start Server
 Depois de executar as etapas na página inicial do repositório, execute os comandos abaixo para iniciar o servidor:
 
@@ -63,9 +63,9 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |~~dadosFuncionarioEmpresa~~|`({params})`|Requer a `ID` do `funcionarioEmpresa` através da parametro URL|F|Retorna os dados do registro `funcionarioEmpresa`
 |verificaVinculo|`(uid,empresa)`|Verifica se o funcionario está vinculado a empresa (uso interno)|-|Retorna `true` ou `false`;
 |alterarFuncionarioEmpresa|`({request,response})`|Altera Cargo e Setor do funcionário vinculado a empresa, requer que seja informado `uid: String, empresa: integer, funcionario: integer, setor: integer, cargo: char, id: integer`;|G|Altera as informaçoes do funcionário vinculado a empresa;
-|deletarFuncionarioEmpresa|({params,request,response})|Requer que informe a `id` do vinculo do funcionário empresa por parametro url e as seguintes informações na request `uid: string, empresa: integer`;|G|Retorna os dados do funcionario desvinculado;
-|aceitarConvite|({params,request,response})|Rota para aceitar os convites, requer que informe o `id` da relação funcionário empresa por parametro URL mais as seguintes informações na request `uid: string, resposta: boolean`;|F|Caso aceite retorna os dados do registro funcionarioEmpresa, caso recusar retorna uma mensagem `{msg:"convite recusado"}`;
-|listarConvite|({request})|Lista todos os convites pendentes de resposta|F|Retorna os dados do registro fruncionario empresa;
+|deletarFuncionarioEmpresa|`({params,request,response})`|Requer que informe a `id` do vinculo do funcionário empresa por parametro url e as seguintes informações na request `uid: string, empresa: integer`;|G|Retorna os dados do funcionario desvinculado;
+|aceitarConvite|`({params,request,response})`|Rota para aceitar os convites, requer que informe o `id` da relação funcionário empresa por parametro URL mais as seguintes informações na request `uid: string, resposta: boolean`;|F|Caso aceite retorna os dados do registro funcionarioEmpresa, caso recusar retorna uma mensagem `{msg:"convite recusado"}`;
+|listarConvite|`({request})`|Lista todos os convites pendentes de resposta, requer que passe a `uid` para consultar os convites sem respostas|F|Retorna os dados do registro fruncionario empresa;
 
 
 ## ⛔ Erros:

@@ -111,7 +111,7 @@ adonis serve
 ```bash
 npm start
 ```
-### Acesse o link http://127.0.0.1:3000 no seu navegador
+### Acesse o link http://127.0.0.1:3004 no seu navegador
 Normalmente ao executar o comando `npm start` o projeto já será aberto em seu navegador, caso não abra acesse o link acima
 
 ## Mais informações
