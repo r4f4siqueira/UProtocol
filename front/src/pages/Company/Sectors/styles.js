@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Panel, TableWrapper, FormWrapper } from "../../../styles/styles";
+import { Panel, TableWrapper, FormWrapper, PanelTable } from "../../../styles/styles";
 
 export const SectorFormWrapper = styled(FormWrapper)`
     form {
@@ -108,10 +108,7 @@ export const FormSectors = styled(Panel)`
     margin-bottom: 1rem;
 `;
 
-export const PanelSectors = styled(Panel)`
-    background-color: #dcffef;
-    color: #1498d5;
-`;
+export const PanelSectors = styled(PanelTable)``;
 
 export const SectorTableWrapper = styled(TableWrapper)`
     th {

@@ -22,11 +22,10 @@ export const getSectors = (uid: String, companyId: Number) => async (dispatch) =
             dispatch(setLoading(false));
         })
         .catch((err) => {
-            if (err.response.data?.erro) {
-                console.log(err.response.data.erro.msg);
-            } else {
-                console.log(err);
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
             }
+            toast.error(err);
             dispatch(setLoading(false));
         });
 };
@@ -65,7 +64,10 @@ export const createSector =
                     console.log(err);
                 });
         } catch (err) {
-            console.error(err);
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
+            }
+            toast.error(err);
             dispatch(setSaving(false));
         }
     };
@@ -96,7 +98,10 @@ export const updateSector =
                     toast.info("Setor editado com sucesso!");
                 })
                 .catch((err) => {
-                    console.log(err);
+                    if (err.response?.data?.erro) {
+                        toast.error(err.response.data.erro.msg);
+                    }
+                    toast.error(err);
                 });
         } catch (error) {
             console.log(error);
@@ -121,7 +126,10 @@ export const deleteSector = (sectorID: Number, uid: String, companyId: Number) =
                 toast.success("Setor deletado com sucesso!");
             })
             .catch((err) => {
-                console.log(err);
+                if (err.response?.data?.erro) {
+                    toast.error(err.response.data.erro.msg);
+                }
+                toast.error(err);
             });
         dispatch(setSaving(false));
     } catch (error) {

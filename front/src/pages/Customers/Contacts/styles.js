@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Panel, TableWrapper, FormWrapper, PanelTable } from "../../../styles/styles";
 
-export const EmployeeFormWrapper = styled(FormWrapper)`
+export const ContactFormWrapper = styled(FormWrapper)`
     form {
         display: flex;
         flex-direction: row;
@@ -22,7 +22,13 @@ export const EmployeeFormWrapper = styled(FormWrapper)`
             }
 
             .input {
-                min-width: 250px;
+                display: flex;
+                min-width: 225px;
+                margin-right: 0.5rem;
+                :nth-of-type(4) {
+                    margin-top: 0.5rem;
+                    margin-right: 0rem;
+                }
             }
         }
 
@@ -77,7 +83,7 @@ export const EmployeeFormWrapper = styled(FormWrapper)`
     }
 `;
 
-export const FormEmployees = styled(Panel)`
+export const FormContacts = styled(Panel)`
     &.edit {
         background-color: #ffdf89;
     }
@@ -86,9 +92,9 @@ export const FormEmployees = styled(Panel)`
     margin-bottom: 1rem;
 `;
 
-export const PanelEmployees = styled(PanelTable)``;
+export const PanelContacts = styled(PanelTable)``;
 
-export const EmployeeTableWrapper = styled(TableWrapper)`
+export const ContactTableWrapper = styled(TableWrapper)`
     th {
         :first-of-type,
         :nth-last-child(-n + 3) {

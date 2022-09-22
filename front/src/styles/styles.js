@@ -124,6 +124,11 @@ export const PanelPage = styled(Panel)`
     box-shadow: 0px 3px 5px #949494ff;
 `;
 
+export const PanelTable = styled(Panel)`
+    background-color: #dcffef;
+    color: #1498d5;
+`;
+
 export const BtSubmit = styled(GButton)`
     margin-top: 1.5rem;
 
@@ -171,6 +176,11 @@ export const TBEdit = styled(GBTable)`
 export const TBRemove = styled(GBTable)`
     background-color: #dc143c;
     box-shadow: 0px 3px 0px #a70a29;
+`;
+
+export const TBConfirm = styled(GBTable)`
+    background-color: #14dc67;
+    box-shadow: 0px 3px 0px #0a9243;
 `;
 
 export const BtCancel = styled(BtSubmit)`

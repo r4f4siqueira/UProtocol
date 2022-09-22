@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { GButton } from "../../styles/styles";
+import { GButton, PanelTable, TableWrapper } from "../../styles/styles";
 
 export const AvatarWrapper = styled.label`
     display: flex;
@@ -50,5 +50,29 @@ export const BtDAccount = styled(GButton)`
         margin-bottom: -0.2rem;
 
         box-shadow: 0.1rem 0.1rem 1px grey;
+    }
+`;
+
+export const PanelInvites = styled(PanelTable)`
+    margin-top: 5rem;
+`;
+
+export const InviteTableWrapper = styled(TableWrapper)`
+    border-top: 2px solid #1498d5;
+    th {
+        :first-of-type,
+        :nth-last-child(-n + 2) {
+            padding-left: 0rem;
+            text-align: center;
+            min-width: 50px;
+            width: 75px;
+        }
+    }
+    td {
+        :first-of-type,
+        :nth-last-child(-n + 3) {
+            text-align: center;
+            padding-left: 0rem;
+        }
     }
 `;

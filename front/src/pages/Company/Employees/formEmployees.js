@@ -166,7 +166,7 @@ function FormEmployees() {
                             Cancelar
                         </BtCancel>
                         <BtSubmit disabled={disableSubmit} type="submit">
-                            Gravar
+                            Convidar
                         </BtSubmit>
                     </div>
                 </form>

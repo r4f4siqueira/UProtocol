@@ -12,7 +12,7 @@ import Error from "../pages/Error/Error";
 import DUser from "../pages/DUser/DUser";
 import Company from "../pages/Company/Company";
 import Protocols from "../pages/Protocols/Protocols";
-import Clients from "../pages/Clients/Clients";
+import Customers from "../pages/Customers/Customers";
 
 import { PagesContainer } from "../styles/styles";
 //componentes
@@ -107,12 +107,12 @@ function RoutesApp() {
                     }
                 />
                 <Route
-                    path="/clients/:tab"
+                    path="/customers/:tab"
                     element={
                         <PrivateRoute>
                             <PagesContainer>
-                                <Navbar opt="clients" />
-                                <Clients />
+                                <Navbar opt="customers" />
+                                <Customers />
                             </PagesContainer>
                         </PrivateRoute>
                     }

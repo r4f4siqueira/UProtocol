@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
 import { DropboxWrapper } from "./styles";
-function Dropbox({ options, label, ocHandler, inputValue }) {
+function Dropbox({ options, label, ocHandler, inputValue, search }) {
     return (
         <DropboxWrapper>
             <div>
@@ -12,6 +12,7 @@ function Dropbox({ options, label, ocHandler, inputValue }) {
                     }}
                     value={inputValue}
                     isClearable
+                    isSearchable={search ? search : false}
                     className="dropbox"
                     options={options}
                 />
