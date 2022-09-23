@@ -1,0 +1,7 @@
+const PREFIX = "@CUSTOMER/";
+
+export const SET_CUSTOMER = `${PREFIX}SET_CUSTOMER`;
+export const SET_SELECTED_CUSTOMER = `${PREFIX}SET_SELECTED_CUSTOMER`;
+export const SET_LOADING = `${PREFIX}SET_LOADING`;
+export const SET_SAVING = `${PREFIX}SET_SAVING`;
+// export const DELETE = `${PREFIX}DELETE`;

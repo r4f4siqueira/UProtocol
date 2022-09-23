@@ -56,7 +56,7 @@ function Navbar(props) {
                     {/* {<NavOption isSelected={props?.opt === "sectors"} title="Setores" navto="/sectors">
                         <FiGrid />
                     </NavOption>} */}
-                    <NavOption isSelected={props?.opt === "clients"} title="Clientes" navto="/clients/overview">
+                    <NavOption isSelected={props?.opt === "customers"} title="Clientes" navto="/customers/overview">
                         <BsPersonFill />
                     </NavOption>
                     <NavOption isSelected={props?.opt === "priorities"} title="Prioridades" navto="/priorities">

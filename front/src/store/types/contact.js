@@ -1,0 +1,7 @@
+const PREFIX = "@CONTACT/";
+
+export const SET_CONTACT = `${PREFIX}SET_CONTACT`;
+export const SET_SELECTED_CONTACT = `${PREFIX}SET_SELECTED_CONTACT`;
+export const SET_LOADING = `${PREFIX}SET_LOADING`;
+export const SET_SAVING = `${PREFIX}SET_SAVING`;
+// export const DELETE = `${PREFIX}DELETE`;

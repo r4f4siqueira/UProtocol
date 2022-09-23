@@ -280,6 +280,7 @@ function AuthProvider({ children }) {
                                 if (err.code !== "ERR_BAD_RESPONSE") {
                                     console.log(err);
                                 }
+                                console.log(err);
                             });
 
                         toast.success("Bem vindo " + userData.name + "!");

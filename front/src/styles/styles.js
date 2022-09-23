@@ -124,6 +124,11 @@ export const PanelPage = styled(Panel)`
     box-shadow: 0px 3px 5px #949494ff;
 `;
 
+export const PanelTable = styled(Panel)`
+    background-color: #dcffef;
+    color: #1498d5;
+`;
+
 export const BtSubmit = styled(GButton)`
     margin-top: 1.5rem;
 
@@ -141,10 +146,7 @@ export const BtSubmit = styled(GButton)`
     }
 
     :active {
-        margin-top: 1.7rem;
-        margin-bottom: -0.2rem;
-        margin-left: 0.3rem;
-
+        transform: translate(4px, 4px);
         box-shadow: 0.1rem 0.1rem 1px grey;
     }
 
@@ -176,6 +178,11 @@ export const TBRemove = styled(GBTable)`
     box-shadow: 0px 3px 0px #a70a29;
 `;
 
+export const TBConfirm = styled(GBTable)`
+    background-color: #14dc67;
+    box-shadow: 0px 3px 0px #0a9243;
+`;
+
 export const BtCancel = styled(BtSubmit)`
     color: crimson;
     background-color: #fde4e4;
@@ -195,4 +202,66 @@ export const BtCancel = styled(BtSubmit)`
 
 export const BtsContainer = styled(ContainerR)`
     justify-content: space-evenly;
+`;
+
+export const FormWrapper = styled(ContainerC)`
+    form {
+        align-self: center;
+        min-width: 60%;
+    }
+    .loading {
+        width: 2.4rem;
+
+        position: absolute;
+        margin-top: 0.7rem;
+        margin-left: 4.5rem;
+
+        fill: lightgray;
+    }
+`;
+
+export const TableWrapper = styled.div`
+    min-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    table {
+        min-width: 100%;
+        border-collapse: collapse;
+        font-size: 13pt;
+        td,
+        th {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+        }
+        thead {
+            tr {
+                border-bottom: solid 2px #1498d5;
+
+                th {
+                    border-right: 1px solid #a5bdb5;
+                    padding-left: 0.5rem;
+                    min-width: 150px;
+                    text-align: start;
+                }
+            }
+        }
+        tbody {
+            tr {
+                border-bottom: 1px solid #a5bdb5;
+                transition: all 100ms;
+                :hover {
+                    background-color: #bfe0ff;
+                    color: #0072a7;
+                }
+                :last-of-type {
+                    border-bottom: 0px solid #a5bdb5 !important;
+                }
+            }
+            td {
+                padding-left: 0.5rem;
+                border-right: 1px solid #a5bdb5;
+            }
+        }
+    }
 `;

@@ -18,7 +18,7 @@ const Route = use("Route");
 
 //ROTAS PARA PEGAR DADOS "get"
 Route.get("/", () => {
-  return { msg: "Api FUNCIONA!!!" };
+  return { msg: "TODAS AS ROTAS PRECISAM DE UID!!!",api: 'OK'};
 }); //desativar esta rota assim que possivel
 
 Route.get('/empresa','EmpresaController.listarEmpresas')
@@ -27,14 +27,15 @@ Route.get("/empresa/:id", "EmpresaController.dadosEmpresa");
 Route.get("/conta", "ContaController.listarConta");
 Route.get("/conta/:id", "ContaController.dadosConta");
 
-Route.get("/setor", "SetorController.listarSetores");
-Route.get("/setor/:id", "SetorController.dadosSetor");
+Route.get("/setor/:empresa", "SetorController.listarSetores");
+//Route.get("/setor/:id", "SetorController.dadosSetor");
 
-Route.get("/funcionario", "FuncionarioController.listarFuncionario");
-Route.get("/funcionario/:id", "FuncionarioController.dadosFuncionario");
+Route.get("/funcionario", "FuncionarioController.dadosFuncionario");
+//Route.get("/funcionario/:id", "FuncionarioController.dadosFuncionario");
 
 Route.get("/funcionarioempresa", "FuncionarioEmpresaController.listarFuncionarioEmpresas");
 Route.get("/funcionarioempresa/:id", "FuncionarioEmpresaController.dadosFuncionarioEmpresa");
+Route.get("/convite", "FuncionarioEmpresaController.listarConvite");
 
 Route.get("/cliente", "ClienteController.listarClientes");
 Route.get("/cliente/:id", "ClienteController.dadosCliente");
@@ -80,7 +81,8 @@ Route.put("/empresa/:id", "EmpresaController.alterarEmpresa");
 Route.put("/conta/:id", "ContaController.alterarConta");
 Route.put("/setor/:id", "SetorController.alterarSetor");
 Route.put("/funcionario/:id", "FuncionarioController.alterarFuncionario");
-Route.put("/funcionarioempresa/:id", "FuncionarioEmpresaController.alterarFuncionarioEmpresa");
+Route.put("/funcionarioempresa", "FuncionarioEmpresaController.alterarFuncionarioEmpresa");
+Route.put("/convite/:id", "FuncionarioEmpresaController.aceitarConvite");
 Route.put("/cliente/:id", "ClienteController.alterarCliente");
 Route.put("/prioridade/:id", "PrioridadeController.alterarPrioridade");
 Route.put("/protocolo/:id", "ProtocoloController.alterarProtocolo");

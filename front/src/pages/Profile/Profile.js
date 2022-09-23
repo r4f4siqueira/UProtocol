@@ -1,18 +1,22 @@
 import React, { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../../context/auth.tsx";
+import { ReactComponent as Loading } from "../../assets/Loading/Gear.svg";
+import { useDispatch } from "react-redux";
 import firebase from "../../services/firebaseConnection";
 import { toast } from "react-toastify";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Input from "../../components/Input/Input";
 import PlaceboInput from "../../components/PlaceboInput/PlaceboInput";
-import { ReactComponent as Loading } from "../../assets/Loading/Gear.svg";
+import TableInvites from "./tableInvites";
 
 import { FaUser } from "react-icons/fa";
 import { BsUpload } from "react-icons/bs";
 
-import { BtsContainer, BtSubmit, ContainerC, ContainerPage, ContainerR, PanelPage, Titles } from "../../styles/styles";
-import { AvatarImg, AvatarWrapper, BtDAccount, FormWrapper } from "./styles";
+import { AuthContext } from "../../context/auth.tsx";
+import { getInvites } from "../../store/actions/invites.tsx";
+
+import { BtsContainer, BtSubmit, ContainerC, ContainerPage, ContainerR, PanelPage, Titles, FormWrapper, PanelTable } from "../../styles/styles";
+import { AvatarImg, AvatarWrapper, BtDAccount, PanelInvites } from "./styles";
 import { LinkPassword } from "../Login/styles";
 
 function Profile() {
@@ -22,9 +26,12 @@ function Profile() {
     const [avatarObj, setAvatarObj] = useState();
     const [saving, setSaving] = useState(false);
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
         setUsername(user.name);
         setAvatar(user.avatar);
+        dispatch(getInvites(user.uid));
     }, []);
 
     // console.log(user);
@@ -172,6 +179,12 @@ function Profile() {
                         <BtDAccount onClick={handleDeactivateAccount}>Desativar conta</BtDAccount>
                     </BtsContainer>
                 </FormWrapper>
+                <PanelInvites>
+                    <Titles>
+                        <h1>Convites</h1>
+                    </Titles>
+                    <TableInvites />
+                </PanelInvites>
             </PanelPage>
         </ContainerPage>
     );
