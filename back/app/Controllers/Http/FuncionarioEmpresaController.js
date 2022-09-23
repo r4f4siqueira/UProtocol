@@ -124,7 +124,6 @@ class FuncionarioEmpresaController {
         const dadosRequest = request.only([
             "uid",
             "empresa",
-            "funcionario",
             "setor",
             "cargo",
             "id",
@@ -133,7 +132,7 @@ class FuncionarioEmpresaController {
             .table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
             .where("empresa", dadosRequest.empresa);
-        if (userm[0]?.cargo === undefined) {
+        if (userm[0]?.id === undefined) {
             response?.status(404);
             retorno = {
                 erro: {
@@ -154,41 +153,52 @@ class FuncionarioEmpresaController {
                 const funcionario = await FuncionarioEmpresa.find(
                     dadosRequest.id
                 );
-                await logC.novoLog({
-                    request: {
-                        operacao: "ALTERAR",
-                        tabela: "funcionario_empresas",
-                        coluna: "",
-                        valorantigo: JSON.stringify({
-                            setor: funcionario.setor,
-                            cargo: funcionario.cargo,
-                        }),
-                        valornovo: JSON.stringify({
+                if(funcionario.cargo === "A"){
+                    response?.status(403)
+                    retorno = {erro:{codigo:58,msg:"Não pode alterar cargo do Criador da empresa"}}
+                }else{
+                    if(funcionario.setor===null){
+                        response?.status(403)
+                        retorno = {erro:{codigo:59,msg:"Não pode alterar setor ou cargo de Funcionári com convite pendente"}}
+                    }else{
+                        await logC.novoLog({
+                            request: {
+                                operacao: "ALTERAR",
+                                tabela: "funcionario_empresas",
+                                coluna: "",
+                                valorantigo: JSON.stringify({
+                                    setor: funcionario.setor,
+                                    cargo: funcionario.cargo,
+                                }),
+                                valornovo: JSON.stringify({
+                                    setor: dadosRequest.setor,
+                                    cargo: dadosRequest.cargo,
+                                }),
+                                funcionario: userm[0].funcionario,
+                                empresa: dadosRequest.empresa,
+                            },
+                        });
+        
+                        // const funcionario = await Database.select('*')
+                        // .table('funcionario_empresas')
+                        // .where('funcionario',dadosRequest.funcionario)
+                        // .where('empresa',dadosRequest.empresa)
+                        //merge não é a melhor função para realizar esta operação(minha opinião)
+                        funcionario.merge({
+                            id: funcionario.id,
+                            empresa: funcionario.empresa,
+                            funcionario: funcionario.funcionario,
+                            funcionario_uid: funcionario.funcionario_uid,
                             setor: dadosRequest.setor,
                             cargo: dadosRequest.cargo,
-                        }),
-                        funcionario: userm[0].funcionario,
-                        empresa: dadosRequest.empresa,
-                    },
-                });
-
-                // const funcionario = await Database.select('*')
-                // .table('funcionario_empresas')
-                // .where('funcionario',dadosRequest.funcionario)
-                // .where('empresa',dadosRequest.empresa)
-                //merge não é a melhor função para realizar esta operação(minha opinião)
-                funcionario.merge({
-                    id: funcionario.id,
-                    empresa: funcionario.empresa,
-                    funcionario: funcionario.funcionario,
-                    funcionario_uid: funcionario.funcionario_uid,
-                    setor: dadosRequest.setor,
-                    cargo: dadosRequest.cargo,
-                    userc: funcionario.userc,
-                    userm: userm.funcionario,
-                });
-                await funcionario.save();
-                retorno = funcionario;
+                            userc: funcionario.userc,
+                            userm: userm.funcionario,
+                        });
+                        await funcionario.save();
+                        retorno = funcionario;
+    
+                    }
+                }
             }
         }
         return retorno;

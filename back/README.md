@@ -6,7 +6,9 @@
 - [Funções](#-funções)
     - [Empresa](#-empresa)
     - [Funcionários](#-funcionário)
-    - [Funcionário Empresa](#-funcionáirio-empresa)
+    - [Setor](#-setor)
+    - [Funcionário Empresa](#-funcionário-empresa)
+    - [Clientes](#-cliente)
 - [Erros](#-erros)
     - [Server Response](#-server-response)
     - [Mensagens de Erros](#-mensagens-de-erros)
@@ -66,6 +68,12 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |deletarFuncionarioEmpresa|`({params,request,response})`|Requer que informe a `id` do vinculo do funcionário empresa por parametro url e as seguintes informações na request `uid: string, empresa: integer`;|G|Retorna os dados do funcionario desvinculado;
 |aceitarConvite|`({params,request,response})`|Rota para aceitar os convites, requer que informe o `id` da relação funcionário empresa por parametro URL mais as seguintes informações na request `uid: string, resposta: boolean`;|F|Caso aceite retorna os dados do registro funcionarioEmpresa, caso recusar retorna uma mensagem `{msg:"convite recusado"}`;
 |listarConvite|`({request})`|Lista todos os convites pendentes de resposta, requer que passe a `uid` para consultar os convites sem respostas|F|Retorna os dados do registro fruncionario empresa;
+
+### 👨🏻‍🦰 Cliente
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarCliente|`({request,response})`|Função obriga a passar as seguintes informações na request `ativo: boolean, razaosocial: string, fantasia: string,CNPJ_CPF: string, empresa: integer, uid: string`;|F|Retorna os dados do cliente cadastrado|
+|listarClientes|`({request,response})`|Para listar os clientes relacionado a empresa nescessita informar `uid: string, empresa: integer`|F|Retorna uma lista de clientes vinculados aquela empresa;
 
 
 ## ⛔ Erros:
@@ -141,3 +149,9 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Funcionario Empresa|[55](# "ver no codigo")|O vinculo de Funcionário e empresa não foi encontrado para ser removido| 404
 |Funcionario Empresa|[56](# "ver no codigo")|Não pode remover o criador da empresa| 403
 |Funcionario Empresa|[57](# "ver no codigo")|Sem permissão para aceitar convite de outro funcionário| 403
+|Funcionario Empresa|[58](# "ver no codigo")|Não pode alterar cargo do Criador da empresa| 403
+|Funcionario Empresa|[59](# "ver no codigo")|Não pode alterar setor ou cargo de Funcionári com convite pendente| 403
+|Cliente|[60](# "ver no codigo")|Funcionário não vinculado a empresa para cadastrar cliente| 404
+|Cliente|[61](# "ver no codigo")|Razão social é obrigatório ser informada| 400
+|Cliente|[62](# "ver no codigo")|Funcionario não vinculado a empresa para listar clientes| 404
+|Contato|[63](# "ver no codigo")|Funcionario não vinculado a empresa para listar contatos| 404
