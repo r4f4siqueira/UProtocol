@@ -30,12 +30,6 @@ function TableCustomers() {
         dispatch(setSelectedCustomer(localList[index]));
     }
 
-    function handleRemoveCustomer(index) {
-        if (window.confirm("Tem certeza? essa acao nao pode ser revertida")) {
-            dispatch(deleteCustomer(localList[index].id, user.uid, localList[index].empresa));
-        }
-    }
-
     return (
         <CustomerTableWrapper>
             <table>
@@ -56,8 +50,8 @@ function TableCustomers() {
                             <tr key={"funcionario: " + Customer.id}>
                                 <td>{Customer.id}</td>
                                 <td>{Customer.fantasia}</td>
-                                <td>{Customer.razao_social}</td>
-                                <td>{Customer.cpf_cnpj}</td>
+                                <td>{Customer.razaosocial}</td>
+                                <td>{Customer.CNPJ_CPF}</td>
                                 <td>{Customer.ativo}</td>
                                 <td>{Customer.userc}</td>
 
@@ -71,14 +65,7 @@ function TableCustomers() {
                                             }}
                                         >
                                             <BsPencilFill />
-                                        </TBEdit>{" "}
-                                        <TBRemove
-                                            onClick={() => {
-                                                handleRemoveCustomer(index);
-                                            }}
-                                        >
-                                            <BsTrashFill />
-                                        </TBRemove>
+                                        </TBEdit>
                                     </td>
                                 )}
                             </tr>

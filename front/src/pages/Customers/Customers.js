@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router";
 
 import { BsFillTelephoneFill, BsPersonFill } from "react-icons/bs";
 
 import { ContainerPage, PanelPage } from "../../styles/styles";
 
+import { AuthContext } from "../../context/auth.tsx";
+
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Tabs from "../../components/Tabs/Tabs";
 import Overview from "./Overview/Overview";
 import Contacts from "./Contacts/Contacts";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "../Loading/Loading";
+import { getCustomers } from "../../store/actions/customer.tsx";
 
 function Customers() {
     const tabs = [
@@ -18,11 +21,22 @@ function Customers() {
         { icon: <BsFillTelephoneFill />, name: "Contatos", navto: "/customers/contacts" },
     ];
 
+    const { user } = useContext(AuthContext);
+
+    const dispatch = useDispatch();
+
     const { tab } = useParams();
     const navTab = "/customers/" + tab;
     let selectedTab;
 
     const customers = useSelector((state) => state.Customer);
+    const company = useSelector((state) => state.Company);
+
+    useEffect(() => {
+        if (company.companyData?.id) {
+            dispatch(getCustomers(user.uid, company.companyData.id));
+        }
+    }, []);
 
     switch (tab) {
         case "overview":

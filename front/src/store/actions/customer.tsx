@@ -11,25 +11,25 @@ export const getCustomers = (uid: String, companyId: Number) => async (dispatch)
     dispatch(setLoading(true));
     console.log("buscando clientes");
 
-    // api.get(`/clienteempresa`, { params: { uid: uid, empresa: companyId } })
-    //     .then(async (resp) => {
-    //         // console.log(resp);
-    //         console.log("clientes encontrados");
+    api.get(`/cliente`, { params: { uid: uid, empresa: companyId } })
+        .then(async (resp) => {
+            // console.log(resp);
+            console.log("clientes encontrados");
 
-    //         dispatch({
-    //             type: SET_CUSTOMER,
-    //             customerList: resp.data,
-    //         });
-    //         dispatch(setLoading(false));
-    //     })
-    //     .catch((err) => {
-    //         if (err.response.data?.erro) {
-    //             console.log(err.response.data.erro.msg);
-    //         } else {
-    //             console.log(err);
-    //         }
-    //         dispatch(setLoading(false));
-    //     });
+            dispatch({
+                type: SET_CUSTOMER,
+                customerList: resp.data,
+            });
+            dispatch(setLoading(false));
+        })
+        .catch((err) => {
+            if (err.response.data?.erro) {
+                console.log(err.response.data.erro.msg);
+            } else {
+                console.log(err);
+            }
+            dispatch(setLoading(false));
+        });
 };
 
 /**
@@ -49,28 +49,29 @@ export const setSelectedCustomer = (customerData) => async (dispatch) => {
  * @param   {Object} customerData  Objeto com os dados da empresa  a ser criada
  * @param   {String} uid  UID do usuário que irá realizar a operação
  */
-export const createCustomer = (customerData: { uid: String; email: String; empresa: Number; cargo: String }) => async (dispatch) => {
-    dispatch(setSaving(true));
-    try {
-        // api.post(`/clienteempresa`, customerData)
-        //     .then(async (resp) => {
-        //         console.log(resp.data);
-        //         await dispatch(getCustomers(customerData.uid, resp.data.empresa));
-        //         // addCustomer(resp.data);
-        //         // loadCustomerData();
-        //         toast.success("Cliente convidado com sucesso!");
-        //     })
-        //     .catch((err) => {
-        //         if (err.response?.data?.erro) {
-        //             toast.error(err.response.data.erro.msg);
-        //         }
-        //         toast.error(err);
-        //     });
-    } catch (err) {
-        console.error(err);
-        dispatch(setSaving(false));
-    }
-};
+export const createCustomer =
+    (customerData: { ativo: String; razaosocial: String | null; fantasia: String; CNPJ_CPF: String | null; uid: String; empresa: Number }) => async (dispatch) => {
+        dispatch(setSaving(true));
+        try {
+            api.post(`/cliente`, customerData)
+                .then(async (resp) => {
+                    console.log(resp.data);
+                    await dispatch(getCustomers(customerData.uid, resp.data.empresa));
+                    // addCustomer(resp.data);
+                    // loadCustomerData();
+                    toast.success("Cliente convidado com sucesso!");
+                })
+                .catch((err) => {
+                    if (err.response?.data?.erro) {
+                        toast.error(err.response.data.erro.msg);
+                    }
+                    toast.error(err);
+                });
+        } catch (err) {
+            console.error(err);
+            dispatch(setSaving(false));
+        }
+    };
 
 /**
  * Atualiza os dados do cliente atual
@@ -78,32 +79,22 @@ export const createCustomer = (customerData: { uid: String; email: String; empre
  * @param   {String} uid  UID do usuário que irá realizar a operação
  */
 export const updateCustomer =
-    (
-        customerData: {
-            uid: String;
-            empresa: Number;
-            cliente: Number;
-            setor: Number;
-            cargo: Number;
-            id: Number;
-        },
-        uid: String
-    ) =>
+    (customerData: { id: Number; ativo: String; razaosocial: String | null; fantasia: String; CNPJ_CPF: String | null; uid: String; idEmpresa: Number }) =>
     async (dispatch) => {
         try {
-            // api.put(`/clienteempresa`, customerData)
-            //     .then(async () => {
-            //         // console.log(resp);
-            //         // loadCustomerData();
-            //         await dispatch(getCustomers(uid, customerData.empresa));
-            //         toast.info("Cliente atualizado com sucesso!");
-            //     })
-            //     .catch((err) => {
-            //         if (err.response?.data?.erro) {
-            //             toast.error(err.response.data.erro.msg);
-            //         }
-            //         toast.error(err);
-            //     });
+            api.put(`/cliente/${customerData.id}`, customerData)
+                .then(async () => {
+                    // console.log(resp);
+                    // loadCustomerData();
+                    await dispatch(getCustomers(customerData.uid, customerData.idEmpresa));
+                    toast.info("Cliente atualizado com sucesso!");
+                })
+                .catch((err) => {
+                    if (err.response?.data?.erro) {
+                        toast.error(err.response.data.erro.msg);
+                    }
+                    toast.error(err);
+                });
         } catch (error) {
             console.log(error);
         }
@@ -111,6 +102,7 @@ export const updateCustomer =
 
 /**
  * Deleta o cliente
+ * @deprecated Cliente nao pode ser deletado, no momento a funcao nao faz nada
  * @param   {Number} customerID  Id do cliente a ser deletado
  * @param   {String} uid  UID do usuário que irá realizar a operação
  * @param   {String} companyId  Id da empresa que o cliente de encontra, utilizado para buscar os
@@ -119,7 +111,7 @@ export const updateCustomer =
 export const deleteCustomer = (customerID: Number, uid: String, companyId: Number) => async (dispatch) => {
     dispatch(setSaving(true));
     try {
-        // api.delete(`/clienteempresa/${customerID}`, { params: { uid: uid, empresa: companyId } })
+        // api.delete(`/cliente/${customerID}`, { params: { uid: uid, empresa: companyId } })
         //     .then(async () => {
         //         await dispatch(getCustomers(uid, companyId));
         //         toast.success("Cliente deletado com sucesso!");

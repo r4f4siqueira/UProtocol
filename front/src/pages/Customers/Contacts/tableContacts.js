@@ -19,14 +19,13 @@ function TableContacts() {
 
     useEffect(() => {
         if (Contacts?.contactList === undefined || Contacts?.contactList.length === 0) {
-            setLocalList([{ id: "0", nome: "Você não tem funcionarios cadastrados!" }]);
+            setLocalList([{ id: "0", pessoa: "Você não tem contatos cadastrados!" }]);
         } else {
             setLocalList(Contacts.contactList);
         }
     }, [Contacts?.contactList]);
 
     function handleSelectContact(index) {
-        // console.log(localList[index]);
         dispatch(setSelectedContact(localList[index]));
     }
 

@@ -80,7 +80,7 @@ function Overview() {
                             <Titles>
                                 <ContainerBTW>
                                     <Details>
-                                        <h3>Criador: {company?.userc}</h3>
+                                        <h3>Criador: {company?.userc.nome}</h3>
                                         <h3>ID: {company?.id}</h3>
                                     </Details>
                                     <span>

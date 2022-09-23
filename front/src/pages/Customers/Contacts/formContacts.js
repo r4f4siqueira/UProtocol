@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AuthContext } from "../../../context/auth.tsx";
-import { createContact, setSelectedContact, updateContact } from "../../../store/actions/contact.tsx";
+import { createContact, setSelectedContact, updateContact, deleteContact } from "../../../store/actions/contact.tsx";
 
 import Input from "../../../components/Input/Input";
 import Dropbox from "../../../components/Dropbox/dropbox";
@@ -26,27 +26,27 @@ function FormContacts() {
 
     // preenchendo a dropbox de setores
     const customerOptions = [];
-    customerList.every((sector, index) => {
-        if (sector.ativo === "1") {
-            customerOptions[index] = { value: sector.id, label: sector.nome };
+    console.log(customerList);
+    customerList.every((customer, index) => {
+        if (customer.ativo) {
+            customerOptions[index] = { value: customer.id, label: customer.fantasia };
         }
         return true;
     });
 
-    const selectedContactClient = customerList.filter((customer) => customer.id === selectedContact?.customer)[0]?.nome;
+    const selectedContactClient = customerList.filter((customer) => customer.id === selectedContact?.cliente)[0]?.fantasia;
 
-    // console.log(selectedContactSetor);
-
-    useEffect(() => {}, []);
+    useEffect(() => {
+        setLocalSelectedContact({
+            ...selectedContact,
+            cliente: { value: selectedContact.cliente, label: selectedContactClient },
+            ativo: selectedContact.ativo ? "1" : "0",
+        });
+    }, [selectedContact]);
 
     function handleCancelContact() {
         setLocalSelectedContact({ pessoa: null, email: null, telefone: null, cliente: null, ativo: "1" });
         dispatch(setSelectedContact({ pessoa: null, email: null, telefone: null, cliente: null, ativo: "1" }));
-    }
-    function handleRemoveContact(id) {
-        if (window.confirm("Tem certeza?") === true) {
-            //dispatch(deleteContact(id, user.uid, company.id));
-        }
     }
     console.log(localSelectedContact);
 
@@ -56,31 +56,33 @@ function FormContacts() {
         // se existir ID, editar
         if (localSelectedContact?.id) {
             const data = {
-                id: localSelectedContact?.id,
-                uid: user.uid,
-                fantasia: localSelectedContact?.fantasia,
-                razao_social: localSelectedContact?.razao_social,
-                cpf_cnpj: localSelectedContact?.cpf_cnpj,
-                ativo: localSelectedContact?.ativo,
+                ativo: localSelectedContact.ativo,
+                cliente: localSelectedContact.cliente?.value,
+                telefone: localSelectedContact.telefone,
+                email: localSelectedContact.email,
+                pessoa: localSelectedContact.pessoa,
                 empresa: companyId,
+                uid: user.uid,
+                id: localSelectedContact.id,
             };
 
-            // await dispatch(updateContact(data));
+            await dispatch(updateContact(data));
             handleCancelContact();
         } else {
             // se nao existir ID, criar
             const data = {
-                uid: user.uid,
-                fantasia: localSelectedContact?.fantasia,
-                razao_social: localSelectedContact?.razao_social,
-                cpf_cnpj: localSelectedContact?.cpf_cnpj,
-                ativo: localSelectedContact?.ativo,
+                ativo: localSelectedContact.ativo,
+                cliente: localSelectedContact.cliente?.value,
+                telefone: localSelectedContact.telefone,
+                email: localSelectedContact.email,
+                pessoa: localSelectedContact.pessoa,
                 empresa: companyId,
+                uid: user.uid,
             };
             console.log("criar");
             console.log(data);
-            // await dispatch(createContact(data));
-            // handleCancelContact();
+            await dispatch(createContact(data));
+            handleCancelContact();
         }
     }
 
@@ -162,7 +164,7 @@ function FormContacts() {
                             Cancelar
                         </BtCancel>
                         <BtSubmit disabled={disableSubmit} type="submit">
-                            Convidar
+                            Criar
                         </BtSubmit>
                     </div>
                 </form>

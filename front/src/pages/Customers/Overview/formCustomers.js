@@ -36,12 +36,13 @@ function FormCustomers() {
     useEffect(() => {
         setLocalSelectedCustomer({
             ...selectedCustomer,
+            ativo: selectedCustomer.ativo ? "1" : "0",
         });
     }, [selectedCustomer]);
 
     function handleCancelCustomer() {
-        setLocalSelectedCustomer({ fantasia: null, razao_social: null, cpf_cnpj: null, ativo: "1" });
-        dispatch(setSelectedCustomer({ fantasia: null, razao_social: null, cpf_cnpj: null, ativo: "1" }));
+        setLocalSelectedCustomer({ fantasia: null, razaosocial: null, CNPJ_CPF: null, ativo: "1" });
+        dispatch(setSelectedCustomer({ fantasia: null, razaosocial: null, CNPJ_CPF: null, ativo: "1" }));
     }
     function handleRemoveCustomer(id) {
         if (window.confirm("Tem certeza?") === true) {
@@ -56,24 +57,28 @@ function FormCustomers() {
         if (localSelectedCustomer?.id) {
             const data = {
                 id: localSelectedCustomer.id,
+                ativo: localSelectedCustomer.ativo,
+                razaosocial: localSelectedCustomer.razaosocial,
+                fantasia: localSelectedCustomer.fantasia,
+                CNPJ_CPF: localSelectedCustomer.CNPJ_CPF,
                 uid: user.uid,
-                empresa: companyId,
-                funcionario: localSelectedCustomer.funcionario,
-                setor: selectedCustomer.setor === null ? null : localSelectedCustomer.setor.value,
-                cargo: localSelectedCustomer.cargo.value ? localSelectedCustomer.cargo.value : localSelectedCustomer.cargo,
+                idEmpresa: companyId,
             };
             await dispatch(updateCustomer(data));
             handleCancelCustomer();
         } else {
             // se nao existir ID, criar
+            console.log(localSelectedCustomer);
             const data = {
+                ativo: localSelectedCustomer.ativo,
+                razaosocial: localSelectedCustomer.razaosocial || null,
+                fantasia: localSelectedCustomer.fantasia,
+                CNPJ_CPF: localSelectedCustomer.CNPJ_CPF || null,
                 uid: user.uid,
                 empresa: companyId,
-                email: localSelectedCustomer.email,
-                cargo: localSelectedCustomer.cargo.value,
             };
-            // console.log("criar");
-            // console.log(data);
+            console.log("criar");
+            console.log(data);
             await dispatch(createCustomer(data));
             handleCancelCustomer();
         }
@@ -108,10 +113,10 @@ function FormCustomers() {
                                 label="Rasão social"
                                 noMargin={true}
                                 placeholder="Se for uma empresa"
-                                inputValue={localSelectedCustomer?.razao_social}
+                                inputValue={localSelectedCustomer?.razaosocial}
                                 isValid={null}
                                 ocHandler={(e) => {
-                                    setLocalSelectedCustomer({ ...localSelectedCustomer, razao_social: e.target.value });
+                                    setLocalSelectedCustomer({ ...localSelectedCustomer, razaosocial: e.target.value });
                                 }}
                             />
                         </div>
@@ -121,10 +126,10 @@ function FormCustomers() {
                                 type="number"
                                 noMargin={true}
                                 placeholder="Não obrigatório"
-                                inputValue={localSelectedCustomer?.cpf_cnpj}
+                                inputValue={localSelectedCustomer?.CNPJ_CPF}
                                 isValid={null}
                                 ocHandler={(e) => {
-                                    setLocalSelectedCustomer({ ...localSelectedCustomer, cpf_cnpj: e.target.value });
+                                    setLocalSelectedCustomer({ ...localSelectedCustomer, CNPJ_CPF: e.target.value });
                                 }}
                             />
                         </div>
