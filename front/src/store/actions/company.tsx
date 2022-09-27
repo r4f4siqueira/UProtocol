@@ -21,10 +21,10 @@ export const getCompany = (uid: String) => async (dispatch) => {
             dispatch(setLoading(false));
         })
         .catch((err) => {
-            if (err.response?.data) {
-                console.log(err.response.data);
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
             }
-            console.log(err);
+            console.error(err);
             dispatch({
                 type: SET_COMPANY,
                 companyData: null,
@@ -67,6 +67,9 @@ export const createCompany =
                 }
             });
         } catch (err) {
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
+            }
             console.error(err);
             dispatch(setSaving(false));
         }
@@ -113,8 +116,11 @@ export const updateCompany =
                     console.error(err);
                     dispatch(setSaving(false));
                 });
-        } catch (error) {
-            console.log(error);
+        } catch (err) {
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
+            }
+            console.error(err);
         }
     };
 
@@ -136,9 +142,12 @@ export const manageCompany = (uid: String, operation: boolean) => async (dispatc
         console.log("Funcão não está em funcionamento agora");
 
         dispatch(setSaving(false));
-    } catch (error) {
+    } catch (err) {
+        if (err.response?.data?.erro) {
+            toast.error(err.response.data.erro.msg);
+        }
+        console.error(err);
         dispatch(setSaving(false));
-        console.log(error);
     }
 };
 

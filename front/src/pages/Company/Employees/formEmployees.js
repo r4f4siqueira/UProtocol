@@ -30,13 +30,17 @@ function FormEmployees() {
         localSelectedEmployee === null ||
         localSelectedEmployee?.cargo === undefined ||
         localSelectedEmployee?.cargo === "" ||
-        localSelectedEmployee.cargo === null;
+        localSelectedEmployee?.cargo === null ||
+        localSelectedEmployee?.setor?.value === undefined ||
+        localSelectedEmployee?.setor?.value === "" ||
+        localSelectedEmployee?.setor?.value === null;
 
     const cargoOptions = [
         { value: "G", label: "Gerente" },
         { value: "F", label: "Funcionário" },
     ];
 
+    console.log(user.uid);
     // preenchendo a dropbox de setores
     const sectorOptions = [];
     sectorList.every((sector, index) => {

@@ -24,7 +24,7 @@ export const getInvites = (uid: String) => async (dispatch) => {
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                toast.error(err);
+                console.error(err);
             });
         dispatch(setLoading(false));
     } catch (error) {
@@ -55,7 +55,7 @@ export const manageInvites = (inviteId: Number, uid: String, resposta: Boolean) 
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                toast.error(err);
+                console.error(err);
             })
             .finally(() => {
                 dispatch(setLoading(false));

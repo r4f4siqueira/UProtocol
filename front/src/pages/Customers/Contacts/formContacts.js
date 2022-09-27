@@ -22,11 +22,17 @@ function FormContacts() {
     const [Contacts, setContacts] = useState();
     const [localSelectedContact, setLocalSelectedContact] = useState();
 
-    const disableSubmit = localSelectedContact?.email === undefined || localSelectedContact?.email === "";
+    const disableSubmit =
+        localSelectedContact?.pessoa === "" ||
+        localSelectedContact?.pessoa === null ||
+        localSelectedContact?.pessoa === undefined ||
+        localSelectedContact?.cliente === "" ||
+        localSelectedContact?.cliente === null ||
+        localSelectedContact?.cliente === undefined ||
+        localSelectedContact?.cliente?.value === null;
 
     // preenchendo a dropbox de setores
     const customerOptions = [];
-    console.log(customerList);
     customerList.every((customer, index) => {
         if (customer.ativo) {
             customerOptions[index] = { value: customer.id, label: customer.fantasia };
@@ -48,7 +54,6 @@ function FormContacts() {
         setLocalSelectedContact({ pessoa: null, email: null, telefone: null, cliente: null, ativo: "1" });
         dispatch(setSelectedContact({ pessoa: null, email: null, telefone: null, cliente: null, ativo: "1" }));
     }
-    console.log(localSelectedContact);
 
     async function handleContact(evt) {
         evt.preventDefault();
@@ -90,7 +95,7 @@ function FormContacts() {
 
     return (
         <ContactsForm className={localSelectedContact?.id ? "edit" : ""}>
-            <Titles>{localSelectedContact?.id && `Selecionado: id - ${localSelectedContact?.id} | ${localSelectedContact?.nome} `}</Titles>
+            <Titles>{localSelectedContact?.id && `Selecionado: id - ${localSelectedContact?.id} | ${localSelectedContact?.pessoa} `}</Titles>
             <ContactFormWrapper>
                 <form
                     onSubmit={(evt) => {
@@ -164,7 +169,7 @@ function FormContacts() {
                             Cancelar
                         </BtCancel>
                         <BtSubmit disabled={disableSubmit} type="submit">
-                            Criar
+                            {localSelectedContact?.id ? "Editar" : "Gravar"}
                         </BtSubmit>
                     </div>
                 </form>

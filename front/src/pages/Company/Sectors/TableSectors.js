@@ -7,7 +7,7 @@ function TableSectors({ sectorList, setSector, handleRemoveSector }) {
     // console.log(sectorList);
 
     if (sectorList === undefined || sectorList.length === 0) {
-        sectorList = [{ id: "ops!", nome: "Você não tem setores cadastrados!" }];
+        sectorList = [{ id: 0, nome: "Você não tem setores cadastrados!" }];
     } else {
         // console.log(sectorList);
     }
@@ -41,8 +41,15 @@ function TableSectors({ sectorList, setSector, handleRemoveSector }) {
                                 <td>{sector.userc}</td>
                                 <td>{sector.ativo === "1" ? "Sim" : "Não"}</td>
 
-                                {sector.id === "ops!" ? (
-                                    ""
+                                {sector.id === 0 || sector.id === 1 ? (
+                                    <td>
+                                        <TBEdit disabled>
+                                            <BsPencilFill />
+                                        </TBEdit>{" "}
+                                        <TBRemove disabled>
+                                            <BsTrashFill />
+                                        </TBRemove>
+                                    </td>
                                 ) : (
                                     <td>
                                         <TBEdit

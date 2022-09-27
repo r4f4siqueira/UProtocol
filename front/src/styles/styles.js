@@ -166,6 +166,13 @@ export const GBTable = styled(GButton)`
         transform: translate(0, 3px);
         box-shadow: 0px 0px 0px #7c7c7c;
     }
+    :disabled {
+        background-color: #8a8a8a;
+        box-shadow: 0px 3px 0px #5e5e5e;
+        :active {
+            box-shadow: 0px 0px 0px #5e5e5e;
+        }
+    }
 `;
 
 export const TBEdit = styled(GBTable)`

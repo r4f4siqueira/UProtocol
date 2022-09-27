@@ -23,11 +23,10 @@ export const getCustomers = (uid: String, companyId: Number) => async (dispatch)
             dispatch(setLoading(false));
         })
         .catch((err) => {
-            if (err.response.data?.erro) {
-                console.log(err.response.data.erro.msg);
-            } else {
-                console.log(err);
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
             }
+            console.error(err);
             dispatch(setLoading(false));
         });
 };
@@ -65,9 +64,12 @@ export const createCustomer =
                     if (err.response?.data?.erro) {
                         toast.error(err.response.data.erro.msg);
                     }
-                    toast.error(err);
+                    console.error(err);
                 });
         } catch (err) {
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
+            }
             console.error(err);
             dispatch(setSaving(false));
         }
@@ -93,7 +95,7 @@ export const updateCustomer =
                     if (err.response?.data?.erro) {
                         toast.error(err.response.data.erro.msg);
                     }
-                    toast.error(err);
+                    console.error(err);
                 });
         } catch (error) {
             console.log(error);
@@ -123,9 +125,12 @@ export const deleteCustomer = (customerID: Number, uid: String, companyId: Numbe
         //         toast.error(err);
         //     });
         dispatch(setSaving(false));
-    } catch (error) {
+    } catch (err) {
+        if (err.response?.data?.erro) {
+            toast.error(err.response.data.erro.msg);
+        }
+        console.error(err);
         dispatch(setSaving(false));
-        console.log(error);
     }
 };
 

@@ -23,11 +23,10 @@ export const getEmployees = (uid: String, companyId: Number) => async (dispatch)
             dispatch(setLoading(false));
         })
         .catch((err) => {
-            if (err.response.data?.erro) {
-                console.log(err.response.data.erro.msg);
-            } else {
-                console.log(err);
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
             }
+            console.error(err);
             dispatch(setLoading(false));
         });
 };
@@ -66,7 +65,7 @@ export const createEmployee = (employeeData: { uid: String; email: String; empre
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                toast.error(err);
+                console.error(err);
             });
     } catch (err) {
         console.error(err);
@@ -94,7 +93,7 @@ export const updateEmployee = (employeeData: { uid: String; empresa: Number; fun
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                toast.error(err);
+                console.error(err);
             });
     } catch (error) {
         console.log(error);
@@ -120,7 +119,7 @@ export const deleteEmployee = (employeeID: Number, uid: String, companyId: Numbe
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                toast.error(err);
+                console.error(err);
             });
         dispatch(setSaving(false));
     } catch (error) {

@@ -84,11 +84,9 @@ function FormCustomers() {
         }
     }
 
-    console.log(localSelectedCustomer);
-
     return (
         <CustomersForm className={localSelectedCustomer?.id ? "edit" : ""}>
-            <Titles>{localSelectedCustomer?.id && `Selecionado: id - ${localSelectedCustomer?.id} | ${localSelectedCustomer?.nome} `}</Titles>
+            <Titles>{localSelectedCustomer?.id && `Selecionado: id - ${localSelectedCustomer?.id} | ${localSelectedCustomer?.fantasia} `}</Titles>
             <CustomerFormWrapper>
                 <form
                     onSubmit={(evt) => {
@@ -152,7 +150,7 @@ function FormCustomers() {
                             Cancelar
                         </BtCancel>
                         <BtSubmit disabled={disableSubmit} type="submit">
-                            Criar
+                            {localSelectedCustomer?.id ? "Editar" : "Gravar"}
                         </BtSubmit>
                     </div>
                 </form>

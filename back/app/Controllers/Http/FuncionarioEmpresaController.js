@@ -128,6 +128,14 @@ class FuncionarioEmpresaController {
             "cargo",
             "id",
         ]);
+        // Caso chegue um setor nulo, o funcionário será alterado para o setor geral
+        if (
+            dadosRequest.setor === "" ||
+            dadosRequest.setor === null ||
+            dadosRequest.setor === undefined
+        ) {
+            dadosRequest.setor = 1;
+        }
         const userm = await Database.select("*")
             .table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
@@ -150,17 +158,30 @@ class FuncionarioEmpresaController {
                     },
                 };
             } else {
+                // Se o cargo do funcionário que está sendo alterado for administrador
+                // Se na requisição o cargo a ser mudado não é administrador
+                // Se quem está tentando mudar não é um administrador
                 const funcionario = await FuncionarioEmpresa.find(
                     dadosRequest.id
                 );
-                if(funcionario.cargo === "A"){
-                    response?.status(403)
-                    retorno = {erro:{codigo:58,msg:"Não pode alterar cargo do Criador da empresa"}}
-                }else{
-                    if(funcionario.setor===null){
-                        response?.status(403)
-                        retorno = {erro:{codigo:59,msg:"Não pode alterar setor ou cargo de Funcionári com convite pendente"}}
-                    }else{
+                if (funcionario.cargo === "A" && dadosRequest.cargo !== "A") {
+                    response?.status(403);
+                    retorno = {
+                        erro: {
+                            codigo: 58,
+                            msg: "O cargo do criador da empresa não pode ser alterado",
+                        },
+                    };
+                } else {
+                    if (funcionario.setor === null) {
+                        response?.status(403);
+                        retorno = {
+                            erro: {
+                                codigo: 59,
+                                msg: "Não pode alterar setor ou cargo de Funcionário com convite pendente",
+                            },
+                        };
+                    } else {
                         await logC.novoLog({
                             request: {
                                 operacao: "ALTERAR",
@@ -178,7 +199,7 @@ class FuncionarioEmpresaController {
                                 empresa: dadosRequest.empresa,
                             },
                         });
-        
+
                         // const funcionario = await Database.select('*')
                         // .table('funcionario_empresas')
                         // .where('funcionario',dadosRequest.funcionario)
@@ -196,7 +217,6 @@ class FuncionarioEmpresaController {
                         });
                         await funcionario.save();
                         retorno = funcionario;
-    
                     }
                 }
             }

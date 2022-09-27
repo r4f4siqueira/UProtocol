@@ -26,7 +26,7 @@ export const getContacts = (uid: String, companyId: Number) => async (dispatch) 
             if (err.response?.data?.erro) {
                 toast.error(err.response.data.erro.msg);
             }
-            toast.error(err);
+            console.error(err);
             dispatch(setLoading(false));
         });
 };
@@ -64,7 +64,7 @@ export const createContact =
                     if (err.response?.data?.erro) {
                         toast.error(err.response.data.erro.msg);
                     }
-                    toast.error(err);
+                    console.error(err);
                 });
         } catch (err) {
             console.error(err);
@@ -91,7 +91,7 @@ export const updateContact =
                     if (err.response?.data?.erro) {
                         toast.error(err.response.data.erro.msg);
                     }
-                    console.log(err);
+                    console.error(err);
                 });
         } catch (error) {
             console.log(error);
@@ -117,7 +117,7 @@ export const deleteContact = (contactID: Number, uid: String, companyId: Number)
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                toast.error(err);
+                console.error(err);
             });
         dispatch(setSaving(false));
     } catch (error) {

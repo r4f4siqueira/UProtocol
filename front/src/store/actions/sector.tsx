@@ -25,7 +25,7 @@ export const getSectors = (uid: String, companyId: Number) => async (dispatch) =
             if (err.response?.data?.erro) {
                 toast.error(err.response.data.erro.msg);
             }
-            toast.error(err);
+            console.error(err);
             dispatch(setLoading(false));
         });
 };
@@ -67,7 +67,7 @@ export const createSector =
             if (err.response?.data?.erro) {
                 toast.error(err.response.data.erro.msg);
             }
-            toast.error(err);
+            console.error(err);
             dispatch(setSaving(false));
         }
     };
@@ -101,7 +101,7 @@ export const updateSector =
                     if (err.response?.data?.erro) {
                         toast.error(err.response.data.erro.msg);
                     }
-                    toast.error(err);
+                    console.error(err);
                 });
         } catch (error) {
             console.log(error);
@@ -129,7 +129,7 @@ export const deleteSector = (sectorID: Number, uid: String, companyId: Number) =
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
-                toast.error(err);
+                console.error(err);
             });
         dispatch(setSaving(false));
     } catch (error) {
