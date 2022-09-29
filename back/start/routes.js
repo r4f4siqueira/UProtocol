@@ -18,7 +18,7 @@ const Route = use("Route");
 
 //ROTAS PARA PEGAR DADOS "get"
 Route.get("/", () => {
-  return { msg: "TODAS AS ROTAS PRECISAM DE UID!!!",api: 'OK'};
+  return { msg: "TODAS AS ROTAS PRECISAM DE UID e EMPRESA!!!",api: 'OK'};
 }); //desativar esta rota assim que possivel
 
 Route.get('/empresa','EmpresaController.listarEmpresas')
