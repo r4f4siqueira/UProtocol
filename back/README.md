@@ -74,6 +74,9 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 | ---- | ---------- | --------- | --------- | ------- |
 |criarCliente|`({request,response})`|Função obriga a passar as seguintes informações na request `ativo: boolean, razaosocial: string, fantasia: string,CNPJ_CPF: string, empresa: integer, uid: string`;|F|Retorna os dados do cliente cadastrado|
 |listarClientes|`({request,response})`|Para listar os clientes relacionado a empresa nescessita informar `uid: string, empresa: integer`|F|Retorna uma lista de clientes vinculados aquela empresa;
+|alterarCliente|`{params,request,response}`|Requer que passe a `id` por pareametro URL e os seguintes dados na request `ativo: boolean, razaosocial: string, fantasia: string, CNPJ_CPF: string, uid: string, empresa: int`|F|Retornas o cliente com os dados atualizados;
+|~~dadosCliente~~|`{params}`|Retorna os dados de um cliente em específico, requer que passe a `id` do cliente por parametro URL|F|Retorna os dados de um cliente em específico;
+
 
 
 
@@ -160,5 +163,10 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Contato|[65](# "ver no codigo")|Convite já aceito ou inexistente| 404
 |Cliente|[66](# "ver no codigo")|Cliente não encontrado para ser alterado| 404
 |Cliente|[67](# "ver no codigo")|`uid` não Informada| 400
-|Cliente|[68](# "ver no codigo")|Funcionário não vinculado a empresa para alterar dados| 404
+|Cliente|[68](# "ver no codigo")|Funcionário não vinculado a empresa para alterar dados do Cliente| 404
 |Cliente|[69](# "ver no codigo")|**Razão Social** ou **Nome** não informados| 400
+|Cliente|[70](# "ver no codigo")|Algo deu errado em salvar cliente| 500
+|Cliente|[71](# "ver no codigo")|Cliente não encontrado para ser deletado| 404
+|Cliente|[72](# "ver no codigo")|Não informada UID para excluir cliente| 400
+|Cliente|[73](# "ver no codigo")|Usuario não cadastrado ou não vinculado a empresa para excluir cliente| 400
+|Cliente|[74](# "ver no codigo")|Não foi possivel excluir, cliente tem um ou mais protocolos vinculados a ele| 400
