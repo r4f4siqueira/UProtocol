@@ -9,6 +9,7 @@
     - [Setor](#-setor)
     - [Funcionário Empresa](#-funcionário-empresa)
     - [Clientes](#-cliente)
+    - [Contato](#-contato)
 - [Erros](#-erros)
     - [Server Response](#-server-response)
     - [Mensagens de Erros](#-mensagens-de-erros)
@@ -74,10 +75,18 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 | ---- | ---------- | --------- | --------- | ------- |
 |criarCliente|`({request,response})`|Função obriga a passar as seguintes informações na request `ativo: boolean, razaosocial: string, fantasia: string,CNPJ_CPF: string, empresa: integer, uid: string`;|F|Retorna os dados do cliente cadastrado|
 |listarClientes|`({request,response})`|Para listar os clientes relacionado a empresa nescessita informar `uid: string, empresa: integer`|F|Retorna uma lista de clientes vinculados aquela empresa;
-|alterarCliente|`{params,request,response}`|Requer que passe a `id` por pareametro URL e os seguintes dados na request `ativo: boolean, razaosocial: string, fantasia: string, CNPJ_CPF: string, uid: string, empresa: int`|F|Retornas o cliente com os dados atualizados;
-|~~dadosCliente~~|`{params}`|Retorna os dados de um cliente em específico, requer que passe a `id` do cliente por parametro URL|F|Retorna os dados de um cliente em específico;
+|alterarCliente|`({params,request,response})`|Requer que passe a `id` por pareametro URL e os seguintes dados na request `ativo: boolean, razaosocial: string, fantasia: string, CNPJ_CPF: string, uid: string, empresa: int`|F|Retornas o cliente com os dados atualizados;
+|~~dadosCliente~~|`({params})`|Retorna os dados de um cliente em específico, requer que passe a `id` do cliente por parametro URL|F|Retorna os dados de um cliente em específico;
+|deletarCliente|`({params,request,response})`|Cliente só será deletado caso não tenha protocolo vunculado, passar a `id` do cliente por parametro URL junto aos seguintes dados na request `uid: string, empresa: integer`;|F|Retorna os dados do cliente excluido;
 
-
+### 📞 Contato
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarContato|`({request,response})`|Cria contato vinculado a um cliente, nescessita que passe os seguintes dados na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string, empresa: integer`;|F|Retorna os dados do contato cadastrado;
+|listarContatos|`({request,response})`|Lista os contatos vinculados de determinado cliente, na request informar `uid: string, empresa: integer, cliente: integer`;|F|Retorna uma lista com os contatos vinculados ao cliente;
+|~~dadosContato~~|`({params})`|Retorna os dados de um contato especifico, requer que passe a `id` por parametro URL;|F|Retorna os dados do contato;
+|alterarContato|`({params,request,response})`|Usada para alterar os dados de um contato vinculado a um cliente, requer que informe o `id` por parametro URL e os seguintes dados junto na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string`;|F|Retoda os dados do contato alterado;
+|deletarContato|`({params,request,response})`|Para excluir o contato é nescessário informa a `id` por parametro URL e os seguintes dados junto na request `uid: string, empresa: integer`;|F|Retorna os dados do contato excluido
 
 
 ## ⛔ Erros:
@@ -159,7 +168,7 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Cliente|[61](# "ver no codigo")|Razão social é obrigatório ser informada| 400
 |Cliente|[62](# "ver no codigo")|Funcionario não vinculado a empresa para listar clientes| 404
 |Contato|[63](# "ver no codigo")|Funcionario não vinculado a empresa para listar contatos| 404
-|Contato|[64](# "ver no codigo")|Já vinculado a outra empresa como criador| 403
+|Funcionario Empresa|[64](# "ver no codigo")|Já vinculado a outra empresa como criador| 403
 |Contato|[65](# "ver no codigo")|Convite já aceito ou inexistente| 404
 |Cliente|[66](# "ver no codigo")|Cliente não encontrado para ser alterado| 404
 |Cliente|[67](# "ver no codigo")|`uid` não Informada| 400
@@ -170,3 +179,13 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Cliente|[72](# "ver no codigo")|Não informada UID para excluir cliente| 400
 |Cliente|[73](# "ver no codigo")|Usuario não cadastrado ou não vinculado a empresa para excluir cliente| 400
 |Cliente|[74](# "ver no codigo")|Não foi possivel excluir, cliente tem um ou mais protocolos vinculados a ele| 400
+|Contato|[75](# "ver no codigo")|Funcionario não vinculado a empresa para criar contato| 404
+|Contato|[76](# "ver no codigo")|Cliente não encontrado para criar contato| 404
+|Contato|[77](# "ver no codigo")|Cliente não encontrado para listar contatos| 404
+|Contato|[78](# "ver no codigo")|Contato com a `id` informada não encontrado| 404
+|Contato|[79](# "ver no codigo")|Funcionario não vinculado a empresa para alterar contato| 404
+|Contato|[80](# "ver no codigo")|Algo deu errado em salvar contato| 500
+|Contato|[81](# "ver no codigo")|Contato não pertence ao cliente selecionado/informado| 400
+|Contato|[82](# "ver no codigo")|Contato não encontrado para ser excluido| 404
+|Contato|[83](# "ver no codigo")|uid não informada para excluir contato| 400
+|Contato|[84](# "ver no codigo")|Usuario não cadastrado ou não vinculado a empresa para excluir contato| 404

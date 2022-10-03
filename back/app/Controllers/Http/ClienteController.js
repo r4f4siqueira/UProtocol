@@ -186,7 +186,7 @@ class ClienteController {
                 .where('funcionario_uid',dadosRequest.uid)
                 .where('empresa',dadosRequest.empresa)
 
-                if(userm.length <= 0){
+                if(userm[0]?.empresa !== cliente.empresa){
                     response?.status(404)
                     retorno = {erro:{codigo:73,msg:"Usuario não cadastrado ou não vinculado a empresa para excluir cliente"}}
                 }else{
@@ -204,7 +204,7 @@ class ClienteController {
                         await logC.novoLog({
                             request: {
                                 operacao: "EXCLUIR",
-                                tabela: "CLIENTE",
+                                tabela: "clientes",
                                 coluna: "",
                                 valorantigo: JSON.stringify(cliente),
                                 valornovo: null,
@@ -216,19 +216,19 @@ class ClienteController {
                         //Função para deletar todos os contatos relacionados ao cliente
                         await Database
                             .table('contatos')
-                            .where('username', 'tutlage')
+                            .where('cliente',cliente.id)
+                            .where('empresa',userm[0].empresa)
                             .delete()
+
+                        //Função para remover o cliente
+                        retorno = cliente
+                        await cliente.delete()
                     }
                     //retorno = 'fazer função no contato para exluir todos os contatos vinculados a este cliente'
                 }
             }
         }
-
-
-
         return retorno
-        // await cliente.delete();
-        // return{mensagem: 'Cliente deletado'}
     }
 }
 
