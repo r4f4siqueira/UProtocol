@@ -10,6 +10,7 @@
     - [Funcionário Empresa](#%EF%B8%8F-funcion%C3%A1rio-empresa)
     - [Clientes](#-cliente)
     - [Contato](#-contato)
+    - [Prioridade](#-prioridade)
 - [Erros](#-erros)
     - [Server Response](#-server-response)
     - [Mensagens de Erros](#-mensagens-de-erros)
@@ -87,6 +88,15 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |~~dadosContato~~|`({params})`|Retorna os dados de um contato especifico, requer que passe a `id` por parametro URL;|F|Retorna os dados do contato;
 |alterarContato|`({params,request,response})`|Usada para alterar os dados de um contato vinculado a um cliente, requer que informe o `id` por parametro URL e os seguintes dados junto na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string`;|F|Retoda os dados do contato alterado;
 |deletarContato|`({params,request,response})`|Para excluir o contato é nescessário informa a `id` por parametro URL e os seguintes dados junto na request `uid: string, empresa: integer`;|F|Retorna os dados do contato excluido
+
+### 🔝 Prioridade
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarPrioridade|`({request,response})`|Cria uma prioridade para ordenar os protocolos, requer que seja informado os seguintes dados na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`|G|Retorna os dados da prioridade cadastrada;
+|listarPrioridades|`({request,response})`|Retorna uma lista de prioridades da empresa, requer que informe na requeste os dados de `uid: string, empresa: integer`;|F|Retorna lista de prioridades vinculada a empresa;
+|~~dadosPrioridade~~|`({params})`|Informa a `id` da prioridade por parametro de URL e retorna os dados da prioridade;|F|Reotorna os dados da prioridade informada;
+
+
 
 
 ## ⛔ Erros:
@@ -190,3 +200,10 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Contato|[82](# "ver no codigo")|Contato não encontrado para ser excluido| 404
 |Contato|[83](# "ver no codigo")|uid não informada para excluir contato| 400
 |Contato|[84](# "ver no codigo")|Usuario não cadastrado ou não vinculado a empresa para excluir contato| 404
+|Prioridade|[85](# "ver no codigo")|Funcionario não vinculado a empresa para criar Prioridade| 404
+|Prioridade|[86](# "ver no codigo")|Funcionário sem permissão para Criar prioridade| 403
+|Prioridade|[87](# "ver no codigo")|Nome ou Ordem de Importância inválidos| 400
+|Prioridade|[88](# "ver no codigo")|funcionario não vinculado a empresa para listar prioridades| 404
+|Prioridade|[89](# "ver no codigo")|Prioridade não encontrada para ser alterada| 404
+|Prioridade|[90](# "ver no codigo")|Funcionario não vinculado a empresa para alterar Prioridade| 404
+|Prioridade|[91](# "ver no codigo")|Funcionário sem permissão para alterar prioridade| 403

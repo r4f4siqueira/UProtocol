@@ -98,6 +98,27 @@ class EmpresaController {
                         id: retorno.userc,
                         nome:nomeUser[0].nome
                     }
+
+                    //cria 2 prioridades iniciais da empresa URGENTE e IMPORTANTE
+                    await Database
+                        .from('prioridades')
+                        .insert([{
+                            ativo: true,
+                            nome: "Urgente",
+                            ordemimportancia: 1,
+                            userc: idUser[0].id,
+                            empresa: retorno.id,
+                            created_at: retorno.created_at
+                        },
+                        {
+                            ativo: true,
+                            nome: "Importante",
+                            ordemimportancia: 2,
+                            userc: idUser[0].id,
+                            empresa: retorno.id,
+                            created_at: retorno.created_at
+                        }
+                    ])
                 }
             }
         }

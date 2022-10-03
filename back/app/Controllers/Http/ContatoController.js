@@ -27,7 +27,8 @@ class ContatoController {
             const userc = await Database.select("*")
             .table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
-            .where("empresa", dadosRequest.empresa);
+            .where("empresa", dadosRequest.empresa)
+            .whereNotNull("setor")
 
             if(userc[0]?.empresa !== cliente.empresa){
                 response?.status(404)
@@ -57,7 +58,8 @@ class ContatoController {
         }else{
             const user = await Database.table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
-            .where("empresa", dadosRequest.empresa);
+            .where("empresa", dadosRequest.empresa)
+            .whereNotNull("setor")
 
             if (user[0]?.setor === null || user[0]?.empresa !== cliente.empresa) {
                 response?.status(404);
@@ -130,7 +132,7 @@ class ContatoController {
                     await logC.novoLog({
                         request: {
                             operacao: "ALTERAR",
-                            tabela: "CONTATO",
+                            tabela: "contatos",
                             coluna: "",
                             valorantigo: JSON.stringify(contato),
                             valornovo: JSON.stringify({
@@ -186,6 +188,7 @@ class ContatoController {
                 .table('funcionario_empresas')
                 .where('funcionario_uid',dadosRequest.uid)
                 .where('empresa',dadosRequest.empresa)
+                .whereNotNull("setor")
 
                 if(userm[0]?.empresa !== contato.empresa){
                     response?.status(404)
