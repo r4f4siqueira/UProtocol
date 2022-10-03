@@ -5,9 +5,9 @@
     - [Tabela de Permissões](#-tabela-de-permissões)
 - [Funções](#-funções)
     - [Empresa](#-empresa)
-    - [Funcionários](#-funcionário)
+    - [Funcionários](#%EF%B8%8F-funcion%C3%A1rio)
     - [Setor](#-setor)
-    - [Funcionário Empresa](#-funcionário-empresa)
+    - [Funcionário Empresa](#%EF%B8%8F-funcion%C3%A1rio-empresa)
     - [Clientes](#-cliente)
     - [Contato](#-contato)
 - [Erros](#-erros)
@@ -98,6 +98,7 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 | 400 | Parametros enviados invalidos|
 | 403 | Sem permissao para realizar a ação|
 | 404 | Nao encontrado retorno para requisicao|
+| 500 | Erro interno no servidor|
 
 
 ### 📩 Mensagens de erros
