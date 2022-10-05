@@ -146,7 +146,7 @@ class EmpresaController {
                 .whereNotNull("setor")
                 .first();
 
-            console.log(idEmpresa);
+            
             if (
                 idEmpresa === "" ||
                 idEmpresa === null ||

@@ -121,23 +121,69 @@ class PrioridadeController {
                                 ordemimportancia: dadosRequest.ordemimportancia,
                                 userm: userm[0].funcionario,
                                 empresa: dadosRequest.empresa
-                            })
+                            }),
+                            funcionario: userm[0].funcionario,
+                            empresa: dadosRequest.empresa
                         }
                     })
+                    
+                    prioridade.merge({
+                        ativo: dadosRequest.ativo,
+                        nome: dadosRequest.nome,
+                        ordemimportancia: dadosRequest.ordemimportancia,
+                        userm: userm[0].funcionario,
+                    });
+
+                    await prioridade.save();
+                    retorno = prioridade
                 }
             }
         }
-
-        prioridade.merge(atualizaPrioridade);
-
-        await prioridade.save();
-        return prioridade
+        return retorno
     }
 
-    async deletarPrioridade({params}){
-        const prioridade = await Prioridade.findOrFail(params.id)
-        await prioridade.delete();
-        return{mensagem: 'Prioridade deletada'}
+    async deletarPrioridade({params,request,response}){
+        let retorno = ''
+        const prioridade = await Prioridade.find(params.id)
+        if (!prioridade){
+            response?.status(404)
+            retorno = {erro:{codigo:92,msg:"Prioridade não encontrada para ser deletada"}}
+        }else{
+            const dadosRequest = request.only(["uid","empresa"])
+            const user = await Database.select('*')
+                .table('funcionario_empresas')
+                .where('funcionario_uid',dadosRequest.uid)
+                .where('empresa',prioridade.empresa)
+                .whereNotNull("setor")
+
+            if(user.length === 0){
+                response?.status(404)
+                retorno = {erro:{codigo:93,msg:"Funcionario não vinculado a empresa para deletar Prioridade"}}
+            }else{
+                if(user[0]?.cargo ==="F"){
+                    response?.status(403)
+                    retorno = {erro:{codigo:94,msg:"Funcionário sem permissão para deletar prioridade"}}
+                }else{
+                    retorno=prioridade;
+                    
+                    await logC.novoLog({
+                        request: {
+                            operacao:"DELETAR",
+                            tabela: "prioridades",
+                            coluna: "",
+                            valorantigo: JSON.stringify(prioridade),
+                            valornovo: null,
+                            funcionario: user[0].funcionario,
+                            empresa: user[0].empresa
+                        }
+                    })
+                    
+                   // await prioridade.delete();
+                }
+
+            }
+        }
+        return retorno
     }
 }
 

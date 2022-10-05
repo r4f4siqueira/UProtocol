@@ -95,8 +95,8 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |criarPrioridade|`({request,response})`|Cria uma prioridade para ordenar os protocolos, requer que seja informado os seguintes dados na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`|G|Retorna os dados da prioridade cadastrada;
 |listarPrioridades|`({request,response})`|Retorna uma lista de prioridades da empresa, requer que informe na requeste os dados de `uid: string, empresa: integer`;|F|Retorna lista de prioridades vinculada a empresa;
 |~~dadosPrioridade~~|`({params})`|Informa a `id` da prioridade por parametro de URL e retorna os dados da prioridade;|F|Reotorna os dados da prioridade informada;
-
-
+|alterarPrioridade|`({params,request,response})`|Lista as prioridades cadastrada pela empresa, requer que informe a `id` por parametro URL e as seguintes infromações na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`;|G|Retorna uma lista de prioridades;
+|deletarPrioridade|`({params,request,response})`|Deleta as informações da prioridade informada, informar a `id` da prioridade por paremetro URL e os seguintes dados na request `uid: string, empresa: integer`;|G|Retorna os dados da prioridade deletada;
 
 
 ## ⛔ Erros:
@@ -207,3 +207,6 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Prioridade|[89](# "ver no codigo")|Prioridade não encontrada para ser alterada| 404
 |Prioridade|[90](# "ver no codigo")|Funcionario não vinculado a empresa para alterar Prioridade| 404
 |Prioridade|[91](# "ver no codigo")|Funcionário sem permissão para alterar prioridade| 403
+|Prioridade|[92](# "ver no codigo")|Prioridade não encontrada para ser deletada| 404
+|Prioridade|[93](# "ver no codigo")|Funcionario não vinculado a empresa para deletar Prioridade| 404
+|Prioridade|[94](# "ver no codigo")|Funcionário sem permissão para deletar prioridade| 403
