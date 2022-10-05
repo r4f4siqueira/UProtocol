@@ -1,6 +1,6 @@
-import { toast } from "react-toastify";
-import api from "../../services/backendAPI";
-import { SET_CUSTOMER, SET_LOADING, SET_SELECTED_CUSTOMER } from "../types/customer";
+import { toast } from 'react-toastify';
+import api from '../../services/backendAPI';
+import { SET_CUSTOMER, SET_LOADING, SET_SELECTED_CUSTOMER } from '../types/customer';
 
 /**
  * Pega a lista de clientes da empresa que o usuário se encontra
@@ -9,12 +9,12 @@ import { SET_CUSTOMER, SET_LOADING, SET_SELECTED_CUSTOMER } from "../types/custo
  */
 export const getCustomers = (uid: String, companyId: Number) => async (dispatch) => {
     dispatch(setLoading(true));
-    console.log("buscando clientes");
+    console.log('buscando clientes');
 
     api.get(`/cliente`, { params: { uid: uid, empresa: companyId } })
         .then(async (resp) => {
             // console.log(resp);
-            console.log("clientes encontrados");
+            console.log('clientes encontrados');
 
             dispatch({
                 type: SET_CUSTOMER,
@@ -58,7 +58,7 @@ export const createCustomer =
                     await dispatch(getCustomers(customerData.uid, resp.data.empresa));
                     // addCustomer(resp.data);
                     // loadCustomerData();
-                    toast.success("Cliente convidado com sucesso!");
+                    toast.success('Cliente criado com sucesso!');
                 })
                 .catch((err) => {
                     if (err.response?.data?.erro) {
@@ -81,15 +81,17 @@ export const createCustomer =
  * @param   {String} uid  UID do usuário que irá realizar a operação
  */
 export const updateCustomer =
-    (customerData: { id: Number; ativo: String; razaosocial: String | null; fantasia: String; CNPJ_CPF: String | null; uid: String; idEmpresa: Number }) =>
+    (customerData: { id: Number; ativo: String; razaosocial: String | null; fantasia: String; CNPJ_CPF: String | null; uid: String; empresa: Number }) =>
     async (dispatch) => {
         try {
+            // console.log(customerData);
+
             api.put(`/cliente/${customerData.id}`, customerData)
                 .then(async () => {
                     // console.log(resp);
                     // loadCustomerData();
-                    await dispatch(getCustomers(customerData.uid, customerData.idEmpresa));
-                    toast.info("Cliente atualizado com sucesso!");
+                    await dispatch(getCustomers(customerData.uid, customerData.empresa));
+                    toast.info('Cliente atualizado com sucesso!');
                 })
                 .catch((err) => {
                     if (err.response?.data?.erro) {

@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 
-import { useDispatch, useSelector } from "react-redux";
-import { BsPencilFill, BsTrashFill } from "react-icons/bs";
+import { useDispatch, useSelector } from 'react-redux';
+import { BsPencilFill, BsTrashFill } from 'react-icons/bs';
 
-import { TBEdit, TBRemove } from "../../../styles/styles";
-import { ContactTableWrapper } from "./styles";
+import { TBEdit, TBRemove } from '../../../styles/styles';
+import { ContactTableWrapper } from './styles';
 
-import { AuthContext } from "../../../context/auth.tsx";
-import { deleteContact, setSelectedContact } from "../../../store/actions/contact.tsx";
+import { AuthContext } from '../../../context/auth.tsx';
+import { deleteContact, setSelectedContact } from '../../../store/actions/contact.tsx';
 
 function TableContacts() {
     const dispatch = useDispatch();
@@ -19,7 +19,7 @@ function TableContacts() {
 
     useEffect(() => {
         if (Contacts?.contactList === undefined || Contacts?.contactList.length === 0) {
-            setLocalList([{ id: "0", pessoa: "Você não tem contatos cadastrados!" }]);
+            setLocalList([{ id: '0', pessoa: 'Você não tem contatos cadastrados!', userc: { nome: null } }]);
         } else {
             setLocalList(Contacts.contactList);
         }
@@ -30,7 +30,7 @@ function TableContacts() {
     }
 
     function handleRemoveContact(index) {
-        if (window.confirm("Tem certeza? essa acao nao pode ser revertida")) {
+        if (window.confirm('Tem certeza? essa acao nao pode ser revertida')) {
             dispatch(deleteContact(localList[index].id, user.uid, localList[index].empresa));
         }
     }
@@ -53,17 +53,17 @@ function TableContacts() {
                 <tbody>
                     {localList.map((Contact, index) => {
                         return (
-                            <tr key={"funcionario: " + Contact.id}>
+                            <tr key={'funcionario: ' + Contact.id}>
                                 <td>{Contact.id}</td>
                                 <td>{Contact.pessoa}</td>
                                 <td>{Contact.email}</td>
                                 <td>{Contact.telefone}</td>
                                 <td>{Contact.cliente}</td>
                                 <td>{Contact.ativo}</td>
-                                <td>{Contact.userc}</td>
+                                <td>{Contact.userc.nome}</td>
 
-                                {Contact.id === "0" ? (
-                                    ""
+                                {Contact.id === '0' ? (
+                                    ''
                                 ) : (
                                     <td>
                                         <TBEdit
@@ -72,7 +72,7 @@ function TableContacts() {
                                             }}
                                         >
                                             <BsPencilFill />
-                                        </TBEdit>{" "}
+                                        </TBEdit>{' '}
                                         <TBRemove
                                             onClick={() => {
                                                 handleRemoveContact(index);

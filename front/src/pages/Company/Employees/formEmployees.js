@@ -13,7 +13,7 @@ import { EmployeeFormWrapper, FormEmployees as EmployeesForm } from './styles';
 function FormEmployees() {
     const dispatch = useDispatch();
 
-    const companyId = useSelector((state) => state.Company.companyData?.id);
+    const companyId = useSelector((state) => state.Company.companyData.id);
     const selectedEmployee = useSelector((state) => state.Employee.selectedEmployee);
     const sectorList = useSelector((state) => state.Sector.sectorList);
 
