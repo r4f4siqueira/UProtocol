@@ -11,72 +11,75 @@ import { MdDone } from 'react-icons/md';
 import { AiOutlineClose } from 'react-icons/ai';
 
 function TableInvites() {
-	const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-	const { user } = useContext(AuthContext);
-	const Invites = useSelector((state) => state.Invite);
+    const { user } = useContext(AuthContext);
+    const Invites = useSelector((state) => state.Invite);
 
-	const [localList, setLocalList] = useState([]);
+    const [localList, setLocalList] = useState([]);
 
-	useEffect(() => {
-		if (Invites?.inviteList === undefined || Invites?.inviteList.length === 0) {
-			setLocalList([{ id: '0', nome: 'Você não tem convites pendentes! ' }]);
-		} else {
-			setLocalList(Invites.inviteList);
-		}
-	}, [Invites?.inviteList]);
+    useEffect(() => {
+        if (Invites?.inviteList === undefined || Invites?.inviteList.length === 0) {
+            setLocalList([{ id: '0', empresa: { nome: 'Você não tem convites pendentes!' } }]);
+        } else {
+            setLocalList(Invites.inviteList);
+        }
+    }, [Invites?.inviteList]);
 
-	function handleManageInvite(index, response) {
-		console.log();
-		dispatch(manageInvites(localList[index].id, user.uid, response));
-	}
+    function handleManageInvite(index, response) {
+        console.log();
+        dispatch(manageInvites(localList[index].id, user.uid, response));
+    }
 
-	return (
-		<InviteTableWrapper>
-			<table>
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Empresa</th>
-						<th>Cargo</th>
-						<th>Ações</th>
-					</tr>
-				</thead>
-				<tbody>
-					{localList.map((Invite, index) => {
-						return (
-							<tr key={'funcionario: ' + Invite.id}>
-								<td>{Invite.id}</td>
-								<td>{Invite.empresa}</td>
-								<td>{Invite.cargo}</td>
+    return (
+        <InviteTableWrapper>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Empresa</th>
+                        <th>Cargo</th>
+                        <th>Convidado por </th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {localList.map((Invite, index) => {
+                        console.log(Invite);
+                        return (
+                            <tr key={'funcionario: ' + Invite.id}>
+                                <td>{Invite.id}</td>
+                                <td>{Invite.empresa?.nome}</td>
+                                <td>{Invite.cargo}</td>
+                                <td>{Invite.userc?.nome}</td>
 
-								{Invite.id === '0' ? (
-									''
-								) : (
-									<td>
-										<TBConfirm
-											onClick={() => {
-												handleManageInvite(index, true);
-											}}
-										>
-											<MdDone />
-										</TBConfirm>{' '}
-										<TBRemove
-											onClick={() => {
-												handleManageInvite(index, false);
-											}}
-										>
-											<AiOutlineClose />
-										</TBRemove>
-									</td>
-								)}
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
-		</InviteTableWrapper>
-	);
+                                {Invite.id === '0' ? (
+                                    ''
+                                ) : (
+                                    <td>
+                                        <TBConfirm
+                                            onClick={() => {
+                                                handleManageInvite(index, true);
+                                            }}
+                                        >
+                                            <MdDone />
+                                        </TBConfirm>{' '}
+                                        <TBRemove
+                                            onClick={() => {
+                                                handleManageInvite(index, false);
+                                            }}
+                                        >
+                                            <AiOutlineClose />
+                                        </TBRemove>
+                                    </td>
+                                )}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        </InviteTableWrapper>
+    );
 }
 
 export default TableInvites;

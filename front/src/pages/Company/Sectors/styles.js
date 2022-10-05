@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Panel, TableWrapper, FormWrapper, PanelTable } from "../../../styles/styles";
+import styled from 'styled-components';
+import { Panel, TableWrapper, FormWrapper, PanelTable } from '../../../styles/styles';
 
 export const SectorFormWrapper = styled(FormWrapper)`
     form {
@@ -113,11 +113,18 @@ export const PanelSectors = styled(PanelTable)``;
 export const SectorTableWrapper = styled(TableWrapper)`
     th {
         :first-of-type,
-        :nth-last-child(-n + 3) {
+        :nth-last-child(-n + 2) {
             padding-left: 0rem;
             text-align: center;
             min-width: 50px;
             width: 75px;
+        }
+
+        :nth-child(3) {
+            padding-left: 0rem;
+            text-align: center;
+            min-width: 100px;
+            width: 150px;
         }
     }
     td {
