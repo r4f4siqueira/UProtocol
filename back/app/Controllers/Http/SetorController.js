@@ -119,20 +119,28 @@ class SetorController {
             } else {
                 retorno = await Database.select(
                     "setors.*",
-                    "funcionarios.nome as nomeUserc"
+                    "funcionarios.nome as userc_nome",
+                    'empresas.fantasia as empresa_nome'
                 )
                     .table("setors")
                     .leftJoin("funcionarios", "funcionarios.id", "setors.userc")
+                    .leftJoin("empresas", "empresas.id", "setors.empresa")
                     .where("empresa", params.empresa)
                     .orWhere("setors.id", 1);
-                console.log(retorno);
-                // const nomeUser = await Database.select("nome")
-                // .table("funcionarios")
-                // .where("id", retorno.userc)
-                // retorno.userc = {
-                //     id: retorno.userc,
-                //     nome:nomeUser[0].nome
-                // }
+            
+                retorno.every((setores)=>{
+                    setores.empresa = {
+                        id: setores.empresa,
+                        nome:setores.empresa_nome
+                    }
+                    setores.userc = {
+                        id: setores.userc,
+                        nome: setores.userc_nome
+                    }
+                    setores.empresa_nome=undefined
+                    setores.userc_nome=undefined
+                    return true
+                })
             }
         }
         // Database.close(['pg'])
@@ -278,6 +286,19 @@ class SetorController {
                                 },
                             };
                         } else {
+
+                            await logC.novoLog({
+                                request: {
+                                    operacao: "EXCLUIR",
+                                    tabela: "SETOR",
+                                    coluna: "",
+                                    valorantigo: JSON.stringify(setor),
+                                    valornovo: null,
+                                    funcionario: funcionario_empresas[0].funcionario,
+                                    empresa: funcionario_empresas[0].empresa,
+                                },
+                            });
+
                             await Database.table("funcionario_empresas")
                                 .where("setor", setor.id)
                                 .update("setor", "1");

@@ -59,11 +59,18 @@ class FuncionarioController {
                         },
                     };
                 } else {
-                    const novoFuncionario = await Funcionario.create(
-                        dataToCreate
-                    );
+                    const verificador = await Database.select("*")
+                        .table("funcionarios")
+                        .where("uid",dataToCreate.uid)
+                        .orWhere("email","=",dataToCreate.email)
+                        
+                    if(verificador.length >0){
+                        return verificador[0]
+                    }else{
+                        const novoFuncionario = await Funcionario.create(dataToCreate);
+                        return novoFuncionario;
+                    }
                     // Database.close(['pg'])
-                    return novoFuncionario;
                 }
             }
         }

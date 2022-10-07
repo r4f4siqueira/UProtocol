@@ -1,6 +1,6 @@
-import React from "react";
-import Select from "react-select";
-import { DropboxWrapper } from "./styles";
+import React from 'react';
+import Select from 'react-select';
+import { DropboxWrapper } from './styles';
 function Dropbox({ options, label, ocHandler, inputValue, search }) {
     return (
         <DropboxWrapper>
@@ -11,7 +11,6 @@ function Dropbox({ options, label, ocHandler, inputValue, search }) {
                         ocHandler(e);
                     }}
                     value={inputValue}
-                    isClearable
                     isSearchable={search ? search : false}
                     className="dropbox"
                     options={options}

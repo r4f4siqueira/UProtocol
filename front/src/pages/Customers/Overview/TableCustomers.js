@@ -1,25 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import { useDispatch, useSelector } from "react-redux";
-import { BsPencilFill, BsTrashFill } from "react-icons/bs";
+import { useDispatch, useSelector } from 'react-redux';
+import { BsPencilFill } from 'react-icons/bs';
 
-import { TBEdit, TBRemove } from "../../../styles/styles";
-import { CustomerTableWrapper } from "./styles";
+import { TBEdit } from '../../../styles/styles';
+import { CustomerTableWrapper } from './styles';
 
-import { AuthContext } from "../../../context/auth.tsx";
-import { deleteCustomer, setSelectedCustomer } from "../../../store/actions/customer.tsx";
+import { setSelectedCustomer } from '../../../store/actions/customer.tsx';
 
 function TableCustomers() {
     const dispatch = useDispatch();
 
-    const { user } = useContext(AuthContext);
     const Customers = useSelector((state) => state.Customer);
 
     const [localList, setLocalList] = useState([]);
 
     useEffect(() => {
         if (Customers?.customerList === undefined || Customers?.customerList.length === 0) {
-            setLocalList([{ id: "0", fantasia: "Você não tem clientes cadastrados!" }]);
+            setLocalList([{ id: '0', fantasia: 'Você não tem clientes cadastrados!', userc: { nome: null } }]);
         } else {
             setLocalList(Customers.customerList);
         }
@@ -46,17 +44,18 @@ function TableCustomers() {
                 </thead>
                 <tbody>
                     {localList.map((Customer, index) => {
+                        // console.log(Customer);
                         return (
-                            <tr key={"funcionario: " + Customer.id}>
+                            <tr key={'funcionario: ' + Customer.id}>
                                 <td>{Customer.id}</td>
                                 <td>{Customer.fantasia}</td>
                                 <td>{Customer.razaosocial}</td>
                                 <td>{Customer.CNPJ_CPF}</td>
-                                <td>{Customer.ativo}</td>
-                                <td>{Customer.userc}</td>
+                                <td>{Customer.ativo ? 'Sim' : 'Não'}</td>
+                                <td>{Customer.userc.nome}</td>
 
-                                {Customer.id === "0" ? (
-                                    ""
+                                {Customer.id === '0' ? (
+                                    ''
                                 ) : (
                                     <td>
                                         <TBEdit

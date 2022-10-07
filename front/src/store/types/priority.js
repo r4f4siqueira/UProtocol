@@ -1,0 +1,7 @@
+const PREFIX = '@PRIORITY/';
+
+export const SET_PRIORITY = `${PREFIX}SET_PRIORITY`;
+export const SET_SELECTED_PRIORITY = `${PREFIX}SET_SELECTED_PRIORITY`;
+export const SET_LOADING = `${PREFIX}SET_LOADING`;
+export const SET_SAVING = `${PREFIX}SET_SAVING`;
+// export const DELETE = `${PREFIX}DELETE`;

@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { getCompany, createCompany, updateCompany } from "../../../store/actions/company.tsx";
-import { AuthContext } from "../../../context/auth.tsx";
+import { createCompany, updateCompany } from '../../../store/actions/company.tsx';
+import { AuthContext } from '../../../context/auth.tsx';
 
-import { BtCancel, BtSubmit, ContainerBTW, ContainerCenter, ContainerR, PanelPage, Titles } from "../../../styles/styles";
-import { CompanyFormWrapper, CompanyOverview, Details, FormButtonsWrapper } from "../styles";
-import Input from "../../../components/Input/Input";
+import { BtCancel, BtSubmit, ContainerBTW, ContainerCenter, ContainerR, Titles } from '../../../styles/styles';
+import { CompanyFormWrapper, CompanyOverview, Details, FormButtonsWrapper } from '../styles';
+import Input from '../../../components/Input/Input';
 
 function Overview() {
     const dispatch = useDispatch();
@@ -22,8 +22,9 @@ function Overview() {
         OriginalCompany.companyData?.CNPJ_CPF === company?.CNPJ_CPF &&
         OriginalCompany.companyData?.ativo === company?.ativo;
 
+    // eslint-disable-next-line no-useless-escape
     const CNPJ_CPF_REX = /(^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$)|(^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}$)/;
-    const hasError = company?.CNPJ_CPF === "" ? false : !CNPJ_CPF_REX.test(company?.CNPJ_CPF);
+    const hasError = company?.CNPJ_CPF === '' ? false : !CNPJ_CPF_REX.test(company?.CNPJ_CPF);
 
     useEffect(() => {
         if (OriginalCompany.hasCompany) {
@@ -34,6 +35,7 @@ function Overview() {
         return () => {
             setCompany({});
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [OriginalCompany.companyData]);
 
     function handleCancel() {
@@ -50,19 +52,19 @@ function Overview() {
         if (!OriginalCompany.hasCompany) {
             // se não possuir empresa, cadastrar
             // empresa sempre será criada ativa
-            data.ativo = "1";
-            console.log("criar");
+            data.ativo = '1';
+            console.log('criar');
             console.log(data);
             dispatch(createCompany(data, user.uid));
         } else {
-            if (company.ativo === "0") {
-                if (!window.confirm("Tem certeza que deseja desativar essa empresa? a maioria das ações nela serão bloqueadas até ativá-la novamente")) {
-                    setCompany({ ...company, ativo: "1" });
+            if (company.ativo === '0') {
+                if (!window.confirm('Tem certeza que deseja desativar essa empresa? a maioria das ações nela serão bloqueadas até ativá-la novamente')) {
+                    setCompany({ ...company, ativo: '1' });
                     return;
                 }
             }
             //se possuir empresa. editar
-            console.log("editar");
+            console.log('editar');
             dispatch(updateCompany(data, user.uid));
         }
     }
@@ -80,7 +82,7 @@ function Overview() {
                             <Titles>
                                 <ContainerBTW>
                                     <Details>
-                                        <h3>Criador: {company?.userc.nome}</h3>
+                                        <h3>Criador: {company?.userc?.nome}</h3>
                                         <h3>ID: {company?.id}</h3>
                                     </Details>
                                     <span>
@@ -89,9 +91,9 @@ function Overview() {
                                             <input
                                                 title="ativo"
                                                 type="checkbox"
-                                                checked={company?.ativo === "1" ? true : false}
+                                                checked={company?.ativo === '1' ? true : false}
                                                 onChange={(e) => {
-                                                    setCompany({ ...company, ativo: e.target.checked ? "1" : "0" });
+                                                    setCompany({ ...company, ativo: e.target.checked ? '1' : '0' });
                                                 }}
                                             />
                                         </ContainerR>
@@ -127,10 +129,17 @@ function Overview() {
                             />
 
                             <FormButtonsWrapper>
-                                <BtCancel disabled={OriginalCompany.isSaving ? true : isDisabled} type="button" onClick={handleCancel}>
+                                <BtCancel
+                                    disabled={OriginalCompany.isSaving ? true : isDisabled}
+                                    type="button"
+                                    onClick={handleCancel}
+                                >
                                     Cancelar
                                 </BtCancel>
-                                <BtSubmit disabled={hasError ? true : OriginalCompany.isSaving ? true : isDisabled} type="submit">
+                                <BtSubmit
+                                    disabled={hasError ? true : OriginalCompany.isSaving ? true : isDisabled}
+                                    type="submit"
+                                >
                                     Salvar mudanças
                                 </BtSubmit>
                             </FormButtonsWrapper>
@@ -180,10 +189,17 @@ function Overview() {
                                 }}
                             />
                             <FormButtonsWrapper>
-                                <BtCancel disabled={OriginalCompany.isSaving ? true : isDisabled} type="button" onClick={handleCancel}>
+                                <BtCancel
+                                    disabled={OriginalCompany.isSaving ? true : isDisabled}
+                                    type="button"
+                                    onClick={handleCancel}
+                                >
                                     Cancelar
                                 </BtCancel>
-                                <BtSubmit disabled={hasError ? true : OriginalCompany.isSaving ? true : isDisabled} type="submit">
+                                <BtSubmit
+                                    disabled={hasError ? true : OriginalCompany.isSaving ? true : isDisabled}
+                                    type="submit"
+                                >
                                     Salvar mudanças
                                 </BtSubmit>
                             </FormButtonsWrapper>

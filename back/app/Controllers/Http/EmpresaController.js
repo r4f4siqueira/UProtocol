@@ -92,12 +92,32 @@ class EmpresaController {
                     });
 
                     const nomeUser = await Database.select("nome")
-                    .table("funcionarios")
-                    .where("id", retorno.userc)
+                        .table("funcionarios")
+                        .where("id", retorno.userc);
                     retorno.userc = {
                         id: retorno.userc,
-                        nome:nomeUser[0].nome
-                    }
+                        nome: nomeUser[0].nome,
+                    };
+
+                    //cria 2 prioridades iniciais da empresa URGENTE e IMPORTANTE
+                    await Database.from("prioridades").insert([
+                        {
+                            ativo: true,
+                            nome: "Urgente",
+                            ordemimportancia: 1,
+                            userc: idUser[0].id,
+                            empresa: retorno.id,
+                            created_at: retorno.created_at,
+                        },
+                        {
+                            ativo: true,
+                            nome: "Importante",
+                            ordemimportancia: 2,
+                            userc: idUser[0].id,
+                            empresa: retorno.id,
+                            created_at: retorno.created_at,
+                        },
+                    ]);
                 }
             }
         }
@@ -123,25 +143,28 @@ class EmpresaController {
             const idEmpresa = await Database.select("empresa")
                 .table("funcionario_empresas")
                 .where("funcionario_uid", user.uid)
-                .whereNotNull('setor')
+                .whereNotNull("setor")
                 .first();
+
+            
             if (
                 idEmpresa === "" ||
                 idEmpresa === null ||
                 idEmpresa === undefined
             ) {
+                response?.status(404);
                 retorno = {
                     erro: { codigo: 31, msg: "Funcionario sem empresa" },
                 };
             } else {
                 const empresa = await Empresa.find(idEmpresa.empresa);
                 const nomeUser = await Database.select("nome")
-                .table("funcionarios")
-                .where("id", empresa.userc)
+                    .table("funcionarios")
+                    .where("id", empresa.userc);
                 empresa.userc = {
                     id: empresa.userc,
-                    nome:nomeUser[0].nome
-                }
+                    nome: nomeUser[0].nome,
+                };
                 retorno = empresa;
             }
         }
@@ -207,12 +230,12 @@ class EmpresaController {
                 } else {
                     retorno = await Empresa.find(params.id);
                     const nomeUser = await Database.select("nome")
-                    .table("funcionarios")
-                    .where("id", retorno.userc)
+                        .table("funcionarios")
+                        .where("id", retorno.userc);
                     retorno.userc = {
                         id: retorno.userc,
-                        nome:nomeUser[0].nome
-                    }
+                        nome: nomeUser[0].nome,
+                    };
                 }
             }
         }
@@ -370,13 +393,15 @@ class EmpresaController {
                                     await empresa.save();
                                     //retorna os dados atualizados
 
-                                    const nomeUser = await Database.select("nome")
+                                    const nomeUser = await Database.select(
+                                        "nome"
+                                    )
                                         .table("funcionarios")
-                                        .where("id", empresa.userc)
-                                        empresa.userc = {
-                                            id: empresa.userc,
-                                            nome:nomeUser[0].nome
-                                        }
+                                        .where("id", empresa.userc);
+                                    empresa.userc = {
+                                        id: empresa.userc,
+                                        nome: nomeUser[0].nome,
+                                    };
                                     retorno = empresa;
                                 }
                             }

@@ -1,6 +1,6 @@
-import { toast } from "react-toastify";
-import api from "../../services/backendAPI";
-import { SET_CONTACT, SET_LOADING, SET_SELECTED_CONTACT } from "../types/contact";
+import { toast } from 'react-toastify';
+import api from '../../services/backendAPI';
+import { SET_CONTACT, SET_LOADING, SET_SELECTED_CONTACT } from '../types/contact';
 
 /**
  * Pega a lista de contatos da empresa que o usuário se encontra
@@ -9,12 +9,12 @@ import { SET_CONTACT, SET_LOADING, SET_SELECTED_CONTACT } from "../types/contact
  */
 export const getContacts = (uid: String, companyId: Number) => async (dispatch) => {
     dispatch(setLoading(true));
-    console.log("buscando contatos");
+    console.log('buscando contatos');
 
     api.get(`/contato`, { params: { uid: uid, empresa: companyId } })
         .then(async (resp) => {
             // console.log(resp);
-            console.log("contatos encontrados");
+            console.log('contatos encontrados');
 
             dispatch({
                 type: SET_CONTACT,
@@ -58,7 +58,7 @@ export const createContact =
                     await dispatch(getContacts(contactData.uid, resp.data.empresa));
                     // addContact(resp.data);
                     // loadContactData();
-                    toast.success("Contato criado com sucesso!");
+                    toast.success('Contato criado com sucesso!');
                 })
                 .catch((err) => {
                     if (err.response?.data?.erro) {
@@ -85,7 +85,7 @@ export const updateContact =
                     // console.log(resp);
                     // loadContactData();
                     await dispatch(getContacts(contactData.uid, contactData.empresa));
-                    toast.info("Contato atualizado com sucesso!");
+                    toast.info('Contato atualizado com sucesso!');
                 })
                 .catch((err) => {
                     if (err.response?.data?.erro) {
@@ -102,16 +102,16 @@ export const updateContact =
  * Deleta o contato
  * @param   {Number} contactID  Id do contato a ser deletado
  * @param   {String} uid  UID do usuário que irá realizar a operação
- * @param   {String} companyId  Id da empresa que o contato de encontra, utilizado para buscar os
+ * @param   {String} empresa  Id da empresa que o contato de encontra, utilizado para buscar os
  * contatos após a operação
  */
-export const deleteContact = (contactID: Number, uid: String, companyId: Number) => async (dispatch) => {
+export const deleteContact = (contactID: Number, uid: String, empresa: Number) => async (dispatch) => {
     dispatch(setSaving(true));
     try {
-        api.delete(`/contato/${contactID}`, { params: { uid: uid } })
+        api.delete(`/contato/${contactID}`, { params: { uid, empresa } })
             .then(async () => {
-                await dispatch(getContacts(uid, companyId));
-                toast.success("Contato deletado com sucesso!");
+                await dispatch(getContacts(uid, empresa));
+                toast.success('Contato deletado com sucesso!');
             })
             .catch((err) => {
                 if (err.response?.data?.erro) {

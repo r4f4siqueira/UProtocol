@@ -300,24 +300,50 @@ class FuncionarioEmpresaController {
         let retorno = "";
         const dadosRequest = request.only(["uid", "resposta"]);
         const funcionario_empresa = await FuncionarioEmpresa.find(params.id);
+
         if (funcionario_empresa?.funcionario_uid !== dadosRequest.uid) {
-            response?.status(403);
+            response?.status(404);
             retorno = {
                 erro: {
                     codigo: 57,
-                    msg: "Sem permissão para aceitar convite de outro funcionário",
+                    msg: "Não encontrado convite para esse usuário",
                 },
             };
         } else {
-            if (dadosRequest.resposta) {
-                funcionario_empresa.merge({
-                    setor: 1,
-                });
-                await funcionario_empresa.save();
-                retorno = funcionario_empresa;
-            } else {
-                await funcionario_empresa.delete();
-                retorno = { msg: "convite recusado" };
+            const verificador = Database.select('*')
+                .table('funcionario_empresas')
+                .where('funcionario_uid',dadosRequest.uid)
+                .where('cargo','A')
+
+            if(verificador.length > 0 ){
+                response?.status(403)
+                retorno = {
+                    erro:{
+                        codigo:64,
+                        msg:'Já vinculado a outra empresa como criador'
+                    }
+                }
+            } else{
+                if(funcionario_empresa.setor !=null){
+                    response?.status(404)
+                    retorno ={
+                        erro:{
+                            codigo:65,
+                            msg:'Convite já aceito ou inexistente'
+                        }
+                    }
+                } else{
+                    if (dadosRequest.resposta) {
+                        funcionario_empresa.merge({
+                            setor: 1,
+                        });
+                        await funcionario_empresa.save();
+                        retorno = { msg: "convite ACEITO" };
+                    } else {
+                        await funcionario_empresa.delete();
+                        retorno = { msg: "convite RECUSADO" };
+                    }
+                }
             }
         }
         return retorno;
@@ -325,10 +351,31 @@ class FuncionarioEmpresaController {
 
     async listarConvite({ request }) {
         const dadosRequest = request.only(["uid"]);
-        return await Database.select("*")
+        const lista = await Database.select(
+                "funcionario_empresas.*",
+                'empresas.fantasia as empresa_nome',
+                'funcionarios.nome as userc_nome')
             .table("funcionario_empresas")
+            .innerJoin('empresas','funcionario_empresas.empresa','empresas.id')
+            .innerJoin('funcionarios','funcionario_empresas.userc','funcionarios.id')
             .where("funcionario_uid", dadosRequest.uid)
             .whereNull("setor");
+
+        lista.every((convite)=>{
+            convite.empresa = {
+                id: convite.empresa,
+                nome:convite.empresa_nome
+            }
+            convite.userc = {
+                id: convite.userc,
+                nome: convite.userc_nome
+            }
+            convite.empresa_nome=undefined
+            convite.userc_nome=undefined
+            return true
+        })
+
+        return lista
     }
 }
 

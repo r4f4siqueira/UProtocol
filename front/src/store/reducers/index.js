@@ -1,10 +1,11 @@
 /* eslint-disable import/no-anonymous-default-export */
-import Company from "./company";
-import Sector from "./sector";
-import Employee from "./employee";
-import Customer from "./customer";
-import Invite from "./invites";
-import Contact from "./contact";
+import Company from './company';
+import Sector from './sector';
+import Employee from './employee';
+import Customer from './customer';
+import Invite from './invites';
+import Contact from './contact';
+import Priority from './priority';
 
 export default {
     Company,
@@ -13,4 +14,5 @@ export default {
     Customer,
     Contact,
     Invite,
+    Priority,
 };

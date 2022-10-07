@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createContext } from "react";
-import firebase from "../services/firebaseConnection";
-import { toast } from "react-toastify";
-import { GoogleAuthProvider } from "firebase/auth";
-import api from "../services/backendAPI";
+import React, { useState, useEffect, createContext } from 'react';
+import firebase from '../services/firebaseConnection';
+import { toast } from 'react-toastify';
+import { GoogleAuthProvider } from 'firebase/auth';
+import api from '../services/backendAPI';
 
 export const AuthContext = createContext({});
 
@@ -14,22 +14,22 @@ function AuthProvider({ children }) {
 
     useEffect(() => {
         //Quando abre o programa tenta pegar o usuário guardado no storage para logar automaticamente
-        firebase.auth().languageCode = "pt";
+        firebase.auth().languageCode = 'pt';
         setLoading(true);
         // passando ts ignore porque preciso que a variavel userstorage seja null ou json
         // @ts-ignore
-        const userStorage = JSON.parse(localStorage.getItem("@UProtocolUser"));
+        const userStorage = JSON.parse(localStorage.getItem('@UProtocolUser'));
         if (userStorage) {
             // caso exista um usuario no local storage, irá realizar o processo de colocar no sistema
             if (userStorage.avatar === null) {
                 // se o usuario nao tiver avatar ele recebe um placeholder
-                userStorage.avatar = require("../assets/placeholder.png");
+                userStorage.avatar = require('../assets/placeholder.png');
             }
             setUser(userStorage);
             setSigned(true);
             // no react strict mode o toast é mandado duas vezes, mas no modo de produção irá ficar normal
             if (Object.keys(user).length > 0) {
-                toast.success("Bem vindo " + userStorage.name + "!");
+                toast.success('Bem vindo ' + userStorage.name + '!');
             }
             // console.log("login");
         }
@@ -51,7 +51,7 @@ function AuthProvider({ children }) {
                 // após criar o usuário no auth, coloca seus dados no firestore
                 await firebase
                     .firestore()
-                    .collection("usuarios")
+                    .collection('usuarios')
                     .doc(response.user?.uid)
                     .set({ name: data.name, avatar: null, email: response.user?.email, active: true })
                     .then(() => {
@@ -61,7 +61,7 @@ function AuthProvider({ children }) {
                         setLoadAuth(false);
                     })
                     .catch((error) => {
-                        console.log("Erro ao salvar usuario firestore: " + error);
+                        console.log('Erro ao salvar usuario firestore: ' + error);
                         toast.error(error);
                         setLoadAuth(false);
                     });
@@ -69,8 +69,8 @@ function AuthProvider({ children }) {
             .catch((error) => {
                 // Sobreescrevendo alguns codigos comuns de erro
                 switch (error.code) {
-                    case "auth/email-already-in-use":
-                        toast.error("Email informado já está em uso");
+                    case 'auth/email-already-in-use':
+                        toast.error('Email informado já está em uso');
                         break;
                     default:
                         toast.error(error);
@@ -101,10 +101,10 @@ function AuthProvider({ children }) {
                         //após logar, pega os dados no firestore
                         const firebaseUser = await firebase
                             .firestore()
-                            .collection("usuarios")
+                            .collection('usuarios')
                             .doc(response.user?.uid)
                             .get()
-                            .catch((err) => console.log("erro ao buscar o usuario firebase auth:" + err));
+                            .catch((err) => console.log('erro ao buscar o usuario firebase auth:' + err));
 
                         const userData = {
                             uid: response.user?.uid,
@@ -121,14 +121,14 @@ function AuthProvider({ children }) {
                         setLoadAuth(false);
                         // sobrescrevendo erros comuns
                         switch (error.code) {
-                            case "auth/user-not-found":
-                                toast.error("Usuário não encontrado ou inexistente");
+                            case 'auth/user-not-found':
+                                toast.error('Usuário não encontrado ou inexistente');
                                 break;
-                            case "auth/wrong-password":
-                                toast.error("Senha inválida");
+                            case 'auth/wrong-password':
+                                toast.error('Senha inválida');
                                 break;
-                            case "auth/too-many-requests":
-                                toast.error("Muitas tentativas falhas, aguarde alguns segundos");
+                            case 'auth/too-many-requests':
+                                toast.error('Muitas tentativas falhas, aguarde alguns segundos');
                                 break; // esqueci por que nao coloquei isso antes
                             default:
                                 toast.error(error);
@@ -145,7 +145,7 @@ function AuthProvider({ children }) {
                 .signInWithPopup(provider)
                 .then(async (response) => {
                     // após login com o google, busca o usuario no firestore
-                    const firebaseUser = await firebase.firestore().collection("usuarios").doc(response.user?.uid).get();
+                    const firebaseUser = await firebase.firestore().collection('usuarios').doc(response.user?.uid).get();
                     if (firebaseUser.exists) {
                         // const avatar = firebaseUser.data()?.avatar !== null ? firebaseUser.data()?.avatarUrl : response.user?.photoURL;
                         // se o usuário existe no firestore
@@ -154,12 +154,12 @@ function AuthProvider({ children }) {
                             const avatar = response.user?.photoURL;
                             await firebase
                                 .firestore()
-                                .collection("usuarios")
+                                .collection('usuarios')
                                 .doc(response.user?.uid)
                                 .update({ avatar })
                                 .then(async () => {
                                     // após atualizar o avatar, pega os dados atualizados do usuario no firestore
-                                    const snapshot = await firebase.firestore().collection("usuarios").doc(response.user?.uid).get();
+                                    const snapshot = await firebase.firestore().collection('usuarios').doc(response.user?.uid).get();
                                     const userData = {
                                         uid: response.user?.uid,
                                         name: snapshot.data()?.name,
@@ -171,7 +171,7 @@ function AuthProvider({ children }) {
                                     setLoadAuth(false);
                                 })
                                 .catch((err) => {
-                                    console.log("erro ao atualizar avatar: " + err);
+                                    console.log('erro ao atualizar avatar: ' + err);
                                     handleUser(null, false, false);
                                     setLoadAuth(false);
                                 });
@@ -179,7 +179,7 @@ function AuthProvider({ children }) {
                             //se o usuário possui avatar no firebase
                             await firebase
                                 .firestore()
-                                .collection("usuarios")
+                                .collection('usuarios')
                                 .doc(response.user?.uid)
                                 .get()
                                 .then((snapshot) => {
@@ -194,7 +194,7 @@ function AuthProvider({ children }) {
                                     setLoadAuth(false);
                                 })
                                 .catch((err) => {
-                                    console.log("erro ao pegar dados do usuario: " + err);
+                                    console.log('erro ao pegar dados do usuario: ' + err);
                                     handleUser(null, false, false);
                                     setLoadAuth(false);
                                 });
@@ -205,7 +205,7 @@ function AuthProvider({ children }) {
                         const userData = { ...userFirebase, uid: response.user?.uid };
                         await firebase
                             .firestore()
-                            .collection("usuarios")
+                            .collection('usuarios')
                             .doc(response.user?.uid)
                             .set(userFirebase)
                             .then(() => {
@@ -213,7 +213,7 @@ function AuthProvider({ children }) {
                                 setLoadAuth(false);
                             })
                             .catch((err) => {
-                                toast.error("erro ao salvar usuario google novo firestore: " + err);
+                                toast.error('erro ao salvar usuario google novo firestore: ' + err);
                                 handleUser(null, false, false);
                                 setLoadAuth(false);
                             });
@@ -222,7 +222,7 @@ function AuthProvider({ children }) {
                 .catch((error) => {
                     console.log(error);
                     console.log(error.code);
-                    toast.error("Algo deu errado 😥");
+                    toast.error('Algo deu errado 😥');
                     setLoadAuth(false);
                     // setErro(true);
                 });
@@ -246,7 +246,7 @@ function AuthProvider({ children }) {
         switch (op) {
             case false:
                 //remover usuario do LS e do sistema
-                localStorage.removeItem("@UProtocolUser");
+                localStorage.removeItem('@UProtocolUser');
                 setUser({});
                 setSigned(false);
                 break;
@@ -254,46 +254,46 @@ function AuthProvider({ children }) {
                 // adicionar usuario no LS e sistema
                 if (userData) {
                     // se existir o obj userdata, sem essa verificacao o typescript reclama la embaixo
-                    localStorage.setItem("@UProtocolUser", JSON.stringify(userData));
+                    localStorage.setItem('@UProtocolUser', JSON.stringify(userData));
                     if (userData.avatar === null) {
                         // se nao possuir avatar, recebe um placeholder
-                        userData.avatar = require("../assets/placeholder.png");
+                        userData.avatar = require('../assets/placeholder.png');
                     }
                     setUser(userData);
                     setSigned(true);
                     // console.log(userData);
                     // se for uma atualizacao de usuário, ex: perfil.
                     if (isEdit) {
-                        toast.success("Salvo com sucesso!");
+                        toast.success('Salvo com sucesso!');
                     } else {
                         const data = new FormData();
-                        data.append("ativo", "1");
-                        data.append("nome", userData.name);
-                        data.append("email", userData.email);
-                        data.append("uid", userData.uid);
-                        data.append("avatarURL", userData.avatar);
-                        api.post("/funcionario", data)
+                        data.append('ativo', '1');
+                        data.append('nome', userData.name);
+                        data.append('email', userData.email);
+                        data.append('uid', userData.uid);
+                        data.append('avatarURL', userData.avatar);
+                        api.post('/funcionario', data)
                             .then((resp) => {
-                                console.log(resp);
+                                // console.log(resp);
                             })
                             .catch((err) => {
-                                if (err.code !== "ERR_BAD_RESPONSE") {
+                                if (err.code !== 'ERR_BAD_RESPONSE') {
                                     console.log(err);
                                 }
                                 console.log(err);
                             });
 
-                        toast.success("Bem vindo " + userData.name + "!");
+                        toast.success('Bem vindo ' + userData.name + '!');
                     }
                 } else {
-                    toast.error("tentando salvar usuario vazio ou nulo");
+                    toast.error('tentando salvar usuario vazio ou nulo');
                 }
                 break;
             // case undefined:
             //     console.log("caso 2");
             //     break;
             default:
-                console.log("op invalida");
+                console.log('op invalida');
                 break;
         }
     }
@@ -304,10 +304,10 @@ function AuthProvider({ children }) {
             .auth()
             .sendPasswordResetEmail(email)
             .then(() => {
-                toast.success("Email de verificação enviado! cheque sua caixa de entrada");
+                toast.success('Email de verificação enviado! cheque sua caixa de entrada');
             })
             .catch((err) => {
-                toast.error("Ocorreu um erro ao enviar o email");
+                toast.error('Ocorreu um erro ao enviar o email');
                 console.log(err.code);
                 console.log(err);
             });
@@ -322,19 +322,19 @@ function AuthProvider({ children }) {
         // muda o estado da conta como ativa ou inativa dependendo de OP
         firebase
             .firestore()
-            .collection("usuarios")
+            .collection('usuarios')
             .doc(uid)
             .update({ active: op })
             .then(() => {
                 if (!op) {
                     logout();
-                    toast.info("Conta desativada");
+                    toast.info('Conta desativada');
                 } else {
-                    toast.info("Conta reativada com sucesso!");
+                    toast.info('Conta reativada com sucesso!');
                 }
             })
             .catch((err) => {
-                toast.error("Ocorreu um erro ao gerenciar conta");
+                toast.error('Ocorreu um erro ao gerenciar conta');
                 console.log(err.code);
                 console.log(err);
             })

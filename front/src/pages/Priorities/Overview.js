@@ -2,16 +2,16 @@
 import React from 'react';
 
 //componentes
-import FormCustomers from './FormCustomers';
-import TableCustomers from './TableCustomers';
+import FormPriorities from './FormPrioritys';
+import TablePriorities from './TablePrioritys';
 import { PanelTable } from '../../../styles/styles';
 
 function Overview() {
     return (
         <>
-            <FormCustomers />
+            <FormPriorities />
             <PanelTable>
-                <TableCustomers />
+                <TablePriorities />
             </PanelTable>
         </>
     );

@@ -1,13 +1,13 @@
-import { SET_ACTIVE, SET_COMPANY, SET_LOADING, SET_SAVING } from "../types/company";
+import { SET_ACTIVE, SET_COMPANY, SET_LOADING, SET_SAVING } from '../types/company';
 
 export default function reducer(
     state = {
         companyData: null,
-        hasCompany: false,
+        hasCompany: null,
         isSaving: false,
         isLoading: false,
     },
-    action
+    action,
 ) {
     switch (action.type) {
         case SET_COMPANY:
@@ -21,13 +21,13 @@ export default function reducer(
                 hasCompany = true;
 
                 tcompany.created_at = tcompany.created_at.substring(0, 10);
-                tcompany.CNPJ_CPF = tcompany.CNPJ_CPF === null ? "" : tcompany.CNPJ_CPF;
+                tcompany.CNPJ_CPF = tcompany.CNPJ_CPF === null ? '' : tcompany.CNPJ_CPF;
 
-                if (typeof tcompany.ativo === "boolean") {
+                if (typeof tcompany.ativo === 'boolean') {
                     if (tcompany.ativo === true) {
-                        tcompany.ativo = "1";
+                        tcompany.ativo = '1';
                     } else {
-                        tcompany.ativo = "0";
+                        tcompany.ativo = '0';
                     }
                 }
             }

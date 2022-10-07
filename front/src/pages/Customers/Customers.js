@@ -1,51 +1,73 @@
-import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router";
+//React
+import React, { useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 
-import { BsFillTelephoneFill, BsPersonFill } from "react-icons/bs";
+//Componentes
+import Overview from './Overview/Overview';
+import Contacts from './Contacts/Contacts';
+import Loading from '../Loading/Loading';
+import Tabs from '../../components/Tabs/Tabs';
+import PageHeader from '../../components/PageHeader/PageHeader';
 
-import { ContainerPage, PanelPage } from "../../styles/styles";
+//Estilos - icones
+import { BsFillTelephoneFill, BsPersonFill } from 'react-icons/bs';
+import { ContainerPage, PanelPage } from '../../styles/styles';
 
-import { AuthContext } from "../../context/auth.tsx";
-
-import PageHeader from "../../components/PageHeader/PageHeader";
-import Tabs from "../../components/Tabs/Tabs";
-import Overview from "./Overview/Overview";
-import Contacts from "./Contacts/Contacts";
-import { useDispatch, useSelector } from "react-redux";
-import Loading from "../Loading/Loading";
-import { getCustomers } from "../../store/actions/customer.tsx";
+//Acoes
+import { AuthContext } from '../../context/auth.tsx';
+import { getCustomers } from '../../store/actions/customer.tsx';
+import { getContacts } from '../../store/actions/contact.tsx';
+import { getCompany } from '../../store/actions/company.tsx';
 
 function Customers() {
-    const tabs = [
-        { icon: <BsPersonFill />, name: "Clientes", navto: "/customers/overview" },
-        { icon: <BsFillTelephoneFill />, name: "Contatos", navto: "/customers/contacts" },
-    ];
-
+    //setup context e redux
     const { user } = useContext(AuthContext);
-
     const dispatch = useDispatch();
 
-    const { tab } = useParams();
-    const navTab = "/customers/" + tab;
-    let selectedTab;
-
+    //selectors
     const customers = useSelector((state) => state.Customer);
     const company = useSelector((state) => state.Company);
 
+    //setup tabs
+    const tabs = [
+        { icon: <BsPersonFill />, name: 'Clientes', navto: '/customers/overview', disabled: !company.hasCompany },
+        { icon: <BsFillTelephoneFill />, name: 'Contatos', navto: '/customers/contacts', disabled: !company.hasCompany },
+    ];
+
+    const { tab } = useParams();
+    const navTab = '/customers/' + tab;
+    let selectedTab;
+
     useEffect(() => {
-        if (company.companyData?.id) {
-            dispatch(getCustomers(user.uid, company.companyData.id));
+        async function loadData() {
+            await dispatch(getCompany(user.uid));
         }
+        if (company.hasCompany === null) {
+            loadData();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        async function loadData() {
+            if (company.companyData?.id) {
+                await dispatch(getCustomers(user.uid, company.companyData.id));
+                await dispatch(getContacts(user.uid, company.companyData.id));
+            }
+        }
+        loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [company.companyData]);
+
     switch (tab) {
-        case "overview":
+        case 'overview':
             //PENDENTE - trocar o formulário e esse modelo para apenas um display, criar uma
             //pagina de cadastro/edição de empresas para lidar com isso.
 
             selectedTab = <Overview />;
             break;
-        case "contacts":
+        case 'contacts':
             selectedTab = <Contacts />;
             break;
         default:
@@ -62,7 +84,10 @@ function Customers() {
                     <Loading />
                 ) : (
                     <>
-                        <Tabs Tabs={tabs} active={navTab} />
+                        <Tabs
+                            Tabs={tabs}
+                            active={navTab}
+                        />
                         {selectedTab}
                     </>
                 )}

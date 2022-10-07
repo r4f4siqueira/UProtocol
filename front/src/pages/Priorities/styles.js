@@ -1,51 +1,32 @@
 import styled from 'styled-components';
-import { Panel, TableWrapper, FormWrapper, PanelTable } from '../../../styles/styles';
+import { Panel, TableWrapper, FormWrapper, PanelTable } from '../../styles/styles';
 
-export const SectorFormWrapper = styled(FormWrapper)`
+export const PriorityFormWrapper = styled(FormWrapper)`
     form {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
-        div {
-            margin-top: 0;
-            width: fit-content;
-        }
-        .center {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            * {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-
-            .ativo {
-                margin-left: 1rem;
-                width: 1rem;
-                height: 1rem;
-            }
-        }
         width: 100%;
-        input {
-            min-width: fit-content;
-        }
+        justify-content: space-between;
 
+        .inputs,
+        .submit {
+            margin-top: 0;
+            display: flex;
+        }
         .inputs {
-            width: 40%;
-            .detailsWrapper {
-                min-width: 60%;
-                @media screen and (max-width: 1300px) {
-                    flex-direction: column;
-                }
-                @media screen and (max-width: 800px) {
-                    margin-left: -0.5rem;
-                }
+            min-width: 50vw;
+            align-items: center;
+            flex-wrap: wrap;
+            @media screen and (max-width: 700px) {
+                min-width: 90vw;
+            }
+
+            .input {
                 @media screen and (max-width: 700px) {
-                    .ativoWrapper {
-                        margin-left: 1.6rem;
-                    }
-                    min-width: 5rem;
+                    width: 70vw;
                 }
+                min-width: 275px;
+                margin-right: 0.5rem;
             }
         }
 
@@ -78,6 +59,7 @@ export const SectorFormWrapper = styled(FormWrapper)`
                     margin-right: 1rem;
                 }
                 width: 10rem;
+                max-height: 40px;
                 :active {
                     transform: translate(4px, 4px);
                     margin-left: 0;
@@ -99,7 +81,7 @@ export const SectorFormWrapper = styled(FormWrapper)`
     }
 `;
 
-export const FormSectors = styled(Panel)`
+export const FormPrioritys = styled(Panel)`
     &.edit {
         background-color: #ffdf89;
     }
@@ -108,12 +90,12 @@ export const FormSectors = styled(Panel)`
     margin-bottom: 1rem;
 `;
 
-export const PanelSectors = styled(PanelTable)``;
+export const PanelPrioritys = styled(PanelTable)``;
 
-export const SectorTableWrapper = styled(TableWrapper)`
+export const PriorityTableWrapper = styled(TableWrapper)`
     th {
         :first-of-type,
-        :nth-last-child(-n + 2) {
+        :nth-last-child(-n + 3) {
             padding-left: 0rem;
             text-align: center;
             min-width: 50px;
@@ -123,13 +105,13 @@ export const SectorTableWrapper = styled(TableWrapper)`
         :nth-child(3) {
             padding-left: 0rem;
             text-align: center;
-            min-width: 100px;
-            width: 150px;
+            min-width: 170px;
+            width: 200px;
         }
     }
     td {
         :first-of-type,
-        :nth-last-child(-n + 3) {
+        :nth-last-child(-n + 4) {
             text-align: center;
             padding-left: 0rem;
         }

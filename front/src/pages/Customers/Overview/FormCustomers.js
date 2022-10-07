@@ -1,14 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { AuthContext } from "../../../context/auth.tsx";
-import { createCustomer, setSelectedCustomer, updateCustomer } from "../../../store/actions/customer.tsx";
+import { AuthContext } from '../../../context/auth.tsx';
+import { createCustomer, setSelectedCustomer, updateCustomer } from '../../../store/actions/customer.tsx';
 
-import Input from "../../../components/Input/Input";
-import Dropbox from "../../../components/Dropbox/dropbox";
+import Input from '../../../components/Input/Input';
 
-import { BtCancel, BtSubmit, ContainerR, Titles } from "../../../styles/styles";
-import { CustomerFormWrapper, FormCustomers as CustomersForm } from "./styles";
+import { BtCancel, BtSubmit, Titles } from '../../../styles/styles';
+import { CustomerFormWrapper, FormCustomers as CustomersForm } from './styles';
 
 function FormCustomers() {
     const dispatch = useDispatch();
@@ -19,15 +18,14 @@ function FormCustomers() {
 
     const { user } = useContext(AuthContext);
 
-    const [Customers, setCustomers] = useState();
     const [localSelectedCustomer, setLocalSelectedCustomer] = useState();
 
-    const disableSubmit = localSelectedCustomer?.fantasia === undefined || localSelectedCustomer?.fantasia === "" || localSelectedCustomer?.fantasia === null;
+    const disableSubmit = localSelectedCustomer?.fantasia === undefined || localSelectedCustomer?.fantasia === '' || localSelectedCustomer?.fantasia === null;
 
     // preenchendo a dropbox de setores
     const sectorOptions = [];
     sectorList.every((sector, index) => {
-        if (sector.ativo === "1") {
+        if (sector.ativo === '1') {
             sectorOptions[index] = { value: sector.id, label: sector.nome };
         }
         return true;
@@ -36,18 +34,13 @@ function FormCustomers() {
     useEffect(() => {
         setLocalSelectedCustomer({
             ...selectedCustomer,
-            ativo: selectedCustomer.ativo ? "1" : "0",
+            ativo: selectedCustomer.ativo ? '1' : '0',
         });
     }, [selectedCustomer]);
 
     function handleCancelCustomer() {
-        setLocalSelectedCustomer({ fantasia: null, razaosocial: null, CNPJ_CPF: null, ativo: "1" });
-        dispatch(setSelectedCustomer({ fantasia: null, razaosocial: null, CNPJ_CPF: null, ativo: "1" }));
-    }
-    function handleRemoveCustomer(id) {
-        if (window.confirm("Tem certeza?") === true) {
-            //dispatch(deleteCustomer(id, user.uid, company.id));
-        }
+        setLocalSelectedCustomer({ fantasia: null, razaosocial: null, CNPJ_CPF: null, ativo: '1' });
+        dispatch(setSelectedCustomer({ fantasia: null, razaosocial: null, CNPJ_CPF: null, ativo: '1' }));
     }
 
     async function handleCustomer(evt) {
@@ -62,7 +55,7 @@ function FormCustomers() {
                 fantasia: localSelectedCustomer.fantasia,
                 CNPJ_CPF: localSelectedCustomer.CNPJ_CPF,
                 uid: user.uid,
-                idEmpresa: companyId,
+                empresa: companyId,
             };
             await dispatch(updateCustomer(data));
             handleCancelCustomer();
@@ -77,7 +70,7 @@ function FormCustomers() {
                 uid: user.uid,
                 empresa: companyId,
             };
-            console.log("criar");
+            console.log('criar');
             console.log(data);
             await dispatch(createCustomer(data));
             handleCancelCustomer();
@@ -85,7 +78,7 @@ function FormCustomers() {
     }
 
     return (
-        <CustomersForm className={localSelectedCustomer?.id ? "edit" : ""}>
+        <CustomersForm className={localSelectedCustomer?.id ? 'edit' : ''}>
             <Titles>{localSelectedCustomer?.id && `Selecionado: id - ${localSelectedCustomer?.id} | ${localSelectedCustomer?.fantasia} `}</Titles>
             <CustomerFormWrapper>
                 <form
@@ -138,19 +131,25 @@ function FormCustomers() {
                             <input
                                 className="ativo"
                                 type="checkbox"
-                                checked={localSelectedCustomer?.ativo === "1" ? true : false}
+                                checked={localSelectedCustomer?.ativo === '1' ? true : false}
                                 onChange={(e) => {
-                                    setLocalSelectedCustomer({ ...localSelectedCustomer, ativo: e.target.checked ? "1" : "0" });
+                                    setLocalSelectedCustomer({ ...localSelectedCustomer, ativo: e.target.checked ? '1' : '0' });
                                 }}
                             />
                         </div>
                     </div>
                     <div className="center submit">
-                        <BtCancel type="button" onClick={handleCancelCustomer}>
+                        <BtCancel
+                            type="button"
+                            onClick={handleCancelCustomer}
+                        >
                             Cancelar
                         </BtCancel>
-                        <BtSubmit disabled={disableSubmit} type="submit">
-                            {localSelectedCustomer?.id ? "Editar" : "Gravar"}
+                        <BtSubmit
+                            disabled={disableSubmit}
+                            type="submit"
+                        >
+                            {localSelectedCustomer?.id ? 'Editar' : 'Gravar'}
                         </BtSubmit>
                     </div>
                 </form>
