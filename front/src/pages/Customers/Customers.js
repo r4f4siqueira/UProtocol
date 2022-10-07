@@ -17,37 +17,48 @@ import { ContainerPage, PanelPage } from '../../styles/styles';
 //Acoes
 import { AuthContext } from '../../context/auth.tsx';
 import { getCustomers } from '../../store/actions/customer.tsx';
+import { getContacts } from '../../store/actions/contact.tsx';
 import { getCompany } from '../../store/actions/company.tsx';
 
 function Customers() {
-    const tabs = [
-        { icon: <BsPersonFill />, name: 'Clientes', navto: '/customers/overview' },
-        { icon: <BsFillTelephoneFill />, name: 'Contatos', navto: '/customers/contacts' },
-    ];
-
+    //setup context e redux
     const { user } = useContext(AuthContext);
-
     const dispatch = useDispatch();
+
+    //selectors
+    const customers = useSelector((state) => state.Customer);
+    const company = useSelector((state) => state.Company);
+
+    //setup tabs
+    const tabs = [
+        { icon: <BsPersonFill />, name: 'Clientes', navto: '/customers/overview', disabled: !company.hasCompany },
+        { icon: <BsFillTelephoneFill />, name: 'Contatos', navto: '/customers/contacts', disabled: !company.hasCompany },
+    ];
 
     const { tab } = useParams();
     const navTab = '/customers/' + tab;
     let selectedTab;
 
-    const customers = useSelector((state) => state.Customer);
-    const company = useSelector((state) => state.Company);
-
     useEffect(() => {
-        async function loadCompanyData() {
+        async function loadData() {
             await dispatch(getCompany(user.uid));
         }
         if (company.hasCompany === null) {
-            loadCompanyData();
-        }
-        if (company.companyData?.id) {
-            dispatch(getCustomers(user.uid, company.companyData.id));
+            loadData();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        async function loadData() {
+            if (company.companyData?.id) {
+                await dispatch(getCustomers(user.uid, company.companyData.id));
+                await dispatch(getContacts(user.uid, company.companyData.id));
+            }
+        }
+        loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [company.companyData]);
 
     switch (tab) {
         case 'overview':

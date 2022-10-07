@@ -22,76 +22,76 @@ import { getSectors } from '../../store/actions/sector.tsx';
 import { getEmployees } from '../../store/actions/employee.tsx';
 
 function Company() {
-	const tabs = [
-		{ icon: <BiBuildings />, name: 'Visão geral', navto: '/company/overview' },
-		{ icon: <FiGrid />, name: 'Setores', navto: '/company/sectors' },
-		{ icon: <BsPersonBadge />, name: 'Funcionarios', navto: '/company/employees' },
-	];
+    const dispatch = useDispatch();
+    const company = useSelector((state) => state.Company);
+    const { user } = useContext(AuthContext);
 
-	const dispatch = useDispatch();
-	const company = useSelector((state) => state.Company);
-	const { user } = useContext(AuthContext);
+    const tabs = [
+        { icon: <BiBuildings />, name: 'Visão geral', navto: '/company/overview', disabled: false },
+        { icon: <FiGrid />, name: 'Setores', navto: '/company/sectors', disabled: !company.hasCompany },
+        { icon: <BsPersonBadge />, name: 'Funcionarios', navto: '/company/employees', disabled: !company.hasCompany },
+    ];
 
-	const { tab } = useParams();
-	const navTab = '/company/' + tab;
-	let selectedTab;
-	// console.log(navTab);
+    const { tab } = useParams();
+    const navTab = '/company/' + tab;
+    let selectedTab;
+    // console.log(navTab);
 
-	useEffect(() => {
-		async function loadCompanyData() {
-			await dispatch(getCompany(user.uid));
-		}
-		loadCompanyData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+    useEffect(() => {
+        async function loadCompanyData() {
+            await dispatch(getCompany(user.uid));
+        }
+        loadCompanyData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-	useEffect(() => {
-		async function loadData() {
-			if (company.hasCompany === true && company.companyData !== null) {
-				await dispatch(getSectors(user.uid, company.companyData.id));
-				await dispatch(getEmployees(user.uid, company.companyData.id));
-			}
-		}
-		loadData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [company.hasCompany]);
+    useEffect(() => {
+        async function loadData() {
+            if (company.hasCompany === true && company.companyData !== null) {
+                await dispatch(getSectors(user.uid, company.companyData.id));
+                await dispatch(getEmployees(user.uid, company.companyData.id));
+            }
+        }
+        loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [company.hasCompany]);
 
-	switch (tab) {
-		case 'overview':
-			//PENDENTE - trocar o formulário e esse modelo para apenas um display, criar uma
-			//pagina de cadastro/edição de empresas para lidar com isso.
+    switch (tab) {
+        case 'overview':
+            //PENDENTE - trocar o formulário e esse modelo para apenas um display, criar uma
+            //pagina de cadastro/edição de empresas para lidar com isso.
 
-			selectedTab = <Overview />;
-			break;
-		case 'sectors':
-			selectedTab = <Sectors />;
-			break;
-		case 'employees':
-			selectedTab = <Employees />;
-			break;
-		default:
-			break;
-	}
-	return (
-		<ContainerPage>
-			<PageHeader title="Empresas">
-				<BiBuildings className="icon" />
-			</PageHeader>
-			<PanelPage>
-				{company.isLoading ? (
-					<Loading />
-				) : (
-					<>
-						<Tabs
-							Tabs={tabs}
-							active={navTab}
-						/>
-						{selectedTab}
-					</>
-				)}
-			</PanelPage>
-		</ContainerPage>
-	);
+            selectedTab = <Overview />;
+            break;
+        case 'sectors':
+            selectedTab = <Sectors />;
+            break;
+        case 'employees':
+            selectedTab = <Employees />;
+            break;
+        default:
+            break;
+    }
+    return (
+        <ContainerPage>
+            <PageHeader title="Empresas">
+                <BiBuildings className="icon" />
+            </PageHeader>
+            <PanelPage>
+                {company.isLoading ? (
+                    <Loading />
+                ) : (
+                    <>
+                        <Tabs
+                            Tabs={tabs}
+                            active={navTab}
+                        />
+                        {selectedTab}
+                    </>
+                )}
+            </PanelPage>
+        </ContainerPage>
+    );
 }
 
 export default Company;

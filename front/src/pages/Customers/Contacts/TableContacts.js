@@ -46,7 +46,7 @@ function TableContacts() {
                         <th>Telefone</th>
                         <th>Cliente</th>
                         <th>Ativo</th>
-                        <th>ID Criador</th>
+                        <th>Criador</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -59,7 +59,7 @@ function TableContacts() {
                                 <td>{Contact.email}</td>
                                 <td>{Contact.telefone}</td>
                                 <td>{Contact.cliente}</td>
-                                <td>{Contact.ativo}</td>
+                                <td>{Contact.ativo ? 'Sim' : 'Não'}</td>
                                 <td>{Contact.userc.nome}</td>
 
                                 {Contact.id === '0' ? (
