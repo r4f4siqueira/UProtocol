@@ -11,6 +11,7 @@
     - [Clientes](#-cliente)
     - [Contato](#-contato)
     - [Prioridade](#-prioridade)
+    - [Protocolo](#-protocolo)
 - [Erros](#-erros)
     - [Server Response](#-server-response)
     - [Mensagens de Erros](#-mensagens-de-erros)
@@ -98,6 +99,14 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |alterarPrioridade|`({params,request,response})`|Lista as prioridades cadastrada pela empresa, requer que informe a `id` por parametro URL e as seguintes infromações na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`;|G|Retorna uma lista de prioridades;
 |deletarPrioridade|`({params,request,response})`|Deleta as informações da prioridade informada, informar a `id` da prioridade por paremetro URL e os seguintes dados na request `uid: string, empresa: integer`;|G|Retorna os dados da prioridade deletada;
 
+### 📋 Protocolo
+Obs: Situação do protocolo `C`:concluído ou `A`:aberto
+
+| Nome | Parametros | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+|criarProtocolo|`({request,response})`|Requer que seja passada as seguintes informações na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, uid: string, empresa: integer` para a criação do protocolo|F|Retorna os dados do protocolo criado;
+|listarProtocolos|`({request,response})`|Retorna uma lista de protocolos, ordenados de acordo com a prioridade e a previsão, requer que seja informado os seguintes dados na request `uid: string, empresa: integer`|F|Retorna uma lista ordenada de protocolos;
+
 
 ## ⛔ Erros:
 
@@ -124,7 +133,7 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Empresa|[7](# "ver no codigo")|Empresa com ID: `id` Nao encontrada para alterar os dados| 404
 |Empresa|[8](# "ver no codigo")|USERM invalido para alterar dados da empresa| 400
 |Empresa|[9](# "ver no codigo")|Nome ou Fantasia não preenchido para alterar dados da empresa| 400
-|Protocolo|[10](# "ver no codigo")|Userc não preenchido para cadastrar protocolo| 400
+|Protocolo|[10](# "ver no codigo")|Usuario não encontrado ou não vinculado a empresa para cadastrar protocolo| 404
 |Protocolo|[11](# "ver no codigo")|Atendente não preenchido para cadastrar protocolo| 400
 |Protocolo|[12](# "ver no codigo")|Cliente não preenchido para cadastrar protocolo| 400
 |Protocolo|[13](# "ver no codigo")|Empresa não preenchida para cadastrar protocolo| 400
@@ -210,3 +219,5 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |Prioridade|[92](# "ver no codigo")|Prioridade não encontrada para ser deletada| 404
 |Prioridade|[93](# "ver no codigo")|Funcionario não vinculado a empresa para deletar Prioridade| 404
 |Prioridade|[94](# "ver no codigo")|Funcionário sem permissão para deletar prioridade| 403
+|Protocolo|[95](# "ver no codigo")|Cliente não encontrado| 404
+|Protocolo|[96](# "ver no codigo")|Funcionario não vinculado a empresa para listar protocolos| 404
