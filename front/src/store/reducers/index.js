@@ -6,6 +6,7 @@ import Customer from './customer';
 import Invite from './invites';
 import Contact from './contact';
 import Priority from './priority';
+import Protocol from './protocol';
 
 export default {
     Company,
@@ -15,4 +16,5 @@ export default {
     Contact,
     Invite,
     Priority,
+    Protocol,
 };
