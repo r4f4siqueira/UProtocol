@@ -89,8 +89,8 @@ Route.put("/protocolo/:id", "ProtocoloController.alterarProtocolo");
 Route.put("/repasse/:id", "RepasseController.alterarRepasse");
 Route.put("/contato/:id", "ContatoController.alterarContato");
 Route.put("/anexo/:id", "AnexoController.alterarAnexo");
-Route.put("/observacao/:id", "ObservacaoController.alterarObservacao");
-Route.put("/log/:id", "LogController.alterarLog");
+//Route.put("/observacao/:id", "ObservacaoController.alterarObservacao");
+//Route.put("/log/:id", "LogController.alterarLog");
 
 //ROTAS PARA EXCLUIR DADOS
 
@@ -101,9 +101,9 @@ Route.delete("/funcionario/:id", "FuncionarioController.deletarFuncionario");
 Route.delete("/funcionarioempresa/:id", "FuncionarioEmpresaController.deletarFuncionarioEmpresa");
 Route.delete("/cliente/:id", "ClienteController.deletarCliente");
 Route.delete("/prioridade/:id", "PrioridadeController.deletarPrioridade");
-Route.delete("/protocolo/:id", "ProtocoloController.deletarProtocolo");
-Route.delete("/repasse/:id", "RepasseController.deletarRepasse");
+//Route.delete("/protocolo/:id", "ProtocoloController.deletarProtocolo");
+//Route.delete("/repasse/:id", "RepasseController.deletarRepasse");
 Route.delete("/contato/:id", "ContatoController.deletarContato");
 Route.delete("/anexo/:id", "AnexoController.deletarAnexo");
-Route.delete("/observacao/:id", "ObservacaoController.deletarObservacao");
-Route.delete("/log/:id", "LogController.deletarLog");
+//Route.delete("/observacao/:id", "ObservacaoController.deletarObservacao");
+//Route.delete("/log/:id", "LogController.deletarLog");
