@@ -8,7 +8,7 @@ const logC = new LogController();
 class ProtocoloController {
     async criarProtocolo({request, response}){
         let retorno =''
-        const dadosRequest = request.only(['cliente','prioridade','pessoaatendida', 'motivo','previsao', 'uid', 'empresa'])
+        const dadosRequest = request.only(['cliente','prioridade','pessoaatendida', 'motivo','previsao','setor', 'uid', 'empresa'])
         
         //1 - Verifica se o usario que solicitou a requisição existe
         //2 - verifica se o atendente esta preenchido
@@ -54,7 +54,8 @@ class ProtocoloController {
                             previsao: dadosRequest.previsao,
                             userc: userc[0].funcionario,
                             empresa: dadosRequest.empresa,
-                            situacao: 'A'
+                            situacao: 'A',
+                            setor: dadosRequest.setor
                         })
                         //await Protocolo.create(dadosRequest);
                     }
@@ -98,6 +99,7 @@ class ProtocoloController {
                 .leftJoin("prioridades","prioridades.id","protocolos.prioridade")
                 .orderBy("ordemimportancia")
                 .orderBy("previsao")
+                //.forPage(1, 5) caso precise usar paginação
             //variavel para pegar a data e hora atual e comparar se o protocolo esta atrasado
             const agora = new Date()
             retorno.every((lista) => {
@@ -130,55 +132,192 @@ class ProtocoloController {
         return retorno
     }
 
-    async dadosProtocolo({params, response}){
+    async dadosProtocolo({params,request,response}){
+        let retorno = ''
         //Verifica se o parametro passado pela URL é valido
         if(params.id===null||params.id===''||parseInt(params.id)===undefined){
             response?.status(400)
-            return {erro:{codigo:14,msg:'Parametros invalidos para consultar protocolo, parametro passado:'+params.id}}
+            retorno = {erro:{codigo:14,msg:'Parametros invalidos para consultar protocolo, parametro passado:'+params.id}}
         }else{
-            //Pega os dados da empresa encontrada e atribui para dados
-            const dados = await Protocolo.find(params.id)
-            //verifica se encontrou algum protocolo
-            //se nao encontrou retorna erro
-            //se encontrar a empresa retorna os dados do protocolo encotrado
-            if(dados === null){
-                response?.status(404)
-                return {erro:{codigo:15, msg:'Protocolo com ID:'+params.id+' nao encontrado'}}
-            }else{
-                return await Protocolo.find(params.id)
+            const dadosRequest = request.only(["uid", "empresa"]);
+            const user = await Database.table("funcionario_empresas")
+                .where("funcionario_uid", dadosRequest.uid)
+                .where("empresa", dadosRequest.empresa)
+                .whereNotNull("setor");
+                
+            if (user.length === 0) {
+                response?.status(404);
+                retorno = {
+                    erro: {
+                        codigo: 97,
+                        msg: "funcionario não vinculado a empresa para ver os dados do protocolo",
+                    },
+                };
+            } else {
+                //Pega os dados do protocolo encontrado e atribui para dados
+                const dados = await Protocolo.find(params.id)
+                //verifica se encontrou algum protocolo
+                //se nao encontrou retorna erro
+                //se encontrar a empresa retorna os dados do protocolo encotrado
+                if(dados === null){
+                    response?.status(404)
+                    retorno = {erro:{codigo:15, msg:'Protocolo com ID:'+params.id+' nao encontrado'}}
+                }else{
+                    let protocolo = await Database
+                        .select(
+                            "protocolos.*",
+                            "fc.nome as userc_nome",
+                            "fa.nome as atendente_nome",
+                            "prioridades.ordemimportancia",
+                            "prioridades.nome",
+                            "clientes.fantasia"
+                            )
+                        .table("protocolos")
+                        .where("protocolos.empresa", dadosRequest.empresa)
+                        .where("protocolos.id",dados.id)
+                        .innerJoin("funcionarios as fc","fc.id","protocolos.userc")
+                        .innerJoin("clientes","clientes.id","protocolos.cliente")
+                        .leftJoin("funcionarios as fa","fa.id","protocolos.atendente")
+                        .leftJoin("prioridades","prioridades.id","protocolos.prioridade")
+                        .orderBy("ordemimportancia")
+                        .orderBy("previsao")
+                        //.forPage(1, 5) caso precise usar paginação
+
+                    let observacoes = await Database
+                        .select('observacoes.*',"funcionarios.nome as atendente_nome")
+                        .table("observacoes")
+                        .innerJoin("funcionarios","funcionarios.id","observacoes.atendente")
+                        .where("observacoes.protocolo",dados.id)
+                        .orderBy("id")
+
+                    observacoes.every((lista)=>{
+                        lista.atendente = {
+                            id: lista.atendente,
+                            nome: lista.atendente_nome
+                        }
+                        lista.atendente_nome = undefined
+
+                        return true
+                    })
+                    
+                    //variavel para pegar a data e hora atual e comparar se o protocolo esta atrasado
+                    const agora = new Date()
+                    protocolo.every((lista) => {
+                        lista.userc = {
+                            id: lista.userc,
+                            nome: lista.userc_nome,
+                        }
+                        lista.ordemimportancia = {
+                            ordem : lista.ordemimportancia,
+                            nome : lista.nome
+                        }
+                        lista.atendente = {
+                            id : lista.atendente,
+                            nome: lista.atendente_nome
+                        }
+                        lista.cliente = {
+                            id : lista.cliente,
+                            nome : lista.fantasia
+                        }
+                        lista.fantasia = undefined
+                        lista.userc_nome = undefined
+                        lista.atendente_nome = undefined
+                        lista.nome = undefined
+                        lista.atrasado = agora < lista.previsao ? false : true;//verificando se o protocolo está atrasado
+                        lista.observacoes = observacoes
+                        
+                        return true;
+                    });
+
+                    retorno = protocolo
+                }
             }
         }
+        return retorno
         //return await Protocolo.find(params.id)
     }
 
     async alterarProtocolo({params, request, response}){
-        //usa a funcao dadosProtocolo para pegar os dados do protocolo, pois a funcao ja faz a validacao do parametro
-        //caso retorne erro sera exibido o erro
-        const protocolo = await this.dadosProtocolo({params})
-        if(protocolo.erro!==undefined){
-            return protocolo
-        }else{
+        let retorno = "";
+        const protocolo = await Protocolo.find(params.id)
+
+        if (!protocolo) {
+            response?.status(404);
+            retorno = {
+                erro: {
+                    codigo: 98,
+                    msg: "Protocolo não encontrado para ser alterado",
+                },
+            };
+        } else {
             if(protocolo.situacao==='C'||protocolo.situacao==='c'){
                 response?.status(403)
                 return {erro:{codigo:16,msg:'Protocolo já está concluido'}}
             }else{
-                const atualizaProtocolo = request.only(['atendente','cliente','situacao','prioridade','pessoaatendida', 'motivo', 'userm'])//lembrar de tratar a situacao para alterar apenas quando for concluir
-            }
-            const atualizaProtocolo = request.only(['atendente','cliente','situacao','prioridade','pessoaatendida', 'motivo', 'userm'])//lembrar de tratar a situacao para alterar apenas quando for concluir
-        }
-        
-        /*const atualizaProtocolo = request.only(['atendente','cliente','situacao','prioridade','pessoaatendida', 'motivo', 'userm'])//lembrar de tratar a situacao para alterar apenas quando for concluir
-        if(atualizaProtocolo.situacao==='c'|| atualizaProtocolo.situacao==='C'){
-            return {erro:{codigo:16,msg:'Protocolo já está concluido'}}
-        }else{
-            if(atualizaProtocolo.userm===''||atualizaProtocolo.userm===null||atualizaProtocolo.userm===undefined)
-        }*/
-        
-        
-        /*protocolo.merge(atualizaProtocolo);
+                const dadosRequest = request.only([
+                    "cliente",
+                    "prioridade",
+                    "pessoaatendida", 
+                    "motivo", 
+                    "previsao",
+                    "setor",
+                    "uid", 
+                    "empresa"
+                ])
 
-        await protocolo.save();
-        return protocolo*/
+                const userm = await Database.select("*")
+                    .table("funcionario_empresas")
+                    .where("funcionario_uid", dadosRequest.uid)
+                    .where("empresa", protocolo.empresa)
+                    .whereNotNull("setor");
+
+                if (userm.length === 0) {
+                    response?.status(404);
+                    retorno = {
+                        erro: {
+                            codigo: 99,
+                            msg: "Funcionario não vinculado a empresa para alterar Protocolo",
+                        },
+                    };
+                } else {                
+                    
+                    await logC.novoLog({
+                        request: {
+                            operacao: "ALTERAR",
+                            tabela: "protocolos",
+                            coluna: "",
+                            valorantigo: JSON.stringify(protocolo),
+                            valornovo: JSON.stringify({
+                                cliente: dadosRequest.cliente,
+                                prioridade: dadosRequest.prioridade,
+                                pessoaatendida: dadosRequest.pessoaatendida, 
+                                motivo: dadosRequest.motivo, 
+                                previsao: dadosRequest.previsao,
+                                situacao: dadosRequest.situacao,
+                                setor: dadosRequest.setor
+                            }),
+                            funcionario: userm[0].funcionario,
+                            empresa: dadosRequest.empresa,
+                        }
+                    });
+
+                    protocolo.merge({
+                        cliente: dadosRequest.cliente,
+                        prioridade: dadosRequest.prioridade,
+                        pessoaatendida: dadosRequest.pessoaatendida, 
+                        motivo: dadosRequest.motivo, 
+                        previsao: dadosRequest.previsao,
+                        situacao: dadosRequest.situacao,
+                        setor: dadosRequest.setor,
+                        userm: userm[0].funcionario
+                    })
+
+                    await protocolo.save();
+                    retorno = protocolo;
+                }
+            }
+        }
+        return retorno
     }
 
     async deletarProtocolo({params}){

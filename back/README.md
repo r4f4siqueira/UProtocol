@@ -96,16 +96,18 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |criarPrioridade|`({request,response})`|Cria uma prioridade para ordenar os protocolos, requer que seja informado os seguintes dados na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`|G|Retorna os dados da prioridade cadastrada;
 |listarPrioridades|`({request,response})`|Retorna uma lista de prioridades da empresa, requer que informe na requeste os dados de `uid: string, empresa: integer`;|F|Retorna lista de prioridades vinculada a empresa;
 |~~dadosPrioridade~~|`({params})`|Informa a `id` da prioridade por parametro de URL e retorna os dados da prioridade;|F|Reotorna os dados da prioridade informada;
-|alterarPrioridade|`({params,request,response})`|Lista as prioridades cadastrada pela empresa, requer que informe a `id` por parametro URL e as seguintes infromações na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`;|G|Retorna uma lista de prioridades;
+|alterarPrioridade|`({params,request,response})`|Requer que informe a `id` da prioridade por parametro URL e as seguintes infromações na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer` para realizar a alteração;|G|Retorna os dados atualizados da prioridade;
 |deletarPrioridade|`({params,request,response})`|Deleta as informações da prioridade informada, informar a `id` da prioridade por paremetro URL e os seguintes dados na request `uid: string, empresa: integer`;|G|Retorna os dados da prioridade deletada;
 
 ### 📋 Protocolo
-Obs: Situação do protocolo `C`:concluído ou `A`:aberto
+Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 
 | Nome | Parametros | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
 |criarProtocolo|`({request,response})`|Requer que seja passada as seguintes informações na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, uid: string, empresa: integer` para a criação do protocolo|F|Retorna os dados do protocolo criado;
 |listarProtocolos|`({request,response})`|Retorna uma lista de protocolos, ordenados de acordo com a prioridade e a previsão, requer que seja informado os seguintes dados na request `uid: string, empresa: integer`|F|Retorna uma lista ordenada de protocolos;
+|dadosProtocolo|`({params,request,response})`|Retorna os dados e as observações referente ao `id` do protocolo informado por parametro URL, requer que seja informado na request `uid: string, empresa: integer` para validar a requisição|F|Retorna os dados do protocolo junto com as respectivas observações;
+|alterarProtocolo|`({params, request, response})`|Requer que informe por parametro URL a `id` do protocolo e os seguintes dados na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, situacao: char, uid: string, empresa: integer` para atualizar os dados do protocolo;|F|Retorna o protocolo com os dados atualizados
 
 
 ## ⛔ Erros:
@@ -221,3 +223,6 @@ Obs: Situação do protocolo `C`:concluído ou `A`:aberto
 |Prioridade|[94](# "ver no codigo")|Funcionário sem permissão para deletar prioridade| 403
 |Protocolo|[95](# "ver no codigo")|Cliente não encontrado| 404
 |Protocolo|[96](# "ver no codigo")|Funcionario não vinculado a empresa para listar protocolos| 404
+|Protocolo|[97](# "ver no codigo")|funcionario não vinculado a empresa para ver os dados do protocolo| 404
+|Protocolo|[98](# "ver no codigo")|Protocolo não encontrado para ser alterado| 404
+|Protocolo|[99](# "ver no codigo")|Funcionario não vinculado a empresa para alterar Protocolo| 404

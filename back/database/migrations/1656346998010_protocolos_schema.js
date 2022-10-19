@@ -11,6 +11,7 @@ class ProtocolosSchema extends Schema {
       table.integer('cliente').references('clientes.id')
       table.string('situacao', 1)
       table.integer('prioridade').references('prioridades.id')
+      table.integer('setor').references('setors.id')
       table.string('pessoaatendida', 100)
       table.string('motivo', 100)
       table.timestamp('previsao')
