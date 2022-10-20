@@ -6,17 +6,17 @@ const LogController = require("./LogController");
 const logC = new LogController();
 
 class ProtocoloController {
-    async criarProtocolo({request, response}){
-        let retorno =''
-        const dadosRequest = request.only(['cliente','prioridade','pessoaatendida', 'motivo','previsao','setor', 'uid', 'empresa'])
-        
+    async criarProtocolo({ request, response }) {
+        let retorno = ''
+        const dadosRequest = request.only(['cliente', 'prioridade', 'pessoaatendida', 'motivo', 'previsao', 'setor', 'uid', 'empresa'])
+
         //1 - Verifica se o usario que solicitou a requisição existe
         //2 - verifica se o atendente esta preenchido
         //3 - verifica se o cliente esta preenchido e se é um cliente valido
         //4 - verifica se a empresa esta prenchida
         //se todas as validacoes passar cadastra o protocolo
         //Caso contrario retorna erro com suas respectivas informacoes de erro
-        
+
         const userc = await Database.select("*")
             .table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
@@ -25,26 +25,26 @@ class ProtocoloController {
 
         if (userc.length === 0) {
             response?.status(404)
-            retorno = {erro:{codigo:10,msg:'Usuario não encontrado ou não vinculado a empresa para cadastrar protocolo'}}
-        }else{
-            if(dadosRequest.cliente===null || dadosRequest.cliente===undefined){
+            retorno = { erro: { codigo: 10, msg: 'Usuario não encontrado ou não vinculado a empresa para cadastrar protocolo' } }
+        } else {
+            if (dadosRequest.cliente === null || dadosRequest.cliente === undefined) {
                 response?.status(400)
-                retorno = {erro:{codigo:12,msg:'Cliente não preenchido para cadastrar protocolo'}}
-            }else{
-                if(dadosRequest.empresa===null || dadosRequest.empresa===undefined){
+                retorno = { erro: { codigo: 12, msg: 'Cliente não preenchido para cadastrar protocolo' } }
+            } else {
+                if (dadosRequest.empresa === null || dadosRequest.empresa === undefined) {
                     response?.status(400)
-                    retorno = {erro:{codigo:13,msg:'Empresa não preenchida para cadastrar protocolo'}}
-                }else{
-                    
+                    retorno = { erro: { codigo: 13, msg: 'Empresa não preenchida para cadastrar protocolo' } }
+                } else {
+
                     const idCliente = await Database.select("id")
                         .table("clientes")
                         .where("id", dadosRequest.cliente)
                         .where("empresa", dadosRequest.empresa)
-                    
-                    if(idCliente.length===0){
+
+                    if (idCliente.length === 0) {
                         response?.status(404)
-                        retorno = {erro:{codigo:95,msg:"Cliente não encontrado"}}
-                    }else{
+                        retorno = { erro: { codigo: 95, msg: "Cliente não encontrado" } }
+                    } else {
                         retorno = await Protocolo.create({
                             atendente: userc[0].funcionario,
                             cliente: idCliente[0].id,
@@ -55,7 +55,7 @@ class ProtocoloController {
                             userc: userc[0].funcionario,
                             empresa: dadosRequest.empresa,
                             situacao: 'A',
-                            setor: dadosRequest.setor
+                            setor: userc[0].setor
                         })
                         //await Protocolo.create(dadosRequest);
                     }
@@ -65,9 +65,9 @@ class ProtocoloController {
         return retorno
     }
 
-    async listarProtocolos({request,response}){
-        let retorno =''
-        const dadosRequest = request.only(["uid","empresa"])
+    async listarProtocolos({ request, response }) {
+        let retorno = ''
+        const dadosRequest = request.only(["uid", "empresa"])
         const user = await Database.table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
             .where("empresa", dadosRequest.empresa)
@@ -89,17 +89,19 @@ class ProtocoloController {
                     "fa.nome as atendente_nome",
                     "prioridades.ordemimportancia",
                     "prioridades.nome",
-                    "clientes.fantasia"
-                    )
+                    "clientes.fantasia",
+                    "setors.nome as setor_nome"
+                )
                 .table("protocolos")
                 .where("protocolos.empresa", dadosRequest.empresa)
-                .innerJoin("funcionarios as fc","fc.id","protocolos.userc")
-                .innerJoin("clientes","clientes.id","protocolos.cliente")
-                .leftJoin("funcionarios as fa","fa.id","protocolos.atendente")
-                .leftJoin("prioridades","prioridades.id","protocolos.prioridade")
+                .innerJoin("funcionarios as fc", "fc.id", "protocolos.userc")
+                .innerJoin("clientes", "clientes.id", "protocolos.cliente")
+                .innerJoin("setors", "setors.id", "protocolos.setor")
+                .leftJoin("funcionarios as fa", "fa.id", "protocolos.atendente")
+                .leftJoin("prioridades", "prioridades.id", "protocolos.prioridade")
                 .orderBy("ordemimportancia")
                 .orderBy("previsao")
-                //.forPage(1, 5) caso precise usar paginação
+            //.forPage(1, 5) caso precise usar paginação
             //variavel para pegar a data e hora atual e comparar se o protocolo esta atrasado
             const agora = new Date()
             retorno.every((lista) => {
@@ -107,44 +109,51 @@ class ProtocoloController {
                     id: lista.userc,
                     nome: lista.userc_nome,
                 }
-                lista.ordemimportancia = {
-                    ordem : lista.ordemimportancia,
-                    nome : lista.nome
+                lista.prioridade = {
+                    id: lista.prioridade,
+                    ordem: lista.ordemimportancia,
+                    nome: lista.nome
                 }
                 lista.atendente = {
-                    id : lista.atendente,
+                    id: lista.atendente,
                     nome: lista.atendente_nome
                 }
                 lista.cliente = {
-                    id : lista.cliente,
-                    nome : lista.fantasia
+                    id: lista.cliente,
+                    nome: lista.fantasia
+                }
+                lista.setor = {
+                    id: lista.setor,
+                    nome: lista.setor_nome
                 }
                 lista.fantasia = undefined
                 lista.userc_nome = undefined
                 lista.atendente_nome = undefined
                 lista.nome = undefined
+                lista.setor_nome = undefined
+                lista.ordemimportancia = undefined
                 lista.atrasado = agora < lista.previsao ? false : true;//verificando se o protocolo está atrasado
-                
+
                 return true;
             });
-            
+
         }
         return retorno
     }
 
-    async dadosProtocolo({params,request,response}){
+    async dadosProtocolo({ params, request, response }) {
         let retorno = ''
         //Verifica se o parametro passado pela URL é valido
-        if(params.id===null||params.id===''||parseInt(params.id)===undefined){
+        if (params.id === null || params.id === '' || parseInt(params.id) === undefined) {
             response?.status(400)
-            retorno = {erro:{codigo:14,msg:'Parametros invalidos para consultar protocolo, parametro passado:'+params.id}}
-        }else{
+            retorno = { erro: { codigo: 14, msg: 'Parametros invalidos para consultar protocolo, parametro passado:' + params.id } }
+        } else {
             const dadosRequest = request.only(["uid", "empresa"]);
             const user = await Database.table("funcionario_empresas")
                 .where("funcionario_uid", dadosRequest.uid)
                 .where("empresa", dadosRequest.empresa)
                 .whereNotNull("setor");
-                
+
             if (user.length === 0) {
                 response?.status(404);
                 retorno = {
@@ -159,10 +168,10 @@ class ProtocoloController {
                 //verifica se encontrou algum protocolo
                 //se nao encontrou retorna erro
                 //se encontrar a empresa retorna os dados do protocolo encotrado
-                if(dados === null){
+                if (dados === null) {
                     response?.status(404)
-                    retorno = {erro:{codigo:15, msg:'Protocolo com ID:'+params.id+' nao encontrado'}}
-                }else{
+                    retorno = { erro: { codigo: 15, msg: 'Protocolo com ID:' + params.id + ' nao encontrado' } }
+                } else {
                     let protocolo = await Database
                         .select(
                             "protocolos.*",
@@ -170,27 +179,29 @@ class ProtocoloController {
                             "fa.nome as atendente_nome",
                             "prioridades.ordemimportancia",
                             "prioridades.nome",
-                            "clientes.fantasia"
-                            )
+                            "clientes.fantasia",
+                            "setors.nome as setor_nome"
+                        )
                         .table("protocolos")
                         .where("protocolos.empresa", dadosRequest.empresa)
-                        .where("protocolos.id",dados.id)
-                        .innerJoin("funcionarios as fc","fc.id","protocolos.userc")
-                        .innerJoin("clientes","clientes.id","protocolos.cliente")
-                        .leftJoin("funcionarios as fa","fa.id","protocolos.atendente")
-                        .leftJoin("prioridades","prioridades.id","protocolos.prioridade")
+                        .where("protocolos.id", dados.id)
+                        .innerJoin("funcionarios as fc", "fc.id", "protocolos.userc")
+                        .innerJoin("clientes", "clientes.id", "protocolos.cliente")
+                        .innerJoin("setors", "setors.id", "protocolos.setor")
+                        .leftJoin("funcionarios as fa", "fa.id", "protocolos.atendente")
+                        .leftJoin("prioridades", "prioridades.id", "protocolos.prioridade")
                         .orderBy("ordemimportancia")
                         .orderBy("previsao")
-                        //.forPage(1, 5) caso precise usar paginação
+                    //.forPage(1, 5) caso precise usar paginação
 
                     let observacoes = await Database
-                        .select('observacoes.*',"funcionarios.nome as atendente_nome")
+                        .select('observacoes.*', "funcionarios.nome as atendente_nome")
                         .table("observacoes")
-                        .innerJoin("funcionarios","funcionarios.id","observacoes.atendente")
-                        .where("observacoes.protocolo",dados.id)
+                        .innerJoin("funcionarios", "funcionarios.id", "observacoes.atendente")
+                        .where("observacoes.protocolo", dados.id)
                         .orderBy("id")
 
-                    observacoes.every((lista)=>{
+                    observacoes.every((lista) => {
                         lista.atendente = {
                             id: lista.atendente,
                             nome: lista.atendente_nome
@@ -199,7 +210,7 @@ class ProtocoloController {
 
                         return true
                     })
-                    
+
                     //variavel para pegar a data e hora atual e comparar se o protocolo esta atrasado
                     const agora = new Date()
                     protocolo.every((lista) => {
@@ -207,25 +218,36 @@ class ProtocoloController {
                             id: lista.userc,
                             nome: lista.userc_nome,
                         }
-                        lista.ordemimportancia = {
-                            ordem : lista.ordemimportancia,
-                            nome : lista.nome
+                        lista.prioridade = {
+                            id: lista.prioridade,
+                            ordem: lista.ordemimportancia,
+                            nome: lista.nome
                         }
                         lista.atendente = {
-                            id : lista.atendente,
+                            id: lista.atendente,
                             nome: lista.atendente_nome
                         }
                         lista.cliente = {
-                            id : lista.cliente,
-                            nome : lista.fantasia
+                            id: lista.cliente,
+                            nome: lista.fantasia
+                        }
+                        lista.setor = {
+                            id: lista.setor,
+                            nome: lista.setor_nome
                         }
                         lista.fantasia = undefined
                         lista.userc_nome = undefined
                         lista.atendente_nome = undefined
                         lista.nome = undefined
-                        lista.atrasado = agora < lista.previsao ? false : true;//verificando se o protocolo está atrasado
+                        lista.setor_nome = undefined
+                        lista.ordemimportancia = undefined
+                        if (lista.previsao !== null) {
+                            lista.atrasado = agora < lista.previsao ? false : true;//verificando se o protocolo está atrasado
+                        } else {
+                            lista.atrasado = false
+                        }
                         lista.observacoes = observacoes
-                        
+
                         return true;
                     });
 
@@ -237,7 +259,7 @@ class ProtocoloController {
         //return await Protocolo.find(params.id)
     }
 
-    async alterarProtocolo({params, request, response}){
+    async alterarProtocolo({ params, request, response }) {
         let retorno = "";
         const protocolo = await Protocolo.find(params.id)
 
@@ -250,18 +272,18 @@ class ProtocoloController {
                 },
             };
         } else {
-            if(protocolo.situacao==='C'||protocolo.situacao==='c'){
+            if (protocolo.situacao === 'C' || protocolo.situacao === 'c') {
                 response?.status(403)
-                return {erro:{codigo:16,msg:'Protocolo já está concluido'}}
-            }else{
+                return { erro: { codigo: 16, msg: 'Protocolo já está concluido' } }
+            } else {
                 const dadosRequest = request.only([
                     "cliente",
                     "prioridade",
-                    "pessoaatendida", 
-                    "motivo", 
+                    "pessoaatendida",
+                    "motivo",
                     "previsao",
                     "setor",
-                    "uid", 
+                    "uid",
                     "empresa"
                 ])
 
@@ -279,8 +301,8 @@ class ProtocoloController {
                             msg: "Funcionario não vinculado a empresa para alterar Protocolo",
                         },
                     };
-                } else {                
-                    
+                } else {
+
                     await logC.novoLog({
                         request: {
                             operacao: "ALTERAR",
@@ -290,8 +312,8 @@ class ProtocoloController {
                             valornovo: JSON.stringify({
                                 cliente: dadosRequest.cliente,
                                 prioridade: dadosRequest.prioridade,
-                                pessoaatendida: dadosRequest.pessoaatendida, 
-                                motivo: dadosRequest.motivo, 
+                                pessoaatendida: dadosRequest.pessoaatendida,
+                                motivo: dadosRequest.motivo,
                                 previsao: dadosRequest.previsao,
                                 situacao: dadosRequest.situacao,
                                 setor: dadosRequest.setor
@@ -304,8 +326,8 @@ class ProtocoloController {
                     protocolo.merge({
                         cliente: dadosRequest.cliente,
                         prioridade: dadosRequest.prioridade,
-                        pessoaatendida: dadosRequest.pessoaatendida, 
-                        motivo: dadosRequest.motivo, 
+                        pessoaatendida: dadosRequest.pessoaatendida,
+                        motivo: dadosRequest.motivo,
                         previsao: dadosRequest.previsao,
                         situacao: dadosRequest.situacao,
                         setor: dadosRequest.setor,
@@ -320,10 +342,92 @@ class ProtocoloController {
         return retorno
     }
 
-    async deletarProtocolo({params}){
+    async concluirProtocolo({ params, request, response }) {
+        let retorno = ''
+        const protocolo = await Protocolo.findOrFail(params.id)
+        const dadosRequest = request.only(["uid", "empresa"])
+
+        const userc = await Database.select("funcionario_empresas.*","funcionarios.nome as nome_funcionario")
+            .table("funcionario_empresas")
+            .innerJoin('funcionarios','funcionarios.id','funcionario_empresas.funcionario')
+            .where("funcionario_uid", dadosRequest.uid)
+            .where("empresa", protocolo.empresa)
+            .whereNotNull("setor")
+
+        if (userc.length === 0) {
+            response?.status(404);
+            retorno = {
+                erro: {
+                    codigo: 102,
+                    msg: "Funcionario não vinculado a empresa para Concluir Protocolo",
+                },
+            };
+        } else {
+            //verificar atendente e repassar para quem ta concluindo
+            //observar conclusão
+            //
+            if(protocolo.situacao =="C"){
+                response?.status(403);
+                retorno = {
+                    erro: {
+                        codigo: 102,
+                        msg: "Protocolo já concluido",
+                    },
+                };
+            }else{
+
+                if(protocolo.atendente === userc[0].funcionario){
+                    protocolo.merge({ situacao: "C" })
+                    await Database
+                        .table('observacoes')
+                        .insert({
+                            protocolo: protocolo.id,
+                            atendente: userc[0].funcionario,
+                            observacao: userc[0].nome_funcionario + " encerrou este protocolo",
+                            empresa: userc[0].empresa
+                        })
+                    await protocolo.save()
+                    retorno = protocolo
+                }else{
+
+                    await Database
+                        .table('repasses')
+                        .insert({
+                            funcionarioatual: protocolo.atendente,
+                            protocolo: protocolo.id,
+                            funcionariodestino: userc[0].funcionario,
+                            userc: userc[0].funcionario,
+                            empresa: userc[0].empresa,
+                            setor: userc[0].setor
+                        })
+
+                    await Database
+                        .table('observacoes')
+                        .insert({
+                            protocolo: protocolo.id,
+                            atendente: userc[0].funcionario,
+                            observacao: userc[0].nome_funcionario + " encerrou este protocolo",
+                            empresa: userc[0].empresa
+                        })
+
+                    await protocolo.merge({ 
+                        situacao: "C",
+                        atendente: userc[0].funcionario
+                    })
+                    await protocolo.save()
+
+                    retorno = protocolo
+                }
+            }
+        }
+
+        return retorno
+    }
+
+    async deletarProtocolo({ params }) {
         const protocolo = await Protocolo.findOrFail(params.id)
         await protocolo.delete();
-        return{mensagem: 'Protocolo deletado'}
+        return { mensagem: 'Protocolo deletado' }
     }
 
     /*

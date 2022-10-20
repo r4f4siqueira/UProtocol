@@ -108,6 +108,7 @@ Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 |listarProtocolos|`({request,response})`|Retorna uma lista de protocolos, ordenados de acordo com a prioridade e a previsão, requer que seja informado os seguintes dados na request `uid: string, empresa: integer`|F|Retorna uma lista ordenada de protocolos;
 |dadosProtocolo|`({params,request,response})`|Retorna os dados e as observações referente ao `id` do protocolo informado por parametro URL, requer que seja informado na request `uid: string, empresa: integer` para validar a requisição|F|Retorna os dados do protocolo junto com as respectivas observações;
 |alterarProtocolo|`({params, request, response})`|Requer que informe por parametro URL a `id` do protocolo e os seguintes dados na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, situacao: char, uid: string, empresa: integer` para atualizar os dados do protocolo;|F|Retorna o protocolo com os dados atualizados
+|concluirProtocolo|`({params,request,response})`|use a rota `protocolo/concluir/:id` para concluir o protocolo e informe `uid: string, empresa: integer` na request;|F|Retorna os dados do protocolo encerrado;
 
 ### 🔄 Repasse
 | Nome | Parametros | Descrição | Permissão | Sucesso |
@@ -232,3 +233,5 @@ Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 |Protocolo|[99](# "ver no codigo")|Funcionario não vinculado a empresa para alterar Protocolo| 404
 |Repasse|[100](# "ver no codigo")|Usuario não encontrado ou não vinculado a empresa para repassar protocolo| 404
 |Repasse|[101](# "ver no codigo")|Funcionário de destino não encontrado ou não vinculado a empresa para repassar protocolo| 404
+|Protocolo|[102](# "ver no codigo")|Funcionario não vinculado a empresa para Concluir Protocolo| 404
+|Protocolo|[103](# "ver no codigo")|Protocolo já concluido| 403

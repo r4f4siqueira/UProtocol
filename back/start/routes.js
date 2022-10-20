@@ -70,6 +70,7 @@ Route.post("/funcionarioempresa", "FuncionarioEmpresaController.criarFuncionario
 Route.post("/cliente", "ClienteController.criarCliente");
 Route.post("/prioridade", "PrioridadeController.criarPrioridade");
 Route.post("/protocolo", "ProtocoloController.criarProtocolo");
+Route.post("/protocolo/concluir/:id", "ProtocoloController.concluirProtocolo");//rota para concluir protocolo
 Route.post("/repasse", "RepasseController.criarRepasse");
 Route.post("/contato", "ContatoController.criarContato");
 Route.post("/anexo", "AnexoController.criarAnexo");
