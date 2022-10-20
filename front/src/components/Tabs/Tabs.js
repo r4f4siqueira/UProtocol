@@ -2,7 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import { Titles } from '../../styles/styles';
 import { TabsWrapper, Tab } from './styles';
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from '@mui/joy/Tooltip';
+
 function Tabs(props) {
     const navigate = useNavigate();
 
@@ -20,8 +21,10 @@ function Tabs(props) {
                 return (
                     <Tooltip
                         title={tab.disabled ? 'Crie ou entre em uma empresa para acessar' : ''}
-                        placement="top"
                         arrow
+                        color="primary"
+                        variant="solid"
+                        placement="top"
                     >
                         <Tab
                             key={tab.name}

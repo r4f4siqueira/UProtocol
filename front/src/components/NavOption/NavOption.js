@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { AiOutlineAlignCenter as Placeholder } from 'react-icons/ai';
 import { OptionWrapper } from './styles';
 import { Titles } from '../../styles/styles';
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from '@mui/joy/Tooltip';
 function NavOption({ title, navto, children, isSelected, disabled }) {
     const navigate = useNavigate();
 
@@ -19,6 +19,8 @@ function NavOption({ title, navto, children, isSelected, disabled }) {
             placement="top-start"
             disableInteractive
             arrow
+            color="primary"
+            variant="solid"
         >
             <OptionWrapper
                 disabled={disabled}
