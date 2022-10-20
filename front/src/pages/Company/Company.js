@@ -35,7 +35,6 @@ function Company() {
     const { tab } = useParams();
     const navTab = '/company/' + tab;
     let selectedTab;
-    // console.log(navTab);
 
     useEffect(() => {
         async function loadCompanyData() {

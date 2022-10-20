@@ -58,7 +58,11 @@ function Overview() {
             dispatch(createCompany(data, user.uid));
         } else {
             if (company.ativo === '0') {
-                if (!window.confirm('Tem certeza que deseja desativar essa empresa? a maioria das ações nela serão bloqueadas até ativá-la novamente')) {
+                if (
+                    !window.confirm(
+                        'Tem certeza que deseja desativar essa empresa? a maioria das ações nela serão bloqueadas até ativá-la novamente',
+                    )
+                ) {
                     setCompany({ ...company, ativo: '1' });
                     return;
                 }
@@ -156,7 +160,7 @@ function Overview() {
                                 <ContainerCenter>
                                     <span>
                                         <ContainerR>
-                                            <h2>Você não possui uma empresa cadastrada, preencha os dados abaixo para cadastrar uma nova</h2>
+                                            <h2>Você não possui uma empresa cadastrada, cadastre uma nova abaixo ou espere por um convite</h2>
                                         </ContainerR>
                                     </span>
                                 </ContainerCenter>
