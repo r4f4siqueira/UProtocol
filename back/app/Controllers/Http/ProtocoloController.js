@@ -370,7 +370,7 @@ class ProtocoloController {
                 response?.status(403);
                 retorno = {
                     erro: {
-                        codigo: 102,
+                        codigo: 103,
                         msg: "Protocolo já concluido",
                     },
                 };

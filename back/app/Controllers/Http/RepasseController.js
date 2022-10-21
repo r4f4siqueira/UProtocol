@@ -6,8 +6,9 @@ class RepasseController {
         let retorno = ""
         const dadosRequest = request.only(['funcionarioatual','protocolo','funcionariodestino','setor','uid','empresa'])
         
-        const userc = await Database.select("*")
+        const userc = await Database.select("funcionario_empresas.*","funcionarios.nome as nome_funcionario")
             .table("funcionario_empresas")
+            .innerJoin('funcionarios','funcionarios.id','funcionario_empresas.funcionario')
             .where("funcionario_uid", dadosRequest.uid)
             .where("empresa", dadosRequest.empresa)
             .whereNotNull("setor");
@@ -33,9 +34,20 @@ class RepasseController {
                     .update('atendente', null)
                     .update('setor', dadosRequest.setor)
                     .where('id', dadosRequest.protocolo)
+
+                await Database
+                .table('observacoes')
+                .insert({
+                    protocolo: dadosRequest.protocolo,
+                    atendente: userc[0].funcionario,
+                    observacao: userc[0].nome_funcionario + " passou o protocolo para fila",
+                    empresa: userc[0].empresa
+                })
+
             }else {
-                const user_destino = await Database.select("*")
+                const user_destino = await Database.select("funcionario_empresas.*","funcionarios.nome as nome_funcionario")
                 .table("funcionario_empresas")
+                .innerJoin('funcionarios','funcionarios.id','funcionario_empresas.funcionario')
                 .where("funcionario", dadosRequest.funcionariodestino)
                 .where("empresa", dadosRequest.empresa)
                 .whereNotNull("setor");
@@ -46,7 +58,7 @@ class RepasseController {
                 }else{
 
                     retorno = await Repasse.create({
-                        funcionarioatual: dadosRequest.funcionarioatual,
+                        funcionarioatual: userc[0].funcionario,
                         protocolo: dadosRequest.protocolo,
                         funcionariodestino: user_destino[0].funcionario,
                         userc: userc[0].funcionario,
@@ -59,6 +71,15 @@ class RepasseController {
                         .update('atendente', user_destino[0].funcionario)
                         .update('setor',user_destino[0].setor)
                         .where('id', dadosRequest.protocolo)
+
+                    await Database
+                    .table('observacoes')
+                    .insert({
+                        protocolo: dadosRequest.protocolo,
+                        atendente: userc[0].funcionario,
+                        observacao: userc[0].nome_funcionario + " passou o protocolo para " + user_destino[0].nome_funcionario,
+                        empresa: userc[0].empresa
+                    })
                 }
             }
         }
