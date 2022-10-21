@@ -9,7 +9,7 @@
     - [Teste](#teste)
     - [Diagrama de Classe](#diagrama-de-classe)
     - [Insomnia](#insomnia)
-- [Doc API](/back/#api-doc)
+- [Doc API](/back#api-doc)
 
 ## Inplantação
 ### Passo 1 : Instalar Depêndencias
