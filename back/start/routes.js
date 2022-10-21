@@ -47,7 +47,7 @@ Route.get("/protocolo", "ProtocoloController.listarProtocolos");
 Route.get("/protocolo/:id", "ProtocoloController.dadosProtocolo");
 
 Route.get("/repasse", "RepasseController.listarRepasses");
-Route.get("/repasse/:id", "RepasseController.dadosRepasse");
+//Route.get("/repasse/:id", "RepasseController.dadosRepasse");
 
 Route.get("/contato", "ContatoController.listarContatos");
 Route.get("/contato/:id", "RepasseController.dadosContato");
@@ -87,7 +87,7 @@ Route.put("/convite/:id", "FuncionarioEmpresaController.aceitarConvite");
 Route.put("/cliente/:id", "ClienteController.alterarCliente");
 Route.put("/prioridade/:id", "PrioridadeController.alterarPrioridade");
 Route.put("/protocolo/:id", "ProtocoloController.alterarProtocolo");
-Route.put("/repasse/:id", "RepasseController.alterarRepasse");
+//Route.put("/repasse/:id", "RepasseController.alterarRepasse");
 Route.put("/contato/:id", "ContatoController.alterarContato");
 Route.put("/anexo/:id", "AnexoController.alterarAnexo");
 //Route.put("/observacao/:id", "ObservacaoController.alterarObservacao");

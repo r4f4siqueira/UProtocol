@@ -12,6 +12,7 @@
     - [Contato](#-contato)
     - [Prioridade](#-prioridade)
     - [Protocolo](#-protocolo)
+    - [Repasses](#-repasse)
 - [Erros](#-erros)
     - [Server Response](#-server-response)
     - [Mensagens de Erros](#-mensagens-de-erros)
@@ -35,23 +36,24 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 ## 📚 Funções:
 
 ### 🏭 Empresa:
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarEmpresa|`({request,response})`|A função obriga a passar as seguintes informações através da request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String,fantasia: String, uid:String`;|A|Retorna a empresa cadastrada;
-|listarEmpresas|`({request,response})`|Necessita que seja passado o `uid` do usuario que está solicitando as informações da emrpresa;|F|Retorna uma lista de empresas que o usuário está vinculado;
-|~~dadosEmpresa~~|`({params,request,response})`|Passa o codigo da empresa por parametro da URL;|F|Retorna os dados da empresa;
-|alterarEmpresa| `({params,request,response})`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String, fantasia: String, criador: int, uid: String`;|A|Atualiza os dados da empresa;
-|~~deletarEmpresa~~|`({params,request,response})`|Informar a id da empresa por parametro URL e a `uid` para verificar permissões;|A|Retorna os dados da empresa excluida
+|criarEmpresa|`/empresa`|A função obriga a passar as seguintes informações através da request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String,fantasia: String, uid:String`;|A|Retorna a empresa cadastrada;
+|listarEmpresas|`/empresa`|Necessita que seja passado o `uid` do usuario que está solicitando as informações da emrpresa;|F|Retorna uma lista de empresas que o usuário está vinculado;
+|~~dadosEmpresa~~|`/empresa/:id`|Passa o codigo da empresa por parametro da URL;|F|Retorna os dados da empresa;
+|alterarEmpresa| `/empresa/:id`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, CNPJ_CPF: String, razaosocial: String, fantasia: String, criador: int, uid: String`;|A|Atualiza os dados da empresa;
+|~~deletarEmpresa~~|`/empresa/:id`|Informar a id da empresa por parametro URL e a `uid` para verificar permissões;|A|Retorna os dados da empresa excluida
 
 ### 👷‍♂️ Funcionário:
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarFuncionario|`({request,response})`|Por padrão o usuário é criado assim que é realizado o primeiro login no sistema, a função obriga a passar na request os seguintes dados: `ativo: boolean, nome: String, email: String, uid: String, avatarURL: String`;|-|Retorna os dados do usuário criado
-|dadosFuncionario|`({request,response})`|Necessita passar a `uid` através da request;|F|Retorna os dados do Funcionário;
-|~~dadosFuncionario~~|`({params,response})`|Informa a `id` por parametro da URL;|F|Retorna os dados do Funcionário;
+|criarFuncionario|`/funcionario`|Por padrão o usuário é criado assim que é realizado o primeiro login no sistema, a função obriga a passar na request os seguintes dados: `ativo: boolean, nome: String, email: String, uid: String, avatarURL: String`;|-|Retorna os dados do usuário criado
+|alterarFuncionario|`/funcionario/:id`|Precisa do `id` da empresa passada por parametro URL e as seguintes informações na request: `ativo: boolean, nome: string, email: string, avatarURL: string`|-|Retorna os dados atualizados;
+|dadosFuncionario|`/funcionario`|Necessita passar a `uid` através da request;|F|Retorna os dados do Funcionário;
+|~~dadosFuncionario~~|`/funcionario/:id`|Informa a `id` por parametro da URL;|F|Retorna os dados do Funcionário;
 
 ### 🦾 Setor:
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
 |criarSetor|`({request,response})`|A função obriga a passar as seguintes informações: `ativo: int, nome: String, empresa: int, uid: String`;|G|Retorna os dados do setor criado;
 |~~dadosSetor~~|`({params})`|Informa o ID do setor por parametro URL|F|Retorna os dados do setor informado;
@@ -61,7 +63,7 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |deletarSetor|`({params,respose})`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor;|G|Retorna os dados do setor deletado;
 
 ### 👷‍♂️ Funcionário Empresa
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
 |criarFuncionarioEmpresa|`({request,response})`|A função obriga a passar as seguitnes informações `uid: String, email: String, empresa: int, cargo: char`;|G|Convida um funcionário para a empresa|
 |listarFuncionarioEmpresas|`({request,response})`|A função retorna uma lista de funcionários vinculados a empresa, a função requer que seja passado as seguintes informações na request `uid: String, empresa: int`;|F|Retorna uma lista de funcionários vinculados a empresa;
@@ -73,7 +75,7 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |listarConvite|`({request})`|Lista todos os convites pendentes de resposta, requer que passe a `uid` para consultar os convites;|F|Retorna os dados do registro fruncionario empresa;
 
 ### 👨🏻‍🦰 Cliente
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
 |criarCliente|`({request,response})`|Função obriga a passar as seguintes informações na request `ativo: boolean, razaosocial: string, fantasia: string,CNPJ_CPF: string, empresa: integer, uid: string`;|F|Retorna os dados do cliente cadastrado|
 |listarClientes|`({request,response})`|Para listar os clientes relacionado a empresa nescessita informar `uid: string, empresa: integer`|F|Retorna uma lista de clientes vinculados aquela empresa;
@@ -82,7 +84,7 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |deletarCliente|`({params,request,response})`|Cliente só será deletado caso não tenha protocolo vunculado, passar a `id` do cliente por parametro URL junto aos seguintes dados na request `uid: string, empresa: integer`;|F|Retorna os dados do cliente excluido;
 
 ### 📞 Contato
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
 |criarContato|`({request,response})`|Cria contato vinculado a um cliente, nescessita que passe os seguintes dados na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string, empresa: integer`;|F|Retorna os dados do contato cadastrado;
 |listarContatos|`({request,response})`|Lista os contatos vinculados de determinado cliente, na request informar `uid: string, empresa: integer, cliente: integer`;|F|Retorna uma lista com os contatos vinculados ao cliente;
@@ -91,7 +93,7 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |deletarContato|`({params,request,response})`|Para excluir o contato é nescessário informa a `id` por parametro URL e os seguintes dados junto na request `uid: string, empresa: integer`;|F|Retorna os dados do contato excluido
 
 ### 🔝 Prioridade
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
 |criarPrioridade|`({request,response})`|Cria uma prioridade para ordenar os protocolos, requer que seja informado os seguintes dados na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`|G|Retorna os dados da prioridade cadastrada;
 |listarPrioridades|`({request,response})`|Retorna uma lista de prioridades da empresa, requer que informe na requeste os dados de `uid: string, empresa: integer`;|F|Retorna lista de prioridades vinculada a empresa;
@@ -102,18 +104,26 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 ### 📋 Protocolo
 Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
 |criarProtocolo|`({request,response})`|Requer que seja passada as seguintes informações na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, uid: string, empresa: integer` para a criação do protocolo|F|Retorna os dados do protocolo criado;
-|listarProtocolos|`({request,response})`|Retorna uma lista de protocolos, ordenados de acordo com a prioridade e a previsão, requer que seja informado os seguintes dados na request `uid: string, empresa: integer`|F|Retorna uma lista ordenada de protocolos;
+|listarProtocolos|`({request,response})`|Retorna uma lista de protocolos, ordenados de acordo com a prioridade e a previsão, requer que seja informado os seguintes dados na request `uid: string, empresa: integer`|F|Retorna uma lista de protocolos respeitando a seguinte ordem: prioridade, previsão e identificador(id) de protocolos;
 |dadosProtocolo|`({params,request,response})`|Retorna os dados e as observações referente ao `id` do protocolo informado por parametro URL, requer que seja informado na request `uid: string, empresa: integer` para validar a requisição|F|Retorna os dados do protocolo junto com as respectivas observações;
 |alterarProtocolo|`({params, request, response})`|Requer que informe por parametro URL a `id` do protocolo e os seguintes dados na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, situacao: char, uid: string, empresa: integer` para atualizar os dados do protocolo;|F|Retorna o protocolo com os dados atualizados
 |concluirProtocolo|`({params,request,response})`|use a rota `protocolo/concluir/:id` para concluir o protocolo e informe `uid: string, empresa: integer` na request;|F|Retorna os dados do protocolo encerrado;
 
 ### 🔄 Repasse
-| Nome | Parametros | Descrição | Permissão | Sucesso |
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
+|criarRepasse|({request,response})|Registra um repasse de protocolo para outro atendente, altera o atendente do protocolo e observa no o repasse, requer que seja informado na request `protocolo: integer, funcionariodestino: integer, setor: integer, uid: string, empresa: integer`;|F|Retorna os dados do registro do repasse;
+|listarRepasses|({request,response})|Retorna uma lista com os repasses realizados de determinado protocolo, informar `uid: string, empresa: integer, protocolo: integer` na request;|F|Retorna uma lista de repasses ordenada de forma crescente;
 
+### 📝 Observações
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
+### 📎 Anexos
+| Nome | Endpoint | Descrição | Permissão | Sucesso |
+| ---- | ---------- | --------- | --------- | ------- |
 
 ## ⛔ Erros:
 
@@ -235,3 +245,4 @@ Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 |Repasse|[101](# "ver no codigo")|Funcionário de destino não encontrado ou não vinculado a empresa para repassar protocolo| 404
 |Protocolo|[102](# "ver no codigo")|Funcionario não vinculado a empresa para Concluir Protocolo| 404
 |Protocolo|[103](# "ver no codigo")|Protocolo já concluido| 403
+|Repasse|[104](# "ver no codigo")|Usuário não encontrado ou não vinculado a empresa para listar repasses| 404

@@ -9,7 +9,7 @@
     - [Teste](#teste)
     - [Diagrama de Classe](#diagrama-de-classe)
     - [Insomnia](#insomnia)
-- [Doc API](/back/README.md)
+- [Doc API](/back/#api-doc)
 
 ## Inplantação
 ### Passo 1 : Instalar Depêndencias
@@ -136,5 +136,5 @@ Caso queira executar os testes, basta ir até a pasta `back/` e executar o coman
 Diagrama de classe disponível em 👉 [Diagrams.net](https://drive.google.com/file/d/1U-_OeJ8yAzngDXw-WTMy6UktqwE2nO1h/view?usp=sharing)
 
 ### Insomnia
-Faça o dawload do arquivo JSON disponivel no link [Insomnia_2022-10-21.json](/docs/Insomnia_2022-10-21.json) e importe no IMSOMNIA caso queira testar as rotas ou retornos da API
+Faça o dawload do arquivo JSON disponivel no link [Insomnia_2022-10-21.json](/docs/Insomnia.json) e importe no IMSOMNIA caso queira testar as rotas ou retornos da API
 
