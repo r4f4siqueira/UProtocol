@@ -11,8 +11,8 @@ import { Provider } from 'react-redux';
 
 function App() {
     return (
-        <AuthProvider>
-            <Provider store={store}>
+        <Provider store={store}>
+            <AuthProvider>
                 <ToastContainer
                     position="top-right"
                     autoClose={3000}
@@ -29,8 +29,8 @@ function App() {
                 <CssVarsProvider>
                     <RoutesApp />
                 </CssVarsProvider>
-            </Provider>
-        </AuthProvider>
+            </AuthProvider>
+        </Provider>
     );
 }
 

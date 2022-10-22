@@ -1,15 +1,15 @@
-import styled from "styled-components";
-import { ContainerC } from "../../styles/styles";
+import styled from 'styled-components';
+import { ContainerC } from '../../styles/styles';
 
 export const InputContainer = styled(ContainerC)`
     align-items: flex-start;
-    margin-top: ${(props) => (props.noMargin === true ? "0rem" : "1.2rem")};
+    margin-top: ${(props) => (props.noMargin === true ? '0rem' : '1.2rem')};
 
     label {
         margin-bottom: 0.2rem;
     }
     input {
-        z-index: 1;
+        z-index: 0;
         width: 100%;
         height: 2rem;
 
@@ -69,7 +69,7 @@ export const InputContainer = styled(ContainerC)`
 
         ::after {
             align-self: flex-end;
-            content: "";
+            content: '';
 
             width: 0;
             z-index: 2;

@@ -40,9 +40,11 @@ function Company() {
         async function loadCompanyData() {
             await dispatch(getCompany(user.uid));
         }
-        loadCompanyData();
+        if (company.hascompany === null) {
+            loadCompanyData();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [company.hasCompany]);
 
     useEffect(() => {
         async function loadData() {

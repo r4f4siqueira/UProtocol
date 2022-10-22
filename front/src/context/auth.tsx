@@ -3,10 +3,15 @@ import firebase from '../services/firebaseConnection';
 import { toast } from 'react-toastify';
 import { GoogleAuthProvider } from 'firebase/auth';
 import api from '../services/backendAPI';
+// @ts-ignore
+import { getCompany } from '../store/actions/company.tsx';
+import { useDispatch } from 'react-redux';
 
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
+    const dispatch = useDispatch();
+
     const [user, setUser] = useState({});
     const [loadAuth, setLoadAuth] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -275,6 +280,7 @@ function AuthProvider({ children }) {
                         api.post('/funcionario', data)
                             .then((resp) => {
                                 // console.log(resp);
+                                dispatch(getCompany(userData.uid));
                             })
                             .catch((err) => {
                                 if (err.code !== 'ERR_BAD_RESPONSE') {
