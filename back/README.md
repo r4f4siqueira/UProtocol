@@ -141,8 +141,8 @@ Também não é possível excluir protocolos abertos, caso o protocolo tenha sid
 |criarAnexo|`/anexo`|Registra um anexo ao protocolo com as informações passadas por request `protocolo: integer, descricao: string, anexo: string, uid: string, empresa: integer`;|F|Retorna as informações cadastradas;
 |listarAnexos|`/anexo`|Informar na request `protocolo: integer, uid: string, empresa: integer` para retornar a lista de anexos;|F|Retorna uma lista de anoexos ordenados por `id`;
 |~~dadosAnexo~~|`/anexo/:id`|Informar por paremetro URL a `id` do anexo;|F|Retorna os dados do anexo informado no paremetro URL;
-|alterarAnexo|`anexo/:id`|Iformar por parametro URL a `id` do anexo e novos dados por resquest `descricao: string, anexo: string, uid: string, empresa: integer`;|F|Retorna os dados alterados do anexo;
-|deletarAnexo|`anexo/:id`|Deleta o anexo de acordo com a `id` informada por parametro URL, informar na request `uid: string`;|F|Retorna os dados do anexo deletado
+|alterarAnexo|`/anexo/:id`|Iformar por parametro URL a `id` do anexo e novos dados por resquest `descricao: string, anexo: string, uid: string, empresa: integer`;|F|Retorna os dados alterados do anexo;
+|deletarAnexo|`/anexo/:id`|Deleta o anexo de acordo com a `id` informada por parametro URL, informar na request `uid: string`;|F|Retorna os dados do anexo deletado
 
 ## ⛔ Erros:
 
