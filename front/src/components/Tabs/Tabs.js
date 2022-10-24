@@ -28,7 +28,9 @@ function Tabs(props) {
                     >
                         <Tab
                             key={tab.name}
-                            onClick={!tab.disabled ? () => handleNavigate(tab.navto) : ''}
+                            onClick={() => {
+                                !tab.disabled ? handleNavigate(tab.navto) : console.log('tab desativada');
+                            }}
                             disabled={tab.disabled}
                             className={props?.active === tab.navto ? 'active' : ''}
                         >

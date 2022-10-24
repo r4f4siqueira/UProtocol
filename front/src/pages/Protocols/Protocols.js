@@ -18,6 +18,7 @@ import { MdDoneAll } from 'react-icons/md';
 //Acoes
 import { AuthContext } from '../../context/auth.tsx';
 import { getCompany } from '../../store/actions/company.tsx';
+import { getProtocols, setSelectedProtocol } from '../../store/actions/protocol.tsx';
 
 function Protocols() {
     //setup context e redux
@@ -54,13 +55,13 @@ function Protocols() {
                 // await dispatch(getProtocols(user.uid, company.companyData.id));
                 switch (tab) {
                     case 'overview':
-                        //await dispatch(getProtocols(user.uid, company.companyData.id));
+                        await dispatch(getProtocols(user.uid, company.companyData.id));
                         break;
                     case 'queue':
-                        //await dispatch(getProtocols(user.uid, company.companyData.id, "queue"));
+                        await dispatch(getProtocols(user.uid, company.companyData.id, 'queue'));
                         break;
                     case 'finished':
-                        //await dispatch(getProtocols(user.uid, company.companyData.id, "finished"));
+                        await dispatch(getProtocols(user.uid, company.companyData.id, 'finished'));
                         break;
                     default:
                         break;
@@ -73,7 +74,10 @@ function Protocols() {
 
     return (
         <ContainerPage>
-            <PageHeader title="Protocolos">
+            <PageHeader
+                title="Protocolos"
+                onBack={dispatch(setSelectedProtocol({ cliente: null, motivo: null, pessoaatendida: null }))}
+            >
                 <FaClipboardList className="icon" />
             </PageHeader>
             <PanelPage>

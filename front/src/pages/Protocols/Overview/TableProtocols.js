@@ -15,25 +15,25 @@ import { useNavigate } from 'react-router';
 function TableProtocols() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const companyId = useSelector((state) => state.Company.companyData?.id);
-    const selectedprotocol = useSelector((state) => state.Customer.selectedCustomer);
     const Protocols = useSelector((state) => state.Protocol);
-    const { user } = useContext(AuthContext);
 
     const [localList, setLocalList] = useState([]);
 
     useEffect(() => {
-        console.log(Protocols);
+        // console.log(Protocols);
         if (Protocols?.protocolList === undefined || Protocols?.protocolList.length === 0) {
-            setLocalList([{ id: '0', pessoa: 'Você não tem contatos cadastrados!', userc: { nome: null } }]);
+            setLocalList([{ id: '0', motivo: 'Nenhum protocolo encontrado' }]);
         } else {
             setLocalList(Protocols.protocolList);
         }
     }, [Protocols?.protocolList]);
 
     function handleSelectProtocol(index) {
-        dispatch(setSelectedProtocol(localList[index]));
-        navigate('/protocols/details/1');
+        console.log('selecionando protocolo: ');
+        console.log(localList[index]);
+        dispatch(setSelectedProtocol(localList[index])).then(() => {
+            navigate(`/protocols/details/${localList[index].id}/overview`);
+        });
     }
     //Prioridade | ID | Motivo | Cliente_nome | Pessoa Atendida | Atendente | Previsao
     return (

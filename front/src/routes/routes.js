@@ -108,7 +108,7 @@ function RoutesApp() {
                     }
                 />
                 <Route
-                    path="/protocols/details/:idProtocol"
+                    path="/protocols/details/:idProtocol/:tab"
                     element={
                         <PrivateRoute>
                             <PagesContainer>

@@ -1,6 +1,7 @@
 //React
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import Dropbox from '../../../components/Dropbox/dropbox';
 import Input from '../../../components/Input/Input';
 
@@ -14,10 +15,11 @@ import { ProtocolFormWrapper, FormProtocols as ProtocolsForm } from './styles';
 
 function FormProtocols() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const companyId = useSelector((state) => state.Company.companyData?.id);
     const selectedProtocol = useSelector((state) => state.Protocol.selectedProtocol);
     const customerList = useSelector((state) => state.Customer.customerList);
-    const protocolList = useSelector((state) => state.Protocol.protocolList);
     const { user } = useContext(AuthContext);
 
     const [localSelectedProtocol, setLocalSelectedProtocol] = useState();
@@ -31,7 +33,8 @@ function FormProtocols() {
         localSelectedProtocol?.motivo === null ||
         localSelectedProtocol?.cliente === null ||
         localSelectedProtocol?.cliente?.value === null;
-    // preenchendo a dropbox de setores
+
+    // preenchendo a dropbox
     const customerOptions = [];
     customerList.every((customer, index) => {
         if (customer.ativo) {
@@ -39,6 +42,13 @@ function FormProtocols() {
         }
         return true;
     });
+
+    useEffect(() => {
+        if (selectedProtocol.id) {
+            navigate(`/protocols/details/${selectedProtocol.id}/overview`);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedProtocol]);
 
     function handleCancelProtocol() {
         setLocalSelectedProtocol({});
@@ -56,7 +66,10 @@ function FormProtocols() {
         };
         console.log('enviando para criar: ');
         console.log(data);
-        await dispatch(createProtocol(data));
+        dispatch(createProtocol(data)).then((id) => {
+            console.log('id protocolo: ' + id);
+            // navigate(`/protocols/details/${id}/overview`);
+        });
         handleCancelProtocol();
     }
     return (

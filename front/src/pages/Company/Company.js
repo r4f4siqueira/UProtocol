@@ -37,14 +37,9 @@ function Company() {
     let selectedTab;
 
     useEffect(() => {
-        async function loadCompanyData() {
-            await dispatch(getCompany(user.uid));
-        }
-        if (company.hascompany === null) {
-            loadCompanyData();
-        }
+        dispatch(getCompany(user.uid));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [company.hasCompany]);
+    }, []);
 
     useEffect(() => {
         async function loadData() {

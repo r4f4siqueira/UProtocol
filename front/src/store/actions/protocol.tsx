@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import api from '../../services/backendAPI';
 import { SET_PROTOCOL, SET_LOADING, SET_SELECTED_PROTOCOL } from '../types/protocol';
@@ -43,6 +44,31 @@ export const getProtocols = (uid: String, empresa: Number, filter?: String) => a
             dispatch(setLoading(false));
         });
 };
+/**
+ * Pega os dados de um protocolo informado por parâmetro
+ * @param   {String} uid  UID do usuário que irá realizar a operação
+ * @param   {Number} empresa  ID da empresa que o usuário está tentando buscar os dados
+ */
+export const getProtocolDetails = (uid: String, empresa: Number, idProtocol: number) => async (dispatch) => {
+    dispatch(setLoading(true));
+    console.log('buscando detalhes do protocolo');
+
+    api.get(`/protocolo/${idProtocol}`, { params: { uid, empresa } })
+        .then(async (resp) => {
+            // console.log(resp);
+            console.log('detalhes do protocolo encontrados');
+
+            dispatch(setSelectedProtocol(resp.data));
+            dispatch(setLoading(false));
+        })
+        .catch((err) => {
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
+            }
+            console.error(err);
+            dispatch(setLoading(false));
+        });
+};
 
 /**
  * Seleciona a entidade para o formulário
@@ -67,15 +93,18 @@ export const createProtocol = (protocolData: protocolData) => async (dispatch) =
             .then(async (resp) => {
                 console.log(resp.data);
                 await dispatch(getProtocols(protocolData.uid, resp.data.empresa));
-                // addProtocol(resp.data);
-                // loadProtocolData();
+                dispatch(setSelectedProtocol(resp.data));
+
                 toast.success('Protocolo criado com sucesso!');
+                dispatch(setSaving(false));
+                return resp.data.id;
             })
             .catch((err) => {
                 if (err.response?.data?.erro) {
                     toast.error(err.response.data.erro.msg);
                 }
                 console.error(err);
+                dispatch(setSaving(false));
             });
     } catch (err) {
         console.error(err);
@@ -91,9 +120,10 @@ export const createProtocol = (protocolData: protocolData) => async (dispatch) =
 export const updateProtocol = (protocolData: protocolData) => async (dispatch) => {
     try {
         api.put(`/protocolo/${protocolData.id}`, protocolData)
-            .then(async () => {
-                // console.log(resp);
-                // loadProtocolData();
+            .then(async (resp) => {
+                console.log(resp);
+
+                // await dispatch(setSelectedProtocol(resp.data));
                 await dispatch(getProtocols(protocolData.uid, protocolData.empresa));
                 toast.info('Protocolo atualizado com sucesso!');
             })
