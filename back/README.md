@@ -13,6 +13,8 @@
     - [Prioridade](#-prioridade)
     - [Protocolo](#-protocolo)
     - [Repasses](#-repasse)
+    - [Observações](#-observações)
+    - [Anexos](#-anexos)
 - [Erros](#-erros)
     - [Server Response](#-server-response)
     - [Mensagens de Erros](#-mensagens-de-erros)
@@ -55,75 +57,82 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 ### 🦾 Setor:
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarSetor|`({request,response})`|A função obriga a passar as seguintes informações: `ativo: int, nome: String, empresa: int, uid: String`;|G|Retorna os dados do setor criado;
-|~~dadosSetor~~|`({params})`|Informa o ID do setor por parametro URL|F|Retorna os dados do setor informado;
-|listarSetores|`({request,params,response})`|Informa o `id` da empresa por parametro URL e a `uid` para verificar vinculo do funcionario com a empresa;|F|Retorna uma lista com todos os setores da empresa;
-|criarSetorEmpresa|`({request,response})`|Função utilizada apenas para vincular o criador da empresa a um setor padrão;|A|Vincula o criador a um setor;
-|alterarSetor|`({params,request,response})`|Altera os dados do setor e necessita que seja informado a `id` do setor por parametro da URL e passar as seguintes informações: `ativo: int, nome: String, uid: String, empresa: int`;|G|Retorna o setor com os dados alterados;
-|deletarSetor|`({params,respose})`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor;|G|Retorna os dados do setor deletado;
+|criarSetor|`/setor`|A função obriga a passar as seguintes informações: `ativo: int, nome: String, empresa: int, uid: String`;|G|Retorna os dados do setor criado;
+|~~dadosSetor~~|`-`|Informa o ID do setor por parametro URL|F|Retorna os dados do setor informado;
+|listarSetores|`/setor/:empresa`|Informa o `id` da empresa por parametro URL e a `uid` para verificar vinculo do funcionario com a empresa;|F|Retorna uma lista com todos os setores da empresa;
+|criarSetorEmpresa|`-`|Função utilizada apenas para vincular o criador da empresa a um setor padrão;|A|Vincula o criador a um setor;
+|alterarSetor|`/setor/:id`|Altera os dados do setor e necessita que seja informado a `id` do setor por parametro da URL e passar as seguintes informações: `ativo: int, nome: String, uid: String, empresa: int`;|G|Retorna o setor com os dados alterados;
+|deletarSetor|`/setor/:id`|Apaga o setor informado através do parametro da URL, precisa da `uid` para verificar se o funcionario tem permissão para excluir o setor;|G|Retorna os dados do setor deletado;
 
 ### 👷‍♂️ Funcionário Empresa
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarFuncionarioEmpresa|`({request,response})`|A função obriga a passar as seguitnes informações `uid: String, email: String, empresa: int, cargo: char`;|G|Convida um funcionário para a empresa|
-|listarFuncionarioEmpresas|`({request,response})`|A função retorna uma lista de funcionários vinculados a empresa, a função requer que seja passado as seguintes informações na request `uid: String, empresa: int`;|F|Retorna uma lista de funcionários vinculados a empresa;
-|~~dadosFuncionarioEmpresa~~|`({params})`|Requer a `ID` do `funcionarioEmpresa` através da parametro URL|F|Retorna os dados do registro `funcionarioEmpresa`
-|verificaVinculo|`(uid,empresa)`|Verifica se o funcionario está vinculado a empresa (uso interno)|-|Retorna `true` ou `false`;
-|alterarFuncionarioEmpresa|`({request,response})`|Altera Cargo e Setor do funcionário vinculado a empresa, requer que seja informado `uid: String, empresa: integer, funcionario: integer, setor: integer, cargo: char, id: integer`;|G|Altera as informaçoes do funcionário vinculado a empresa;
-|deletarFuncionarioEmpresa|`({params,request,response})`|Requer que informe a `id` do vinculo do funcionário empresa por parametro url e as seguintes informações na request `uid: string, empresa: integer`;|G|Retorna os dados do funcionario desvinculado;
-|aceitarConvite|`({params,request,response})`|Rota para aceitar os convites, requer que informe o `id` da relação funcionário empresa por parametro URL mais as seguintes informações na request `uid: string, resposta: boolean`;|F|Caso aceite retorna os dados do registro funcionarioEmpresa, caso recusar retorna uma mensagem `{msg:"convite recusado"}`;
-|listarConvite|`({request})`|Lista todos os convites pendentes de resposta, requer que passe a `uid` para consultar os convites;|F|Retorna os dados do registro fruncionario empresa;
+|criarFuncionarioEmpresa|`/funcionarioempresa`|A função obriga a passar as seguitnes informações `uid: String, email: String, empresa: int, cargo: char`;|G|Convida um funcionário para a empresa|
+|listarFuncionarioEmpresas|`/funcionarioempresa`|A função retorna uma lista de funcionários vinculados a empresa, a função requer que seja passado as seguintes informações na request `uid: String, empresa: int`;|F|Retorna uma lista de funcionários vinculados a empresa;
+|~~dadosFuncionarioEmpresa~~|`/funcionarioempresa/:id`|Requer a `ID` do `funcionarioEmpresa` através da parametro URL|F|Retorna os dados do registro `funcionarioEmpresa`
+|verificaVinculo|`-`|Verifica se o funcionario está vinculado a empresa (uso interno)|-|Retorna `true` ou `false`;
+|alterarFuncionarioEmpresa|`/funcionarioempresa`|Altera Cargo e Setor do funcionário vinculado a empresa, requer que seja informado `uid: String, empresa: integer, funcionario: integer, setor: integer, cargo: char, id: integer`;|G|Altera as informaçoes do funcionário vinculado a empresa;
+|deletarFuncionarioEmpresa|`/funcionarioempresa/:id`|Requer que informe a `id` do vinculo do funcionário empresa por parametro url e as seguintes informações na request `uid: string, empresa: integer`;|G|Retorna os dados do funcionario desvinculado;
+|aceitarConvite|`/convite/:id`|Rota para aceitar os convites, requer que informe o `id` da relação funcionário empresa por parametro URL mais as seguintes informações na request `uid: string, resposta: boolean`;|F|Caso aceite retorna os dados do registro funcionarioEmpresa, caso recusar retorna uma mensagem `{msg:"convite recusado"}`;
+|listarConvite|`/convite`|Lista todos os convites pendentes de resposta, requer que passe a `uid` para consultar os convites;|F|Retorna os dados do registro fruncionario empresa;
 
 ### 👨🏻‍🦰 Cliente
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarCliente|`({request,response})`|Função obriga a passar as seguintes informações na request `ativo: boolean, razaosocial: string, fantasia: string,CNPJ_CPF: string, empresa: integer, uid: string`;|F|Retorna os dados do cliente cadastrado|
-|listarClientes|`({request,response})`|Para listar os clientes relacionado a empresa nescessita informar `uid: string, empresa: integer`|F|Retorna uma lista de clientes vinculados aquela empresa;
-|alterarCliente|`({params,request,response})`|Requer que passe a `id` por pareametro URL e os seguintes dados na request `ativo: boolean, razaosocial: string, fantasia: string, CNPJ_CPF: string, uid: string, empresa: int`|F|Retornas o cliente com os dados atualizados;
-|~~dadosCliente~~|`({params})`|Retorna os dados de um cliente em específico, requer que passe a `id` do cliente por parametro URL|F|Retorna os dados de um cliente em específico;
-|deletarCliente|`({params,request,response})`|Cliente só será deletado caso não tenha protocolo vunculado, passar a `id` do cliente por parametro URL junto aos seguintes dados na request `uid: string, empresa: integer`;|F|Retorna os dados do cliente excluido;
+|criarCliente|`/cliente`|Função obriga a passar as seguintes informações na request `ativo: boolean, razaosocial: string, fantasia: string,CNPJ_CPF: string, empresa: integer, uid: string`;|F|Retorna os dados do cliente cadastrado|
+|listarClientes|`/cliente`|Para listar os clientes relacionado a empresa nescessita informar `uid: string, empresa: integer`|F|Retorna uma lista de clientes vinculados aquela empresa;
+|alterarCliente|`/cliente/:id`|Requer que passe a `id` por pareametro URL e os seguintes dados na request `ativo: boolean, razaosocial: string, fantasia: string, CNPJ_CPF: string, uid: string, empresa: int`|F|Retornas o cliente com os dados atualizados;
+|~~dadosCliente~~|`/cliente/:id`|Retorna os dados de um cliente em específico, requer que passe a `id` do cliente por parametro URL|F|Retorna os dados de um cliente em específico;
+|deletarCliente|`/cliente/:id`|Cliente só será deletado caso não tenha protocolo vunculado, passar a `id` do cliente por parametro URL junto aos seguintes dados na request `uid: string, empresa: integer`;|F|Retorna os dados do cliente excluido;
 
 ### 📞 Contato
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarContato|`({request,response})`|Cria contato vinculado a um cliente, nescessita que passe os seguintes dados na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string, empresa: integer`;|F|Retorna os dados do contato cadastrado;
-|listarContatos|`({request,response})`|Lista os contatos vinculados de determinado cliente, na request informar `uid: string, empresa: integer, cliente: integer`;|F|Retorna uma lista com os contatos vinculados ao cliente;
-|~~dadosContato~~|`({params})`|Retorna os dados de um contato especifico, requer que passe a `id` por parametro URL;|F|Retorna os dados do contato;
-|alterarContato|`({params,request,response})`|Usada para alterar os dados de um contato vinculado a um cliente, requer que informe o `id` por parametro URL e os seguintes dados junto na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string`;|F|Retoda os dados do contato alterado;
-|deletarContato|`({params,request,response})`|Para excluir o contato é nescessário informa a `id` por parametro URL e os seguintes dados junto na request `uid: string, empresa: integer`;|F|Retorna os dados do contato excluido
+|criarContato|`/contato/:id`|Cria contato vinculado a um cliente, nescessita que passe os seguintes dados na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string, empresa: integer`;|F|Retorna os dados do contato cadastrado;
+|listarContatos|`/contato`|Lista os contatos vinculados de determinado cliente, na request informar `uid: string, empresa: integer, cliente: integer`;|F|Retorna uma lista com os contatos vinculados ao cliente;
+|~~dadosContato~~|`/contato/:id`|Retorna os dados de um contato especifico, requer que passe a `id` por parametro URL;|F|Retorna os dados do contato;
+|alterarContato|`/contato/:id`|Usada para alterar os dados de um contato vinculado a um cliente, requer que informe o `id` por parametro URL e os seguintes dados junto na request `ativo: boolean, cliente: integer, telefone: string, email: string, pessoa: string, uid: string`;|F|Retoda os dados do contato alterado;
+|deletarContato|`/contato/:id`|Para excluir o contato é nescessário informa a `id` por parametro URL e os seguintes dados junto na request `uid: string, empresa: integer`;|F|Retorna os dados do contato excluido
 
 ### 🔝 Prioridade
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarPrioridade|`({request,response})`|Cria uma prioridade para ordenar os protocolos, requer que seja informado os seguintes dados na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`|G|Retorna os dados da prioridade cadastrada;
-|listarPrioridades|`({request,response})`|Retorna uma lista de prioridades da empresa, requer que informe na requeste os dados de `uid: string, empresa: integer`;|F|Retorna lista de prioridades vinculada a empresa;
-|~~dadosPrioridade~~|`({params})`|Informa a `id` da prioridade por parametro de URL e retorna os dados da prioridade;|F|Reotorna os dados da prioridade informada;
-|alterarPrioridade|`({params,request,response})`|Requer que informe a `id` da prioridade por parametro URL e as seguintes infromações na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer` para realizar a alteração;|G|Retorna os dados atualizados da prioridade;
-|deletarPrioridade|`({params,request,response})`|Deleta as informações da prioridade informada, informar a `id` da prioridade por paremetro URL e os seguintes dados na request `uid: string, empresa: integer`;|G|Retorna os dados da prioridade deletada;
+|criarPrioridade|`/prioridade`|Cria uma prioridade para ordenar os protocolos, requer que seja informado os seguintes dados na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer`|G|Retorna os dados da prioridade cadastrada;
+|listarPrioridades|`/prioridade`|Retorna uma lista de prioridades da empresa, requer que informe na requeste os dados de `uid: string, empresa: integer`;|F|Retorna lista de prioridades vinculada a empresa;
+|~~dadosPrioridade~~|`/prioridade/:id`|Informa a `id` da prioridade por parametro de URL e retorna os dados da prioridade;|F|Reotorna os dados da prioridade informada;
+|alterarPrioridade|`/prioridade/:id`|Requer que informe a `id` da prioridade por parametro URL e as seguintes infromações na request `ativo: boolean, nome: string, ordemimportancia: integer, uid: string, empresa: integer` para realizar a alteração;|G|Retorna os dados atualizados da prioridade;
+|deletarPrioridade|`/prioridade/:id`|Deleta as informações da prioridade informada, informar a `id` da prioridade por paremetro URL e os seguintes dados na request `uid: string, empresa: integer`;|G|Retorna os dados da prioridade deletada;
 
 ### 📋 Protocolo
 Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarProtocolo|`({request,response})`|Requer que seja passada as seguintes informações na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, uid: string, empresa: integer` para a criação do protocolo|F|Retorna os dados do protocolo criado;
-|listarProtocolos|`({request,response})`|Retorna uma lista de protocolos, ordenados de acordo com a prioridade e a previsão, requer que seja informado os seguintes dados na request `uid: string, empresa: integer`|F|Retorna uma lista de protocolos respeitando a seguinte ordem: prioridade, previsão e identificador(id) de protocolos;
-|dadosProtocolo|`({params,request,response})`|Retorna os dados e as observações referente ao `id` do protocolo informado por parametro URL, requer que seja informado na request `uid: string, empresa: integer` para validar a requisição|F|Retorna os dados do protocolo junto com as respectivas observações;
-|alterarProtocolo|`({params, request, response})`|Requer que informe por parametro URL a `id` do protocolo e os seguintes dados na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, situacao: char, uid: string, empresa: integer` para atualizar os dados do protocolo;|F|Retorna o protocolo com os dados atualizados
-|concluirProtocolo|`({params,request,response})`|use a rota `protocolo/concluir/:id` para concluir o protocolo e informe `uid: string, empresa: integer` na request;|F|Retorna os dados do protocolo encerrado;
+|criarProtocolo|`/protocolo`|Requer que seja passada as seguintes informações na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, uid: string, empresa: integer` para a criação do protocolo|F|Retorna os dados do protocolo criado;
+|listarProtocolos|`/protocolo`|Retorna uma lista de protocolos, ordenados de acordo com a prioridade e a previsão, requer que seja informado os seguintes dados na request `uid: string, empresa: integer`|F|Retorna uma lista de protocolos respeitando a seguinte ordem: prioridade, previsão e identificador(id) de protocolos;
+|dadosProtocolo|`/protocolo/:id`|Retorna os dados e as observações referente ao `id` do protocolo informado por parametro URL, requer que seja informado na request `uid: string, empresa: integer` para validar a requisição|F|Retorna os dados do protocolo junto com as respectivas observações;
+|alterarProtocolo|`/protocolo/:id`|Requer que informe por parametro URL a `id` do protocolo e os seguintes dados na request `cliente: integer, prioridade: integer, setor: integer, pessoaatendida: string, motivo: string, previsao: timestemp, situacao: char, uid: string, empresa: integer` para atualizar os dados do protocolo;|F|Retorna o protocolo com os dados atualizados
+|concluirProtocolo|`/protocolo/concluir/:id`|use a rota `protocolo/concluir/:id` para concluir o protocolo e informe `uid: string, empresa: integer` na request;|F|Retorna os dados do protocolo encerrado;
 
 ### 🔄 Repasse
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-|criarRepasse|({request,response})|Registra um repasse de protocolo para outro atendente, altera o atendente do protocolo e observa no o repasse, requer que seja informado na request `protocolo: integer, funcionariodestino: integer, setor: integer, uid: string, empresa: integer`;|F|Retorna os dados do registro do repasse;
-|listarRepasses|({request,response})|Retorna uma lista com os repasses realizados de determinado protocolo, informar `uid: string, empresa: integer, protocolo: integer` na request;|F|Retorna uma lista de repasses ordenada de forma crescente;
+|criarRepasse|`/repasse`|Registra um repasse de protocolo para outro atendente, altera o atendente do protocolo e observa no o repasse, requer que seja informado na request `protocolo: integer, funcionariodestino: integer, setor: integer, uid: string, empresa: integer`;|F|Retorna os dados do registro do repasse;
+|listarRepasses|`/repasse`|Retorna uma lista com os repasses realizados de determinado protocolo, informar `uid: string, empresa: integer, protocolo: integer` na request;|F|Retorna uma lista de repasses ordenada de forma crescente;
 
 ### 📝 Observações
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
+|criarObservacao|`/observacao`|Registra uma observação no protocolo informado na request, dados que devem ser informado na request `protocolo: integer, observacao: string, uid: string, empresa: integer`;|F|Retorna os dados cadastrados da observação;
+|~~listarObservacoes~~|`-`|lista todas as observações, desativada no momento|F|Retorna uma lista de observações;
+|~~dadosObservacao~~|`-`|Retorna os dados de uma observação especifica informada por parametro URL|F|Retorna os dados da observação;
+|~~alterarObservacao~~|`-`|Altera os dados da observação informada por parametro|F|Retorna os dados atualizados;
+|~~deletarObservacao~~|`-`|Deleta observação|F|Retorna uma mensagem de sucesso;
 ### 📎 Anexos
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
+
+
 
 ## ⛔ Erros:
 
@@ -246,3 +255,6 @@ Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 |Protocolo|[102](# "ver no codigo")|Funcionario não vinculado a empresa para Concluir Protocolo| 404
 |Protocolo|[103](# "ver no codigo")|Protocolo já concluido| 403
 |Repasse|[104](# "ver no codigo")|Usuário não encontrado ou não vinculado a empresa para listar repasses| 404
+|Observação|[105](# "ver no codigo")|Usuário não encontrado ou não vinculado a empresa para observar protocolo| 404
+|Observação|[106](# "ver no codigo")|Protocolo não encontrado para ser observado| 404
+|Observação|[107](# "ver no codigo")|Protocolo já concluido| 403

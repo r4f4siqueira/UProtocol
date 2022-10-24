@@ -56,7 +56,7 @@ Route.get("/anexo", "AnexoController.listarAnexos");
 Route.get("/anexo/:id", "AnexoController.dadosAnexo");
 
 Route.get("/observacao", "ObservacaoController.listarObservacoes");
-Route.get("/observacao/:id", "ObservacaoController.dadosObservacao");
+//Route.get("/observacao/:id", "ObservacaoController.dadosObservacao");
 
 Route.get("/log", "LogController.listarLogs");
 Route.get("/log/:id", "LogcaoController.dadosLog");
