@@ -16,6 +16,12 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
+/*
+* Existem rotas comentadas para futuras implementações
+* que foram utilizadas apenas no momento do desenvolvimento mas a função continua ativa
+* para algum ajuste futuro
+*/
+
 //ROTAS PARA PEGAR DADOS "get"
 Route.get("/", () => {
   return { msg: "TODAS AS ROTAS PRECISAM DE UID e EMPRESA!!!",api: 'OK'};
@@ -53,13 +59,13 @@ Route.get("/contato", "ContatoController.listarContatos");
 Route.get("/contato/:id", "RepasseController.dadosContato");
 
 Route.get("/anexo", "AnexoController.listarAnexos");
-Route.get("/anexo/:id", "AnexoController.dadosAnexo");
+//Route.get("/anexo/:id", "AnexoController.dadosAnexo");
 
 Route.get("/observacao", "ObservacaoController.listarObservacoes");
 //Route.get("/observacao/:id", "ObservacaoController.dadosObservacao");
 
-Route.get("/log", "LogController.listarLogs");
-Route.get("/log/:id", "LogcaoController.dadosLog");
+//Route.get("/log", "LogController.listarLogs");
+//Route.get("/log/:id", "LogcaoController.dadosLog");
 
 //ROTAS PARA CRIAR DADOS "post"
 Route.post("/empresa", "EmpresaController.criarEmpresa");
@@ -75,7 +81,7 @@ Route.post("/repasse", "RepasseController.criarRepasse");
 Route.post("/contato", "ContatoController.criarContato");
 Route.post("/anexo", "AnexoController.criarAnexo");
 Route.post("/observacao", "ObservacaoController.criarObservacao");
-Route.post("/log", "LogController.criarLog");
+//Route.post("/log", "LogController.criarLog");
 
 //ROTAS PARA ALTERAR DADOS
 Route.put("/empresa/:id", "EmpresaController.alterarEmpresa");

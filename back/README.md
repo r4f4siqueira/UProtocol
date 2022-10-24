@@ -19,13 +19,13 @@
     - [Server Response](#-server-response)
     - [Mensagens de Erros](#-mensagens-de-erros)
 ## ▶ Start Server
-Depois de executar as etapas na página inicial do repositório, execute os comandos abaixo para iniciar o servidor:
+Depois de executar as etapas na [página inicial](https://github.com/r4f4siqueira/UProtocol#uprotocol) do repositório, execute os comandos abaixo para iniciar o servidor:
 
-`adonis serve --dev`
+`adonis serve --dev` para o ambiente de desenvolvedor, onde a cada atualização de algum arquivo ele atualiza o servidor;
 
 or
 
-`adonis serve`
+`adonis serve` desta forma ele só atualiza o servidor ao reiniciar;
 
 ##  🚫 Permissões:
 Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis diferentes conforme mostra a tabela abaixo:
@@ -35,6 +35,10 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 | **A** | **Administrador:** quem criou a empresa, essa permissão também pode ser concedida a um funcionário através de um administrador, com essa permissão o funcionario pode gerenciar a empresa por inteiro;
 | **G** | **Gerente:** tem poder de remover funcionarios da empresa, mas não pode alterar os dados da empresa
 | **F** | **Funcionario:** Apenas meche com os protocolos
+
+Estas permissões são importantes para realizar o controle referente a que o usuário pode fazer dentro do sistema, elas são preenchidas no momento de realizar um convite para um funcionário e pode ser alterada no cadastros de funcionários.
+
+Sobre a permissão definida como **A** ela não pode ser alterada, pois é a permissão definida para o *criador* da empresa assim que a empresa é criada;
 ## 📚 Funções:
 
 ### 🏭 Empresa:
@@ -104,7 +108,9 @@ Cada funcionário vinculado a empresa terá uma permissão separada em 3 níveis
 |deletarPrioridade|`/prioridade/:id`|Deleta as informações da prioridade informada, informar a `id` da prioridade por paremetro URL e os seguintes dados na request `uid: string, empresa: integer`;|G|Retorna os dados da prioridade deletada;
 
 ### 📋 Protocolo
-Obs: Situação do protocolo `C`: concluído ou `A`: aberto
+Protocolo atualmente tem duas situações `C: concluído` e `A: aberto`, protocolos com situação concluído não pode sofrer nenhum tipo de alteração ou observação;
+
+Também não é possível excluir protocolos abertos, caso o protocolo tenha sido aberto errado pode fazer as alterações necessárias ou observar que o protocolo foi aberto errado, desta forma evitando problemas de usabilidade;
 
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
@@ -128,11 +134,15 @@ Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 |~~dadosObservacao~~|`-`|Retorna os dados de uma observação especifica informada por parametro URL|F|Retorna os dados da observação;
 |~~alterarObservacao~~|`-`|Altera os dados da observação informada por parametro|F|Retorna os dados atualizados;
 |~~deletarObservacao~~|`-`|Deleta observação|F|Retorna uma mensagem de sucesso;
+
 ### 📎 Anexos
 | Nome | Endpoint | Descrição | Permissão | Sucesso |
 | ---- | ---------- | --------- | --------- | ------- |
-
-
+|criarAnexo|`/anexo`|Registra um anexo ao protocolo com as informações passadas por request `protocolo: integer, descricao: string, anexo: string, uid: string, empresa: integer`;|F|Retorna as informações cadastradas;
+|listarAnexos|`/anexo`|Informar na request `protocolo: integer, uid: string, empresa: integer` para retornar a lista de anexos;|F|Retorna uma lista de anoexos ordenados por `id`;
+|~~dadosAnexo~~|`/anexo/:id`|Informar por paremetro URL a `id` do anexo;|F|Retorna os dados do anexo informado no paremetro URL;
+|alterarAnexo|`anexo/:id`|Iformar por parametro URL a `id` do anexo e novos dados por resquest `descricao: string, anexo: string, uid: string, empresa: integer`;|F|Retorna os dados alterados do anexo;
+|deletarAnexo|`anexo/:id`|Deleta o anexo de acordo com a `id` informada por parametro URL, informar na request `uid: string`;|F|Retorna os dados do anexo deletado
 
 ## ⛔ Erros:
 
@@ -144,6 +154,10 @@ Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 | 403 | Sem permissao para realizar a ação|
 | 404 | Nao encontrado retorno para requisicao|
 | 500 | Erro interno no servidor|
+
+Pode acontecer da API retornar um erro com algum código que não esteja listado, isso depende da forma que está sendo inicializado a API, onde ela está hospedada entre outras possibilidades.
+
+A lista acima refere a alguns erros que foram tratados pela api e que podem retornar o código da *response*, o *código do erro* que foi tratado e uma *menságem* personalizada;
 
 
 ### 📩 Mensagens de erros
@@ -258,3 +272,12 @@ Obs: Situação do protocolo `C`: concluído ou `A`: aberto
 |Observação|[105](# "ver no codigo")|Usuário não encontrado ou não vinculado a empresa para observar protocolo| 404
 |Observação|[106](# "ver no codigo")|Protocolo não encontrado para ser observado| 404
 |Observação|[107](# "ver no codigo")|Protocolo já concluido| 403
+|Anexo|[108](# "ver no codigo")|Funcionário não vinculado a empresa para criar um anexo| 404
+|Anexo|[109](# "ver no codigo")|Protocolo não encontrado para vincular um Anexo| 404
+|Anexo|[110](# "ver no codigo")|Usuário não encontrado ou não vinculado a empresa para listar anexos| 404
+|Anexo|[111](# "ver no codigo")|Anexo não encontrado para ser alterado| 404
+|Anexo|[112](# "ver no codigo")|Usuário não encontrado ou não vinculado a empresa para alterar anexo| 404
+|Anexo|[113](# "ver no codigo")|Anexo não encontrado para ser deletado| 404
+|Anexo|[114](# "ver no codigo")|Usuário não encontrado ou não vinculado a empresa para deletar anexo| 404
+
+Como informado anteriormente, a API pode retornar algum erro que não estaja listado, pois este erro não foi tratado ou não aconteceu durante os testes, também levar em consideração as regras de onde a API foi hospedada e a forma que ela foi inicializada;

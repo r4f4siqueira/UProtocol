@@ -43,29 +43,29 @@ CREATE DATABASE uprotocol
 
 #### 2 - Revise o arquivo **.env**
 
-O arquivo se encontra em `back/.env`, verifique se os parametros estão de acordo com a instalação do postgreSQL, atenção para as linhas 
+O arquivo se encontra em `back/.env`, verifique se os parametros estão de acordo com a instalação do postgreSQL, atenção para as linhas `10,11,12,13`
 ```
-10|DB_PORT
-11|DB_USER
-12|DB_PASSWORD
-13|DB_DATABASE
+DB_PORT
+DB_USER
+DB_PASSWORD
+DB_DATABASE
 ```
 Exemplo de como o arquivo deve ficar:
 ```
-01|HOST=127.0.0.1
-02|PORT=3333
-03|NODE_ENV=development
-04|APP_NAME=AdonisJs
-05|APP_URL=http://${HOST}:${PORT}
-06|CACHE_VIEWS=false
-07|APP_KEY=bHaSTp0PIkZKnLqKdWRj0sYEcLj61GaG
-08|DB_CONNECTION=pg
-09|DB_HOST=127.0.0.1
-10|DB_PORT=5432
-11|DB_USER=postgres
-12|DB_PASSWORD=postgres
-13|DB_DATABASE=uprotocol
-14|HASH_DRIVER=bcrypt
+HOST=127.0.0.1
+PORT=3334
+NODE_ENV=development
+APP_NAME=AdonisJs
+APP_URL=http://${HOST}:${PORT}
+CACHE_VIEWS=false
+APP_KEY=bHaSTp0PIkZKnLqKdWRj0sYEcLj61GaG
+DB_CONNECTION=pg
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=uprotocol
+HASH_DRIVER=bcrypt
 ```
 
 

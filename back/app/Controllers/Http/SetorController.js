@@ -67,7 +67,7 @@ class SetorController {
             .table("funcionarios")
             .where("uid", request.uid);
         if (idUserC === null) {
-            response?.(404);
+            response?.status(404);
             retorno = {
                 erro: {
                     codigo: 36,
