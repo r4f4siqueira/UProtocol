@@ -1,6 +1,6 @@
 // import padrao
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 // componentes
 
@@ -59,7 +59,7 @@ export const GButton = styled.button`
 export const Titles = styled.span`
     max-width: 100%;
     color: #0d99da;
-    ${(props) => (props.align ? "text-align: " + props.align : "text-align: center;")};
+    ${(props) => (props.align ? 'text-align: ' + props.align : 'text-align: center;')};
     white-space: nowrap;
     padding: 0 0.8rem;
 
@@ -122,6 +122,7 @@ export const PanelPage = styled(Panel)`
     padding: 1rem;
 
     box-shadow: 0px 3px 5px #949494ff;
+    min-height: 53.5rem;
 `;
 
 export const PanelTable = styled(Panel)`

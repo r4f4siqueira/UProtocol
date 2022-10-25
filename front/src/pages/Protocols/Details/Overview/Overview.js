@@ -9,18 +9,19 @@ import { ReactComponent as LoadingGif } from '../../../../assets/Loading/Gear.sv
 
 //Estilos - icones
 import { Cabecalho, DelailsFormWrapper, DisplayWrapper, DropboxWrapper, InputWrapper } from './styles';
-import { BtCancel, BtSubmit, ContainerR } from '../../../../styles/styles';
+import { BtCancel, BtSubmit } from '../../../../styles/styles';
 
 //Acoes
 import { AuthContext } from '../../../../context/auth.tsx';
 import { updateProtocol, getProtocolDetails } from '../../../../store/actions/protocol.tsx';
 import { getCustomers } from '../../../../store/actions/customer.tsx';
 import { getPriorities } from '../../../../store/actions/priority.tsx';
+import { getCompany } from '../../../../store/actions/company.tsx';
 import { useParams } from 'react-router';
 
 function Overview() {
     const dispatch = useDispatch();
-    const companyId = useSelector((state) => state.Company.companyData?.id);
+    const company = useSelector((state) => state.Company);
     const selectedProtocol = useSelector((state) => state.Protocol.selectedProtocol);
     const { user } = useContext(AuthContext);
 
@@ -57,10 +58,19 @@ function Overview() {
         return true;
     });
     useEffect(() => {
-        dispatch(getCustomers(user.uid, companyId));
-        dispatch(getPriorities(user.uid, companyId));
+        async function loadData() {
+            if (company.hasCompany) {
+                dispatch(getPriorities(user.uid, company.companyData.id));
+                dispatch(getCustomers(user.uid, company.companyData.id));
+            } else {
+                await dispatch(getCompany(user.uid));
+                await dispatch(getPriorities(user.uid, company.companyData.id));
+                await dispatch(getCustomers(user.uid, company.companyData.id));
+            }
+        }
+        loadData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [company.hasCompany]);
 
     const { idProtocol } = useParams();
     useEffect(() => {
@@ -71,7 +81,7 @@ function Overview() {
                 prioridade: { value: selectedProtocol.prioridade?.id, label: selectedProtocol.prioridade?.nome },
             });
         } else {
-            dispatch(getProtocolDetails(user.uid, companyId, idProtocol));
+            dispatch(getProtocolDetails(user.uid, company.companyData.id, idProtocol));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedProtocol]);
@@ -97,7 +107,7 @@ function Overview() {
             previsao: localSelectedProtocol.previsao,
             situacao: selectedProtocol.situacao,
             uid: user.uid,
-            empresa: companyId,
+            empresa: company.companyData.id,
         };
         console.log('editar');
         console.log(data);

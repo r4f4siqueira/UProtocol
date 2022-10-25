@@ -31,7 +31,6 @@ function Details() {
     const protocols = useSelector((state) => state.Protocol);
     const { user } = useContext(AuthContext);
 
-    console.log(selectedProtocol);
     const tabs = [
         { icon: <TbListDetails />, name: 'Detalhes', navto: `/protocols/details/${selectedProtocol.id}/overview`, disabled: !company.hasCompany },
         { icon: <FaList />, name: 'Observações', navto: `/protocols/details/${selectedProtocol.id}/notes`, disabled: !company.hasCompany },

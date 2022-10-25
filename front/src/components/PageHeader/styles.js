@@ -1,11 +1,13 @@
-import styled from "styled-components";
-import { ContainerR, GButton, PanelPage } from "../../styles/styles";
+import styled from 'styled-components';
+import { ContainerR, GButton, PanelPage } from '../../styles/styles';
 
 export const ContainerPageHeader = styled(ContainerR)``;
 
 export const PanelPageHeader = styled(PanelPage)`
     flex-direction: row;
     align-items: center;
+    max-height: fit-content;
+    min-height: fit-content;
 
     margin: 1.5rem 0 1.5rem 0;
     div {
