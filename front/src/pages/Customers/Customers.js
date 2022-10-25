@@ -62,9 +62,6 @@ function Customers() {
 
     switch (tab) {
         case 'overview':
-            //PENDENTE - trocar o formulário e esse modelo para apenas um display, criar uma
-            //pagina de cadastro/edição de empresas para lidar com isso.
-
             selectedTab = <Overview />;
             break;
         case 'contacts':

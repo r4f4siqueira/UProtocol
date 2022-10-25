@@ -1,33 +1,27 @@
 //react
-import React, { useContext, useState } from "react";
-import { toast } from "react-toastify";
+import React, { useContext, useState } from 'react';
+import { toast } from 'react-toastify';
 
 //components
-import Input from "../../components/Input/Input";
-import { AuthContext } from "../../context/auth.tsx";
-import { ReactComponent as Loading } from "../../assets/Loading/Gear.svg";
+import Input from '../../components/Input/Input';
+import { AuthContext } from '../../context/auth.tsx';
+import { ReactComponent as Loading } from '../../assets/Loading/Gear.svg';
 
 //styles
-import { ContainerCenter, ContainerR } from "../../styles/styles";
-import Logo from "../../assets/logo/logo.png";
-import { BtLogin, LoginWrapper, LinkPassword, BtGLogin, LinkRegister } from "./styles";
+import { ContainerCenter, ContainerR } from '../../styles/styles';
+import Logo from '../../assets/logo/logo.png';
+import { BtLogin, LoginWrapper, LinkPassword, BtGLogin, LinkRegister } from './styles';
 
-// var canVerify = false;
 function Login() {
-    // const { register } = useContext(AuthContext);
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [touched, setTouched] = useState({ email: false, pass: false });
 
     const { login, forgotPassword, loadAuth } = useContext(AuthContext);
-    // const [firstTime, setFirstTime] = useState({ email: true, senha: true });
 
     // seta de forma genérica o state touched que comeca como falso para true, de acordo com o parametro passado, utilizado com a prop blur do input
     function handleBlur(field) {
-        // canVerify = true;
-        // canSubmit(true);
-        if (!touched[`${field}`] === true) {
+        if (!touched[field] === true) {
             setTouched({ ...touched, [field]: true });
         }
     }
@@ -39,32 +33,16 @@ function Login() {
      * @return {fieldValidation} objeto contendo erros e mensagem de erros dos campos
      */
     function validate(temail, tpassword) {
-        // if (firstTime.email) {
-        //     fieldValidation.email.err = null;
-        //     setFirstTime({ ...firstTime, email: false });
-        //     return false;
-        // }
-        // if (firstTime.senha) {
-        //     fieldValidation.pass.err = null;
-        //     setFirstTime({ ...firstTime, senha: false });
-        //     return false;
-        // }
-
-        // if (!canVerify) {
-        //     console.log("nao verificou");
-        //     return false;
-        // }
-
         // constante de validacao, indica se o campo possui um erro e a mensagem de erro que ele vai ter, as proximas verificacoes
         // são para verificar o email e a senha e empurrar uma mensagem referente ao erro
         const fieldValidation = {
-            email: { err: null, msg: [""] },
-            pass: { err: null, msg: [""] },
+            email: { err: null, msg: [''] },
+            pass: { err: null, msg: [''] },
         };
 
         let ver = true;
-        let msgEmail = ["Erros encontrados: "];
-        let msgPass = ["Erros encontrados: "];
+        let msgEmail = ['Erros encontrados: '];
+        let msgPass = ['Erros encontrados: '];
 
         //REX = Regular Expression, expressao regular para validacao de email, basicamente requer algo@algo.algo
         // eslint-disable-next-line
@@ -75,28 +53,28 @@ function Login() {
         // lança um erro se a senha for menor que 6 digitos
         if (tpassword.length < 6) {
             ver = false;
-            msgPass.push("A senha deve possuir mais de 6 caracteres");
+            msgPass.push('A senha deve possuir mais de 6 caracteres');
             fieldValidation.pass.err = false;
         }
 
         // lança um erro se o erro não possuir @
-        if (!temail.includes("@")) {
+        if (!temail.includes('@')) {
             ver = false;
-            msgEmail.push("O Email deve possuir @");
+            msgEmail.push('O Email deve possuir @');
             fieldValidation.email.err = false;
         }
 
         // lança um erro se o email não possuir nenhum ponto
-        if (!temail.includes(".")) {
+        if (!temail.includes('.')) {
             ver = false;
-            msgEmail.push("O Email deve possuir ponto final (.)");
+            msgEmail.push('O Email deve possuir ponto final (.)');
             fieldValidation.email.err = false;
         }
 
         // lança um erro se o email não coincidir com a expressao regular
         if (!temail.match(emailREX)) {
             ver = false;
-            msgEmail.push("O Email não possui formato válido");
+            msgEmail.push('O Email não possui formato válido');
             fieldValidation.email.err = false;
         }
 
@@ -121,10 +99,6 @@ function Login() {
 
         return fieldValidation;
     }
-
-    // console.log("render");
-    // console.log(fieldValidation);
-
     //funcao executada ao submitar o formulário, ela para a execucao antes caso a funcao canbesubmitted retorne false
     function handleSubmit(e) {
         e.preventDefault();
@@ -133,33 +107,22 @@ function Login() {
         }
         const userData = { email, password };
         login(userData, false);
-        // console.log("enviado");
     }
 
     // retorna true ou false se o formulario pode ser enviado
     function canBeSubmitted() {
         const errors = validate(email, password);
-        const isDisabled = Object.keys(errors).some((x) => !errors[`${x}`].err);
-        // console.log(errors);
-        // console.log("desativado: " + isDisabled);
+        const isDisabled = Object.keys(errors).some((x) => !errors[x].err);
         return !isDisabled;
     }
 
-    // const isEnabled = Object.keys(fieldValidation).some((key) => fieldValidation[`${key}`].err);
-    // const isEnabled = validate();
     const errors = validate(email, password);
-    const isDisabled = Object.keys(errors).some((x) => !errors[`${x}`].err);
+    const isDisabled = Object.keys(errors).some((x) => !errors[x].err);
 
     // retorna true ou false se o input deveria mostrar os erros
     const shouldMarkError = (field) => {
-        const hasError = !errors[`${field}`].err;
-        // const hasError = !canSubmit();
-        // if (fieldValidation[`${field}`].err === null) {
-        //     return null;
-        // }
-        // console.log("has error: " + hasError + " - field: " + field);
+        const hasError = !errors[field].err;
         const shouldShow = touched[field];
-        // console.log("Should show: " + shouldShow);
         if (!shouldShow) {
             return null;
         }
@@ -173,7 +136,7 @@ function Login() {
         if (errors.email.err) {
             forgotPassword(email);
         } else {
-            toast.error("O email precisa estar preenchido corretamente!");
+            toast.error('O email precisa estar preenchido corretamente!');
             setTouched({ ...touched, email: true });
         }
     }
@@ -181,11 +144,14 @@ function Login() {
     return (
         <ContainerCenter>
             <LoginWrapper>
-                <img alt="logotipo da empresa" src={Logo} />
+                <img
+                    alt="logotipo da empresa"
+                    src={Logo}
+                />
                 <form onSubmit={handleSubmit}>
                     <Input
                         blur={() => {
-                            handleBlur("email");
+                            handleBlur('email');
                         }}
                         inputValue={email}
                         errMsg={errors.email.msg}
@@ -193,13 +159,13 @@ function Login() {
                             setEmail(e.target.value);
                         }}
                         type="email"
-                        isValid={shouldMarkError("email") ? false : shouldMarkError("email") === null ? null : true} /* false - erro, null - nada, true - correto */
+                        isValid={shouldMarkError('email') ? false : shouldMarkError('email') === null ? null : true} /* false - erro, null - nada, true - correto */
                         label="Email:"
                         placeholder="exemplo@exemplo.com.br"
                     />
                     <Input
                         blur={() => {
-                            handleBlur("pass");
+                            handleBlur('pass');
                         }}
                         inputValue={password}
                         errMsg={errors.pass.msg}
@@ -207,15 +173,18 @@ function Login() {
                             setPassword(e.target.value);
                         }}
                         type="password"
-                        isValid={shouldMarkError("pass") ? false : shouldMarkError("pass") === null ? null : true}
+                        isValid={shouldMarkError('pass') ? false : shouldMarkError('pass') === null ? null : true}
                         label="Senha:"
                         placeholder="Insira sua senha"
                     />
                     <ContainerR>
-                        <BtLogin disabled={loadAuth ? true : isDisabled}>{loadAuth ? "Carregando..." : "Entrar"}</BtLogin>
-                        {loadAuth ? <Loading className="loading" /> : ""}
+                        <BtLogin disabled={loadAuth ? true : isDisabled}>{loadAuth ? 'Carregando...' : 'Entrar'}</BtLogin>
+                        {loadAuth ? <Loading className="loading" /> : ''}
                     </ContainerR>
-                    <LinkPassword to="" onClick={handleForgotPass}>
+                    <LinkPassword
+                        to=""
+                        onClick={handleForgotPass}
+                    >
                         Esqueci minha senha
                     </LinkPassword>
                 </form>

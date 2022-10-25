@@ -1,23 +1,24 @@
 // react imports
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./privateRoute";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import PrivateRoute from './privateRoute';
 
 //paginas
-import Login from "../pages/Login/Login";
-import Register from "../pages/Register/Register";
-import Dashboard from "../pages/Dashboard/Dashboard";
-import Profile from "../pages/Profile/Profile";
-import Error from "../pages/Error/Error";
-import DUser from "../pages/DUser/DUser";
-import Company from "../pages/Company/Company";
-import Protocols from "../pages/Protocols/Protocols";
-import Customers from "../pages/Customers/Customers";
+import Login from '../pages/Login/Login';
+import Register from '../pages/Register/Register';
+import Dashboard from '../pages/Dashboard/Dashboard';
+import Profile from '../pages/Profile/Profile';
+import Error from '../pages/Error/Error';
+import DUser from '../pages/DUser/DUser';
+import Company from '../pages/Company/Company';
+import Protocols from '../pages/Protocols/Protocols';
+import Details from '../pages/Protocols/Details/Details';
+import Customers from '../pages/Customers/Customers';
 
-import { PagesContainer } from "../styles/styles";
+import { PagesContainer } from '../styles/styles';
 //componentes
-import Navbar from "../components/Navbar/Navbar";
-import Priorities from "../pages/Priorities/Priorities";
+import Navbar from '../components/Navbar/Navbar';
+import Priorities from '../pages/Priorities/Priorities';
 
 function RoutesApp() {
     return (
@@ -107,6 +108,17 @@ function RoutesApp() {
                     }
                 />
                 <Route
+                    path="/protocols/details/:idProtocol/:tab"
+                    element={
+                        <PrivateRoute>
+                            <PagesContainer>
+                                <Navbar opt="protocols" />
+                                <Details />
+                            </PagesContainer>
+                        </PrivateRoute>
+                    }
+                />
+                <Route
                     path="/customers/:tab"
                     element={
                         <PrivateRoute>
@@ -139,7 +151,10 @@ function RoutesApp() {
                         </PrivateRoute>
                     }
                 />
-                <Route path="/*" element={<Error />} />
+                <Route
+                    path="/*"
+                    element={<Error />}
+                />
             </Routes>
         </BrowserRouter>
     );

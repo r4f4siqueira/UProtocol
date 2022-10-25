@@ -3,10 +3,15 @@ import firebase from '../services/firebaseConnection';
 import { toast } from 'react-toastify';
 import { GoogleAuthProvider } from 'firebase/auth';
 import api from '../services/backendAPI';
+// @ts-ignore
+import { getCompany } from '../store/actions/company.tsx';
+import { useDispatch } from 'react-redux';
 
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
+    const dispatch = useDispatch();
+
     const [user, setUser] = useState({});
     const [loadAuth, setLoadAuth] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -81,7 +86,7 @@ function AuthProvider({ children }) {
             });
     }
     // infelizmente a documentacao fica disponivel acessar dentro do documento mas a partir do momento que
-    // é importado pelo useContext dentro de outro documento a mesma não aparece
+    // é importado pelo useContext dentro de outro arquivo a mesma não aparece junto
 
     /**
      * Loga o usuário com o firebase auth
@@ -129,7 +134,7 @@ function AuthProvider({ children }) {
                                 break;
                             case 'auth/too-many-requests':
                                 toast.error('Muitas tentativas falhas, aguarde alguns segundos');
-                                break; // esqueci por que nao coloquei isso antes
+                                break;
                             default:
                                 toast.error(error);
                                 console.log(error.code);
@@ -275,6 +280,7 @@ function AuthProvider({ children }) {
                         api.post('/funcionario', data)
                             .then((resp) => {
                                 // console.log(resp);
+                                dispatch(getCompany(userData.uid));
                             })
                             .catch((err) => {
                                 if (err.code !== 'ERR_BAD_RESPONSE') {

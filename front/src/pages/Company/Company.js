@@ -35,13 +35,9 @@ function Company() {
     const { tab } = useParams();
     const navTab = '/company/' + tab;
     let selectedTab;
-    // console.log(navTab);
 
     useEffect(() => {
-        async function loadCompanyData() {
-            await dispatch(getCompany(user.uid));
-        }
-        loadCompanyData();
+        dispatch(getCompany(user.uid));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

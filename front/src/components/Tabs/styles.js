@@ -15,7 +15,7 @@ export const TabsWrapper = styled(ContainerR)`
 `;
 
 export const Tab = styled(OptionWrapper)`
-    ${(props) => (props.disabled ? 'filter: grayscale(100); pointer-events: none;' : '')};
+    ${(props) => (props.disabled ? 'filter: grayscale(100); cursor: not-allowed;' : '')};
     margin: 0rem -1.1rem 0 -1.1rem;
 
     :first-of-type {

@@ -52,7 +52,7 @@ function TableCustomers() {
                                 <td>{Customer.razaosocial}</td>
                                 <td>{Customer.CNPJ_CPF}</td>
                                 <td>{Customer.ativo ? 'Sim' : 'Não'}</td>
-                                <td>{Customer.userc.nome}</td>
+                                <td> {Customer.userc.nome} </td>
 
                                 {Customer.id === '0' ? (
                                     ''
