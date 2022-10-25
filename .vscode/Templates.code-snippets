@@ -34,7 +34,7 @@
             "function $1() {",
             "\tconst dispatch = useDispatch();",
             "\tconst companyId = useSelector((state) => state.Company.companyData?.id);",
-            "\tconst selected$2 = useSelector((state) => state.Customer.selectedCustomer);",
+            "\tconst selected$2 = useSelector((state) => state.$2.selected$2);",
             "\tconst $2List = useSelector((state) => state.$2.$2List);",
             "\tconst { user } = useContext(AuthContext);",
             " ",

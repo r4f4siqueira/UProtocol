@@ -18,6 +18,7 @@ import { getCustomers } from '../../../../store/actions/customer.tsx';
 import { getPriorities } from '../../../../store/actions/priority.tsx';
 import { getCompany } from '../../../../store/actions/company.tsx';
 import { useParams } from 'react-router';
+import moment from 'moment';
 
 function Overview() {
     const dispatch = useDispatch();
@@ -72,6 +73,11 @@ function Overview() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [company.hasCompany]);
 
+    console.log('detalhes do protocolo');
+    console.log(selectedProtocol);
+    console.log('detalhes do protocolo local');
+    console.log(localSelectedProtocol);
+
     const { idProtocol } = useParams();
     useEffect(() => {
         if (selectedProtocol) {
@@ -79,6 +85,7 @@ function Overview() {
                 ...selectedProtocol,
                 cliente: { value: selectedProtocol.cliente?.id, label: selectedProtocol.cliente?.nome },
                 prioridade: { value: selectedProtocol.prioridade?.id, label: selectedProtocol.prioridade?.nome },
+                previsao: moment(selectedProtocol.previsao).format('yyyy-MM-DDThh:mm'),
             });
         } else {
             dispatch(getProtocolDetails(user.uid, company.companyData.id, idProtocol));
@@ -91,6 +98,7 @@ function Overview() {
             ...selectedProtocol,
             cliente: { value: selectedProtocol.cliente?.id, label: selectedProtocol.cliente?.nome },
             prioridade: { value: selectedProtocol.prioridade?.id, label: selectedProtocol.prioridade?.nome },
+            previsao: moment(selectedProtocol.previsao).format('yyyy-MM-DDThh:mm'),
         });
     }
 
@@ -116,7 +124,6 @@ function Overview() {
             handleCancelProtocol();
         }, 1000);
     }
-
     return (
         <DelailsFormWrapper
             onSubmit={(evt) => {

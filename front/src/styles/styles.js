@@ -122,7 +122,9 @@ export const PanelPage = styled(Panel)`
     padding: 1rem;
 
     box-shadow: 0px 3px 5px #949494ff;
-    min-height: 53.5rem;
+    margin-bottom: 1rem;
+    min-height: max-content;
+    overflow: hidden;
 `;
 
 export const PanelTable = styled(Panel)`

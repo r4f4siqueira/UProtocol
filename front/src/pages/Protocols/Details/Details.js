@@ -6,7 +6,7 @@ import PageHeader from '../../../components/PageHeader/PageHeader';
 
 //Actions
 import { AuthContext } from '../../../context/auth.tsx';
-import {} from '../../../store/actions/protocol.tsx';
+import { getProtocolDetails } from '../../../store/actions/protocol.tsx';
 import { getCompany } from '../../../store/actions/company.tsx';
 
 //components
@@ -22,7 +22,7 @@ import { TbListDetails } from 'react-icons/tb';
 import { FaClipboardList, FaList } from 'react-icons/fa';
 import { BiTransfer } from 'react-icons/bi';
 import { ImAttachment } from 'react-icons/im';
-import { BtCancel, BtSubmit, ContainerPage, PanelPage } from '../../../styles/styles';
+import { ContainerPage, PanelPage } from '../../../styles/styles';
 
 function Details() {
     const dispatch = useDispatch();
@@ -38,19 +38,29 @@ function Details() {
         { icon: <ImAttachment />, name: 'Anexos', navto: `/protocols/details/${selectedProtocol.id}/attachments`, disabled: !company.hasCompany },
     ];
 
-    const { tab } = useParams();
+    const { tab, idProtocol } = useParams();
     const navTab = `/protocols/details/${selectedProtocol.id}/${tab}`;
     let selectedTab;
 
     useEffect(() => {
         async function loadData() {
-            await dispatch(getCompany(user.uid));
+            if (company.hasCompany === null) {
+                await dispatch(getCompany(user.uid));
+            }
         }
-        if (company.hasCompany === null) {
-            loadData();
-        }
+        loadData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        async function loadData() {
+            if (company.hasCompany) {
+                await dispatch(getProtocolDetails(user.uid, company.companyData.id, idProtocol));
+            }
+        }
+        loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [company.hasCompany]);
 
     switch (tab) {
         case 'overview':

@@ -55,10 +55,38 @@ export const getProtocolDetails = (uid: String, empresa: Number, idProtocol: num
 
     api.get(`/protocolo/${idProtocol}`, { params: { uid, empresa } })
         .then(async (resp) => {
-            // console.log(resp);
-            console.log('detalhes do protocolo encontrados');
+            console.log('detalhes do protocolo encontrados:');
+            console.log(resp);
+            // resposta vem em um array de uma posição com os detalhes do protocolo
+            dispatch(setSelectedProtocol(resp.data[0]));
+            dispatch(setLoading(false));
+        })
+        .catch((err) => {
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
+            }
+            console.error(err);
+            dispatch(setLoading(false));
+        });
+};
 
-            dispatch(setSelectedProtocol(resp.data));
+/**
+ * Cria um registro de observação no protocolo
+ * @param   {String} uid  UID do usuário que irá realizar a operação
+ * @param   {Number} empresa  ID da empresa que o usuário está tentando buscar os dados
+ * @param   {Number} protocolo  ID do protocolo
+ * @param   {Number} observacao  String contendo o que foi observado
+ */
+export const observeProtocol = (uid: String, empresa: Number, protocolo: number, observacao: string) => async (dispatch) => {
+    dispatch(setLoading(true));
+    console.log('Salvando observacao');
+
+    api.post(`/observacao`, { uid, empresa, protocolo, observacao })
+        .then(async (resp) => {
+            console.log('Observacao salva');
+            toast.success('Observacao registrada com sucesso!');
+
+            dispatch(getProtocolDetails(uid, empresa, protocolo));
             dispatch(setLoading(false));
         })
         .catch((err) => {
