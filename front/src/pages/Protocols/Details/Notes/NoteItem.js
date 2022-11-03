@@ -1,6 +1,5 @@
 //React
-import React, { useContext, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
 //Componentes
 import parse from 'html-react-parser';
 import Chip from '@mui/joy/Chip';
@@ -13,19 +12,17 @@ import { NoteItemWrapper } from './styles';
 import { ContainerC, ContainerR, Titles } from '../../../../styles/styles';
 import { FiInfo } from 'react-icons/fi';
 
-//Acoes
-import { AuthContext } from '../../../../context/auth.tsx';
-import {} from '../../../../store/actions/protocol.tsx';
-import moment from 'moment';
-
 function NoteItem({ obs }) {
-    const dispatch = useDispatch();
-    const companyId = useSelector((state) => state.Company.companyData?.id);
-    const selectedprotocol = useSelector((state) => state.Protocol.selectedProtocol);
-    const protocolList = useSelector((state) => state.Protocol.protocolList);
-    const { user } = useContext(AuthContext);
-
     const [showTooltip, setShowTooltip] = useState(false);
+
+    const dataCriacao = new Date(obs.created_at).toLocaleDateString('pt-br', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+    });
 
     return (
         <Titles>
@@ -71,7 +68,7 @@ function NoteItem({ obs }) {
                         color="primary"
                         sx={{ border: '1px solid #3161ff', minWidth: 'fit-content' }}
                     >
-                        {moment(obs.created_at).format('DD/MM/YYYY - HH:mm')}
+                        {dataCriacao}
                         <Divider
                             orientation="vertical"
                             sx={{ backgroundColor: '#3161ff', marginX: '10px' }}
@@ -86,7 +83,6 @@ function NoteItem({ obs }) {
                     </Chip>
                 </Tooltip>
             </Divider>
-            <h3></h3>
             <NoteItemWrapper>{parse(obs.observacao)}</NoteItemWrapper>
         </Titles>
     );

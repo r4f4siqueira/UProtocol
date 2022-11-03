@@ -47,9 +47,10 @@ function Notes() {
                 {selectedProtocol.observacoes?.length > 0 ? (
                     selectedProtocol.observacoes?.map((obs) => {
                         return (
-                            <>
-                                <NoteItem obs={obs} />
-                            </>
+                            <NoteItem
+                                key={obs.id}
+                                obs={obs}
+                            />
                         );
                     })
                 ) : (

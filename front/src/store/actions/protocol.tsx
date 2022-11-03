@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import api from '../../services/backendAPI';
-import { SET_PROTOCOL, SET_LOADING, SET_SELECTED_PROTOCOL } from '../types/protocol';
+import { SET_PROTOCOL, SET_LOADING, SET_SELECTED_PROTOCOL, SET_TRANSFERS } from '../types/protocol';
 
 interface protocolData {
     id?: number;
@@ -177,7 +177,7 @@ export const commitProtocol = (uid: string, empresa: number, protocolId: number)
                 // console.log(resp);
                 // loadProtocolData();
                 await dispatch(getProtocols(uid, empresa));
-                toast.info('Protocolo concluído com sucesso!');
+                toast.success('Protocolo concluído com sucesso!');
             })
             .catch((err) => {
                 if (err.response?.data?.erro) {
@@ -189,30 +189,64 @@ export const commitProtocol = (uid: string, empresa: number, protocolId: number)
         console.log(error);
     }
 };
-// /**
-//  * Atualiza os dados do protocolo atual
-//  * @param   {Object} protocolData  Objeto com os dados a serem alterados do protocolo
-//  * @param   {String} uid  UID do usuário que irá realizar a operação
-//  */
-// export const transferProtocol = (protocolData: {}) => async (dispatch) => {
-//     try {
-//         api.put(`/protocolo/${protocolData.id}`, protocolData)
-//             .then(async () => {
-//                 // console.log(resp);
-//                 // loadProtocolData();
-//                 await dispatch(getProtocols(protocolData.uid, protocolData.empresa));
-//                 toast.info('Protocolo atualizado com sucesso!');
-//             })
-//             .catch((err) => {
-//                 if (err.response?.data?.erro) {
-//                     toast.error(err.response.data.erro.msg);
-//                 }
-//                 console.error(err);
-//             });
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
+/**
+ * Repassa o protocolo
+ * @param   {Object} transferData  Objeto com os dados a serem criados no repasse
+ * @param   {String} uid  UID do usuário que irá realizar a operação
+ */
+export const transferProtocol =
+    (transferData: { uid: string; empresa: number; protocolo: number; funcionariodestino: number; setor: number }) => async (dispatch) => {
+        try {
+            api.post(`/repasse`, transferData)
+                .then(async () => {
+                    // console.log('dados busca: ' + transferData.uid + ' - ' + transferData.empresa + ' - ' + transferData.protocolo);
+
+                    await dispatch(getTransfers(transferData.uid, transferData.empresa, transferData.protocolo));
+                    await dispatch(getProtocolDetails(transferData.uid, transferData.empresa, transferData.protocolo));
+                    toast.info('Repasse realizado com sucesso!');
+                })
+                .catch((err) => {
+                    if (err.response?.data?.erro) {
+                        toast.error(err.response.data.erro.msg);
+                    }
+                    console.error(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+/**
+ * Lista os repasses do protocolo
+ * @param   {Object} transferData  Objeto com os dados a serem criados no repasse
+ * @param   {String} uid  UID do usuário que irá realizar a operação
+ */
+export const getTransfers = (uid: string, empresa: number, protocolo: number) => async (dispatch) => {
+    try {
+        console.log('Buscando Repasses');
+
+        dispatch(setLoading(true));
+        api.get(`/repasse`, { params: { uid, empresa, protocolo } })
+            .then(async (resp) => {
+                console.log('Repasses encontrados');
+                console.log(resp.data);
+
+                dispatch({
+                    type: SET_TRANSFERS,
+                    transferList: resp.data,
+                });
+                dispatch(setLoading(false));
+            })
+            .catch((err) => {
+                if (err.response?.data?.erro) {
+                    toast.error(err.response.data.erro.msg);
+                }
+                console.error(err);
+                dispatch(setLoading(false));
+            });
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 /**
  * pega os detalhes de um protocolo, como seus repasses e observações

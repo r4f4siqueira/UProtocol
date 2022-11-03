@@ -25,9 +25,9 @@ function Tabs(props) {
                         color="primary"
                         variant="solid"
                         placement="top"
+                        key={tab.name}
                     >
                         <Tab
-                            key={tab.name}
                             onClick={() => {
                                 !tab.disabled ? handleNavigate(tab.navto) : console.log('tab desativada');
                             }}
