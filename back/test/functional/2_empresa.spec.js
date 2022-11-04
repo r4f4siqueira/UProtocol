@@ -5,21 +5,13 @@ const EmpresaController = require('../../App/controllers/Http/EmpresaController'
 //Instanciando o objeto controller
 const empresaC = new EmpresaController()
 
-
-test("1 - Listar todas empresas", async ({assert})=>{
-  let empresas = await empresaC.listarEmpresas()
-  
-  //pega a quantidade de registros de empresas
-  let qtdRegistro = empresas.rows.length //qtd = quantidade 
-  
-  //Caso nao ter nenhuma empresa cadastrada o retorno sera 0
-  //caso nescessario use o console log para ver oque esta sendo retornado na funcao
-  //console.log(qtdRegistro)
-
-  //se a quantidade de registros for diferente de null e
-  //diferente de undefined passa no teste
-  //ou seja conseguiu listar as empresas
-  assert.equal(true,qtdRegistro!==null&&qtdRegistro!==undefined)
+test("1 - usuario sem empresa cadastrada", async ({ assert }) => {
+  const uid = "x"
+  let empresas = await empresaC.listarEmpresas({ request: { uid }, })
+  //Espra que retorne um objeto com os seguintes atributos:
+  //codigo
+  //msg:
+  assert.equal(true,empresas.erro.codigo==31)
 })
 
 test("2 - Consulta EMPRESA: Valida os parametros da URL", async ({assert})=>{

@@ -129,7 +129,7 @@ class EmpresaController {
         //exemplo de url
         //http://127.0.0.1:3333/empresa?uid=nN4TfCisXFdapqgYzWdg29ohWHe
         let retorno = "";
-        const user = request.only(["uid"]);
+        const user = request.uid==undefined ? request.only(["uid"]) : request;
         if (user.uid === "" || user.uid === undefined || user.uid === null) {
             response?.status(400);
             retorno = {

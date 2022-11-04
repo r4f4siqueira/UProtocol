@@ -6,13 +6,13 @@ const Funcionario = use("App/Models/Funcionario");
 class FuncionarioController {
     async criarFuncionario({ request, response }) {
         //Pega os dados enviados pela requisicao e atribui a dataToCreate
-        const dataToCreate = request.only([
+        const dataToCreate = request.uid==undefined ? request.only([
             "ativo",
             "nome",
             "email",
             "uid",
             "avatarURL",
-        ]);
+        ]) : request; 
         //Verifica se esta passando user UID
         //Se tiver UID velifica se esta passando nome
         //Se passar nome verifica o Email
@@ -59,6 +59,8 @@ class FuncionarioController {
                         },
                     };
                 } else {
+                    //Se o usuário existir retorna os dados do usuário
+                    //Caso contrário cadastra o usuário no BD
                     const verificador = await Database.select("*")
                         .table("funcionarios")
                         .where("uid",dataToCreate.uid)
@@ -79,7 +81,7 @@ class FuncionarioController {
     //async listarFuncionarios(){
     async dadosFuncionario({ request, response }) {
         let retorno = null;
-        const user = request.only(["uid"]);
+        const user = request.uid==undefined ? request.only(["uid"]) : request;
         if (user.uid === "" || user.uid === undefined || user.uid === null) {
             response?.status(400);
             retorno = {
@@ -123,16 +125,14 @@ class FuncionarioController {
     // }
 
     async alterarFuncionario({ params, request }) {
-        //verificar se esta passando userm
-        //se passar userm verifica
-
+        
         const funcionario = await Funcionario.find(params.id); //Retorna erro caso nao encontrar
-        const atualizaFuncionario = request.only([
+        const atualizaFuncionario = request.email== undefined ? request.only([
             "ativo",
             "nome",
             "email",
             "avatarURL",
-        ]);
+        ]) : request;
 
         funcionario.merge(atualizaFuncionario);
 
