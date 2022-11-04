@@ -1,24 +1,38 @@
 //React
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //Componentes
+import TableAttachments from './TableAttachments';
+import FormAttachments from './FormAttachments';
 
 //Estilos - icones
+import { PanelTable } from '../../../../styles/styles';
 
 //Acoes
 import { AuthContext } from '../../../../context/auth.tsx';
-import {} from '../../../../store/actions/protocol.tsx';
+import { getAttachments } from '../../../../store/actions/protocol.tsx';
+import { getSectors } from '../../../../store/actions/sector.tsx';
+import { getEmployees } from '../../../../store/actions/employee.tsx';
 
 function Attachments() {
     const dispatch = useDispatch();
     const companyId = useSelector((state) => state.Company.companyData?.id);
-    const selectedprotocol = useSelector((state) => state.Customer.selectedCustomer);
-    const protocol = useSelector((state) => state.Protocol);
+    const selectedProtocolId = useSelector((state) => state.Protocol.selectedProtocol.id);
     const { user } = useContext(AuthContext);
 
+    useEffect(() => {
+        async function loadData() {
+            await dispatch(getSectors(user.uid, companyId));
+            await dispatch(getEmployees(user.uid, companyId));
+        }
+        loadData();
+    }, []);
     return (
         <>
-            <div>Attachments</div>
+            <FormAttachments />
+            <PanelTable>
+                <TableAttachments />
+            </PanelTable>
         </>
     );
 }
