@@ -20,13 +20,14 @@ function Attachments() {
     const selectedProtocolId = useSelector((state) => state.Protocol.selectedProtocol.id);
     const { user } = useContext(AuthContext);
 
-    useEffect(() => {
-        async function loadData() {
-            await dispatch(getSectors(user.uid, companyId));
-            await dispatch(getEmployees(user.uid, companyId));
-        }
-        loadData();
-    }, []);
+    // useEffect(() => {
+    //     async function loadData() {
+    //         await dispatch(getSectors(user.uid, companyId));
+    //         await dispatch(getEmployees(user.uid, companyId));
+    //     }
+    //     loadData();
+    // }, []);
+
     return (
         <>
             <FormAttachments />

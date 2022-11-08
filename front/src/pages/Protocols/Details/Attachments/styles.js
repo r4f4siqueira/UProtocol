@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Panel, TableWrapper, FormWrapper, PanelTable, GBTable } from '../../../../styles/styles';
 
-export const TransferFormWrapper = styled(FormWrapper)`
+export const AttachmentFormWrapper = styled(FormWrapper)`
     form {
         display: flex;
         flex-direction: row;
@@ -89,7 +89,7 @@ export const FormAttachments = styled(Panel)`
 
 export const PanelAttachments = styled(PanelTable)``;
 
-export const TransferTableWrapper = styled(TableWrapper)`
+export const AttachmentTableWrapper = styled(TableWrapper)`
     th {
         :nth-of-type(1),
         :nth-of-type(2),

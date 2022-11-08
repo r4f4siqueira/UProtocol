@@ -1,4 +1,4 @@
-import { SET_PROTOCOL, SET_SELECTED_PROTOCOL, SET_LOADING, SET_SAVING, SET_TRANSFERS } from '../types/protocol';
+import { SET_PROTOCOL, SET_SELECTED_PROTOCOL, SET_LOADING, SET_SAVING, SET_TRANSFERS, SET_SELECTED_ATTACHMENTS, SET_ATTACHMENTS } from '../types/protocol';
 
 export default function reducer(
     state = {
@@ -52,6 +52,11 @@ export default function reducer(
             return {
                 ...state,
                 selectedTransfers: action.transferList,
+            };
+        case SET_ATTACHMENTS:
+            return {
+                ...state,
+                selectedAttachments: action.attachmentList,
             };
         default:
             break;

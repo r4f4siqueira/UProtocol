@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import api from '../../services/backendAPI';
-import { SET_PROTOCOL, SET_LOADING, SET_SELECTED_PROTOCOL, SET_TRANSFERS } from '../types/protocol';
+import { SET_PROTOCOL, SET_LOADING, SET_SELECTED_PROTOCOL, SET_TRANSFERS, SET_ATTACHMENTS } from '../types/protocol';
+import firebase from '../../services/firebaseConnection';
 
 interface protocolData {
     id?: number;
@@ -217,8 +218,6 @@ export const transferProtocol =
     };
 /**
  * Lista os repasses do protocolo
- * @param   {Object} transferData  Objeto com os dados a serem criados no repasse
- * @param   {String} uid  UID do usuário que irá realizar a operação
  */
 export const getTransfers = (uid: string, empresa: number, protocolo: number) => async (dispatch) => {
     try {
@@ -246,6 +245,92 @@ export const getTransfers = (uid: string, empresa: number, protocolo: number) =>
     } catch (error) {
         console.log(error);
     }
+};
+
+/**
+ * Lista os anexos do protocolo
+ */
+export const getAttachments = (uid: string, empresa: number, protocolo: number) => async (dispatch) => {
+    try {
+        console.log('Buscando Anexos');
+
+        dispatch(setLoading(true));
+        api.get(`/anexo`, { params: { uid, empresa, protocolo } })
+            .then(async (resp) => {
+                console.log('Anexos encontrados');
+                console.log(resp.data);
+
+                dispatch({
+                    type: SET_ATTACHMENTS,
+                    attachmentList: resp.data,
+                });
+                dispatch(setLoading(false));
+            })
+            .catch((err) => {
+                if (err.response?.data?.erro) {
+                    toast.error(err.response.data.erro.msg);
+                }
+                console.error(err);
+                dispatch(setLoading(false));
+            });
+    } catch (error) {
+        console.log(error);
+    }
+};
+/**
+ * Cria um anexo novo no protocolo
+ */
+export const createAttachment = (attachmentData: { protocolo: number; descricao: string; uid: string; empresa: number }, objAnexo: any) => async (dispatch) => {
+    try {
+        console.log('Criando anexo');
+        dispatch(setLoading(true));
+        let tAnexo;
+        await firebase
+            .storage()
+            .ref(`anexos/${attachmentData.empresa}/${attachmentData.protocolo}/${objAnexo.name}`)
+            .put(objAnexo)
+            .then(async (snapshot) => {
+                // console.log(snapshot);
+                tAnexo = await snapshot.ref.getDownloadURL();
+            })
+            .catch((err) => {
+                toast.error('Erro ao salvar imagem');
+                console.log(err);
+                setSaving(false);
+            });
+
+        api.post(`/anexo`, { ...attachmentData, anexo: tAnexo })
+            .then(async (resp) => {
+                console.log(resp.data);
+                toast.info('Anexo criado com sucesso!');
+
+                dispatch(getAttachments(attachmentData.uid, attachmentData.empresa, attachmentData.protocolo));
+                dispatch(setLoading(false));
+            })
+            .catch((err) => {
+                if (err.response?.data?.erro) {
+                    toast.error(err.response.data.erro.msg);
+                }
+                console.error(err);
+                dispatch(setLoading(false));
+            });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const deleteAttachment = (attachmentId: number, uid: string, empresa: number, protocolo: number) => async (dispatch) => {
+    api.delete(`/anexo/${attachmentId}`, { params: { uid, empresa } })
+        .then(async () => {
+            await dispatch(getAttachments(uid, empresa, protocolo));
+            toast.success('Anexo deletado com sucesso!');
+        })
+        .catch((err) => {
+            if (err.response?.data?.erro) {
+                toast.error(err.response.data.erro.msg);
+            }
+            console.error(err);
+        });
 };
 
 /**

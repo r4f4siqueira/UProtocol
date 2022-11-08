@@ -4,57 +4,85 @@ import { useDispatch, useSelector } from 'react-redux';
 //Componentes
 
 //Estilos - icones
-import { TransferTableWrapper } from './styles';
+import { AttachmentTableWrapper, TBInfo } from './styles';
+import { AiOutlinePaperClip } from 'react-icons/ai';
 
 //Acoes
 import { AuthContext } from '../../../../context/auth.tsx';
 import {} from '../../../../store/actions/protocol.tsx';
+import { TBRemove } from '../../../../styles/styles';
+import { BsTrashFill } from 'react-icons/bs';
 
 function TableAttachments() {
     const dispatch = useDispatch();
     const companyId = useSelector((state) => state.Company.companyData?.id);
     const selectedProtocol = useSelector((state) => state.Protocol.selectedProtocol);
-    const transferList = useSelector((state) => state.Protocol.selectedAttachments);
+    const attachmentList = useSelector((state) => state.Protocol.selectedAttachments);
     const { user } = useContext(AuthContext);
 
     const [localList, setLocalList] = useState([]);
 
     useEffect(() => {
         // console.log(Protocols);
-        if (transferList === undefined || transferList.length === 0) {
+        if (attachmentList === undefined || attachmentList.length === 0) {
             setLocalList([{ id: '0', setor: 'Esse protocolo não possui repasses' }]);
         } else {
-            setLocalList(transferList);
+            setLocalList(attachmentList);
         }
-    }, [transferList]);
+    }, [attachmentList]);
+
+    function handleDownloadAttachment(index) {
+        //stuff
+    }
+
+    function handleRemoveAttachment(index) {
+        //stuff
+    }
 
     return (
-        <TransferTableWrapper>
+        <AttachmentTableWrapper>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Setor</th>
-                        <th>Funcionário anterior</th>
-                        <th>Funcionário destino</th>
+                        <th>Descricao</th>
                         <th>Criador</th>
+                        <th>Acoes</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {localList.map((Transfer) => {
+                    {localList.map((Attachment, index) => {
                         return (
-                            <tr key={'repasse: ' + Transfer.id}>
-                                <td>{Transfer.id}</td>
-                                <td>{Transfer.setor}</td>
-                                <td>{Transfer.funcionarioatual?.nome}</td>
-                                <td>{Transfer.funcionariodestino?.nome}</td>
-                                <td>{Transfer.userc?.nome}</td>
+                            <tr key={'repasse: ' + Attachment.id}>
+                                <td>{Attachment.id}</td>
+                                <td>{Attachment.descricao}</td>
+                                <td>{Attachment.userc?.nome}</td>
+                                {Attachment.id === '0' ? (
+                                    ''
+                                ) : (
+                                    <td>
+                                        <TBInfo
+                                            onClick={() => {
+                                                handleDownloadAttachment(index);
+                                            }}
+                                        >
+                                            <AiOutlinePaperClip />
+                                        </TBInfo>
+                                        <TBRemove
+                                            onClick={() => {
+                                                handleRemoveAttachment(index);
+                                            }}
+                                        >
+                                            <BsTrashFill />
+                                        </TBRemove>
+                                    </td>
+                                )}
                             </tr>
                         );
                     })}
                 </tbody>
             </table>
-        </TransferTableWrapper>
+        </AttachmentTableWrapper>
     );
 }
 export default TableAttachments;
