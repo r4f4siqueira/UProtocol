@@ -98,7 +98,10 @@ class ProtocoloController {
 
     async listarProtocolos({ request, response }) {
         let retorno = "";
-        const dadosRequest = request.uid !== "teste" ? request.only(["uid", "empresa"]) : request;
+        const dadosRequest =
+            request.uid !== "teste"
+                ? request.only(["uid", "empresa"])
+                : request;
         const user = await Database.table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
             .where("empresa", dadosRequest.empresa)
@@ -166,7 +169,12 @@ class ProtocoloController {
                 lista.nome = undefined;
                 lista.setor_nome = undefined;
                 lista.ordemimportancia = undefined;
-                lista.atrasado = agora < lista.previsao ? false : true; //verificando se o protocolo está atrasado
+                if (lista.previsao !== null) {
+                    lista.atrasado = agora < lista.previsao ? false : true; //verificando se o protocolo está atrasado
+                } else {
+                    lista.atrasado = false;
+                }
+                //verificando se o protocolo está atrasado
 
                 return true;
             });

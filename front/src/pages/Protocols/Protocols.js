@@ -36,8 +36,7 @@ function Protocols() {
     ];
 
     const { tab } = useParams();
-    const navTab = '/customers/' + tab;
-    let selectedTab;
+    const navTab = '/protocols/' + tab;
 
     useEffect(() => {
         async function loadData() {
@@ -53,25 +52,25 @@ function Protocols() {
         async function loadData() {
             if (company.companyData?.id) {
                 // await dispatch(getProtocols(user.uid, company.companyData.id));
-                switch (tab) {
-                    case 'overview':
-                        await dispatch(getProtocols(user.uid, company.companyData.id));
-                        break;
-                    case 'queue':
-                        await dispatch(getProtocols(user.uid, company.companyData.id, 'queue'));
-                        break;
-                    case 'finished':
-                        await dispatch(getProtocols(user.uid, company.companyData.id, 'finished'));
-                        break;
-                    default:
-                        break;
-                }
             }
         }
         loadData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [company.companyData]);
 
+    switch (tab) {
+        case 'overview':
+            dispatch(getProtocols(user.uid, company.companyData?.id, 'geral'));
+            break;
+        case 'queue':
+            dispatch(getProtocols(user.uid, company.companyData?.id, 'queue'));
+            break;
+        case 'finished':
+            dispatch(getProtocols(user.uid, company.companyData?.id, 'finished'));
+            break;
+        default:
+            break;
+    }
     return (
         <ContainerPage>
             <PageHeader
@@ -81,7 +80,10 @@ function Protocols() {
                 <FaClipboardList className="icon" />
             </PageHeader>
             <PanelPage>
-                <Tabs Tabs={tabs} />
+                <Tabs
+                    Tabs={tabs}
+                    active={navTab}
+                />
                 <Overview />
             </PanelPage>
         </ContainerPage>

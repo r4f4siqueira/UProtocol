@@ -49,7 +49,6 @@ class ObservacaoController {
                     };
                 } else {
                     const agora = new Date();
-                    agora.setUTCHours(agora.getUTCHours() + 1);
                     retorno = await Observacao.create({
                         protocolo: protocolo[0].id,
                         atendente: userc[0].funcionario,

@@ -152,8 +152,10 @@ export const updateProtocol = (protocolData: protocolData) => async (dispatch) =
             .then(async (resp) => {
                 console.log(resp);
 
-                // await dispatch(setSelectedProtocol(resp.data));
                 await dispatch(getProtocols(protocolData.uid, protocolData.empresa));
+                if (protocolData.id) {
+                    await dispatch(getProtocolDetails(protocolData.uid, protocolData.empresa, protocolData.id));
+                }
                 toast.info('Protocolo atualizado com sucesso!');
             })
             .catch((err) => {
@@ -174,10 +176,11 @@ export const updateProtocol = (protocolData: protocolData) => async (dispatch) =
 export const commitProtocol = (uid: string, empresa: number, protocolId: number) => async (dispatch) => {
     try {
         api.post(`/protocolo/concluir/${protocolId}`, { uid, empresa })
-            .then(async () => {
+            .then(async (resp) => {
                 // console.log(resp);
                 // loadProtocolData();
                 await dispatch(getProtocols(uid, empresa));
+                await dispatch(getProtocolDetails(uid, empresa, protocolId));
                 toast.success('Protocolo concluído com sucesso!');
             })
             .catch((err) => {
@@ -285,6 +288,7 @@ export const createAttachment = (attachmentData: { protocolo: number; descricao:
         console.log('Criando anexo');
         dispatch(setLoading(true));
         let tAnexo;
+        toast.info('Fazendo o upload do Anexo... isso pode demorar alguns segundos', { autoClose: false, toastId: 'infoUpload' });
         await firebase
             .storage()
             .ref(`anexos/${attachmentData.empresa}/${attachmentData.protocolo}/${objAnexo.name}`)
@@ -302,7 +306,8 @@ export const createAttachment = (attachmentData: { protocolo: number; descricao:
         api.post(`/anexo`, { ...attachmentData, anexo: tAnexo })
             .then(async (resp) => {
                 console.log(resp.data);
-                toast.info('Anexo criado com sucesso!');
+                toast.dismiss('infoUpload');
+                toast.success('Anexo criado com sucesso!');
 
                 dispatch(getAttachments(attachmentData.uid, attachmentData.empresa, attachmentData.protocolo));
                 dispatch(setLoading(false));

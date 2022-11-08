@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 //Estilos - icones
 import { AttachmentTableWrapper, TBInfo } from './styles';
 import { AiOutlinePaperClip } from 'react-icons/ai';
+import { FiDownload } from 'react-icons/fi';
+import { TBRemove } from '../../../../styles/styles';
+import { BsTrashFill } from 'react-icons/bs';
 
 //Acoes
 import { AuthContext } from '../../../../context/auth.tsx';
-import {} from '../../../../store/actions/protocol.tsx';
-import { TBRemove } from '../../../../styles/styles';
-import { BsTrashFill } from 'react-icons/bs';
+import { deleteAttachment } from '../../../../store/actions/protocol.tsx';
 
 function TableAttachments() {
     const dispatch = useDispatch();
@@ -25,18 +26,20 @@ function TableAttachments() {
     useEffect(() => {
         // console.log(Protocols);
         if (attachmentList === undefined || attachmentList.length === 0) {
-            setLocalList([{ id: '0', setor: 'Esse protocolo não possui repasses' }]);
+            setLocalList([{ id: '0', descricao: 'Esse protocolo não possui anexos' }]);
         } else {
             setLocalList(attachmentList);
         }
     }, [attachmentList]);
 
-    function handleDownloadAttachment(index) {
-        //stuff
+    function handleDownloadAttachment(url) {
+        window.open(url, '_blank');
     }
 
     function handleRemoveAttachment(index) {
-        //stuff
+        if (window.confirm('Você tem certeza? essa ação não pode ser desfeita')) {
+            dispatch(deleteAttachment(index, user.uid, companyId, selectedProtocol.id));
+        }
     }
 
     return (
@@ -51,7 +54,7 @@ function TableAttachments() {
                     </tr>
                 </thead>
                 <tbody>
-                    {localList.map((Attachment, index) => {
+                    {localList.map((Attachment) => {
                         return (
                             <tr key={'repasse: ' + Attachment.id}>
                                 <td>{Attachment.id}</td>
@@ -63,14 +66,15 @@ function TableAttachments() {
                                     <td>
                                         <TBInfo
                                             onClick={() => {
-                                                handleDownloadAttachment(index);
+                                                handleDownloadAttachment(Attachment.anexo);
                                             }}
                                         >
-                                            <AiOutlinePaperClip />
+                                            <FiDownload />
                                         </TBInfo>
+                                        {'  '}
                                         <TBRemove
                                             onClick={() => {
-                                                handleRemoveAttachment(index);
+                                                handleRemoveAttachment(Attachment.id);
                                             }}
                                         >
                                             <BsTrashFill />

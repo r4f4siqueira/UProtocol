@@ -22,6 +22,7 @@ function NoteItem({ obs }) {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',
+        timeZone: 'America/Cuiaba',
     });
 
     return (
@@ -58,8 +59,6 @@ function NoteItem({ obs }) {
                                 />
                                 {`Atendente: ${obs.atendente.id} - ${obs.atendente.nome}`}
                             </ContainerR>
-                            <Divider sx={{ backgroundColor: '#627fdd', marginY: '5px', textAlign: 'justify' }} />
-                            Todos os horários são mostrados em GMT -5
                         </ContainerC>
                     }
                 >

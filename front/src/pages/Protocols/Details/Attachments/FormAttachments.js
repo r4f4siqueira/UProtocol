@@ -2,45 +2,51 @@
 import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //Componentes
+import Input from '../../../../components/Input/Input';
+import { toast } from 'react-toastify';
 
 //Estilos - icones
-import { AttachmentFormWrapper, FileWrapper, FormAttachments as AttachmentForm } from './styles';
+import { AttachmentContainer, AttachmentFormWrapper, FileWrapper, FormAttachments as AttachmentForm } from './styles';
+import { AiFillFile, AiOutlinePaperClip } from 'react-icons/ai';
+import Chip from '@mui/joy/Chip';
+import { BtCancel, BtSubmit } from '../../../../styles/styles';
 
 //Acoes
 import { AuthContext } from '../../../../context/auth.tsx';
-// import { attachmentProtocol } from '../../../../store/actions/protocol.tsx';
-import Dropbox from '../../../../components/Dropbox/dropbox';
-import { BtCancel, BtSubmit, TBEdit } from '../../../../styles/styles';
-import Input from '../../../../components/Input/Input';
-import { AiOutlinePaperClip } from 'react-icons/ai';
+import { createAttachment } from '../../../../store/actions/protocol.tsx';
 
 function FormAttachments() {
     const dispatch = useDispatch();
     const companyId = useSelector((state) => state.Company.companyData?.id);
-    const sectorList = useSelector((state) => state.Sector.sectorList);
-    const employeeList = useSelector((state) => state.Employee.employeeList);
     const selectedProtocolId = useSelector((state) => state.Protocol.selectedProtocol.id);
     const { user } = useContext(AuthContext);
 
-    const [localAttachment, setLocalAttachment] = useState({ setor: { value: null }, funcionariodestino: { value: null } });
+    const [localAttachment, setLocalAttachment] = useState({ descricao: null, anexo: null });
 
-    const disableSubmit = localAttachment?.setor === null || localAttachment?.setor?.value === null;
+    const disableSubmit = localAttachment?.anexo === null || localAttachment?.descricao === null;
 
     function handleCancelAttachment() {
-        setLocalAttachment({ setor: { value: null }, funcionariodestino: { value: null } });
+        setLocalAttachment({ descricao: null, anexo: null });
     }
 
     async function handleAttachment(evt) {
         evt.preventDefault();
-        // console.log(localAttachment);
+        if (localAttachment.anexo.size > 128000000) {
+            // 128Mb
+            toast.error('Arquivo muito grande! Tamanho max permitido: 128Mb', { autoClose: 10000 });
+        }
+        console.log(localAttachment);
         const data = {
             uid: user.uid,
             empresa: companyId,
             protocolo: selectedProtocolId,
+            descricao: localAttachment.descricao,
         };
-        // console.log('enviando para criar: ');
-        // console.log(data);
-        // dispatch(attachmentProtocol(data));
+        const AttachmentFile = localAttachment.anexo;
+        console.log('enviando para criar: ');
+        console.log(data);
+        console.log(AttachmentFile);
+        dispatch(createAttachment(data, AttachmentFile));
         handleCancelAttachment();
     }
     return (
@@ -56,7 +62,7 @@ function FormAttachments() {
                             <Input
                                 label="Descrição do anexo"
                                 noMargin={true}
-                                placeholder="uma breve descrição do anexo a ser vinculado ao protocolo"
+                                placeholder="breve descrição do anexo"
                                 inputValue={localAttachment?.descricao}
                                 isValid={null}
                                 ocHandler={(e) => {
@@ -64,20 +70,31 @@ function FormAttachments() {
                                 }}
                             />
                         </div>
-                        <div className="input">
+                        <AttachmentContainer>
                             <FileWrapper>
                                 <input
                                     onChange={(e) => {
                                         setLocalAttachment({ ...localAttachment, anexo: e.target.files[0] });
                                     }}
                                     type="file"
-                                    accept="image/*"
+                                    accept="*"
                                 />
-                                <TBEdit>
-                                    <AiOutlinePaperClip />
-                                </TBEdit>
+
+                                <AiOutlinePaperClip />
                             </FileWrapper>
-                        </div>
+                            {localAttachment.anexo?.name ? (
+                                <Chip
+                                    sx={{ marginRight: '1rem', marginTop: '1rem' }}
+                                    variant="soft"
+                                    color="warning"
+                                    startDecorator={<AiFillFile />}
+                                >
+                                    Arquivo selecionado: {localAttachment.anexo.name}
+                                </Chip>
+                            ) : (
+                                ''
+                            )}
+                        </AttachmentContainer>
 
                         <div className="center submit">
                             <BtCancel

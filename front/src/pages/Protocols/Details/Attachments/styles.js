@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Panel, TableWrapper, FormWrapper, PanelTable, GBTable } from '../../../../styles/styles';
+import { Panel, TableWrapper, FormWrapper, PanelTable, GBTable, ContainerR } from '../../../../styles/styles';
 import { AvatarWrapper } from '../../../Profile/styles';
 
 export const AttachmentFormWrapper = styled(FormWrapper)`
@@ -23,7 +23,7 @@ export const AttachmentFormWrapper = styled(FormWrapper)`
             }
 
             .input {
-                min-width: 225px;
+                min-width: 300px;
                 margin-right: 0.5rem;
             }
         }
@@ -93,7 +93,6 @@ export const PanelAttachments = styled(PanelTable)``;
 export const AttachmentTableWrapper = styled(TableWrapper)`
     th {
         :nth-of-type(1),
-        :nth-of-type(2),
         :nth-last-child(-n + 1) {
             padding-left: 0rem;
             text-align: center;
@@ -103,7 +102,6 @@ export const AttachmentTableWrapper = styled(TableWrapper)`
     }
     td {
         :nth-of-type(1),
-        :nth-of-type(2),
         :nth-last-child(-n + 1) {
             text-align: center;
             padding-left: 0rem;
@@ -116,4 +114,51 @@ export const TBInfo = styled(GBTable)`
     box-shadow: 0px 3px 0px #002cbe;
 `;
 
-export const FileWrapper = styled(AvatarWrapper);
+export const FileWrapper = styled(AvatarWrapper)`
+    margin-top: 1rem;
+    margin-right: 1rem;
+
+    height: min-content;
+    width: min-content;
+    border-radius: 0.2rem;
+
+    padding: 0.5rem;
+
+    background-color: #ffc831;
+    box-shadow: 0px 3px 0px #be8c00;
+
+    transition: all 100ms;
+    :active {
+        transform: translate(0, 3px);
+        box-shadow: 0px 0px 0px #7c7c7c;
+    }
+    :disabled {
+        background-color: #8a8a8a;
+        box-shadow: 0px 3px 0px #5e5e5e;
+        :active {
+            box-shadow: 0px 0px 0px #5e5e5e;
+        }
+    }
+
+    svg {
+        position: relative;
+        transition: all 250ms;
+        fill: white;
+        cursor: pointer;
+        transform: scale(1.3);
+        filter: drop-shadow(1px 0 2px black);
+    }
+    :hover {
+        svg {
+            fill: white;
+            transform: scale(1.5);
+        }
+    }
+    button {
+    }
+    overflow: visible;
+`;
+
+export const AttachmentContainer = styled(ContainerR)`
+    min-width: fit-content;
+`;

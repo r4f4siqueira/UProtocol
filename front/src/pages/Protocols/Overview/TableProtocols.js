@@ -53,15 +53,31 @@ function TableProtocols() {
                 </thead>
                 <tbody>
                     {localList.map((Protocol, index) => {
+                        const dataPrevisao =
+                            Protocol.previsao !== null
+                                ? new Date(Protocol.previsao).toLocaleDateString('pt-br', {
+                                      day: 'numeric',
+                                      month: 'numeric',
+                                      year: 'numeric',
+                                      hour: 'numeric',
+                                      minute: 'numeric',
+                                      second: 'numeric',
+                                      timeZone: 'America/Cuiaba',
+                                  })
+                                : '';
+
                         return (
-                            <tr key={'funcionario: ' + Protocol.id}>
+                            <tr
+                                className={Protocol.situacao === 'C' ? 'concluido' : Protocol.atrasado === true ? 'atrasado' : ''}
+                                key={'funcionario: ' + Protocol.id}
+                            >
                                 <td>{Protocol.prioridade?.nome}</td>
                                 <td>{Protocol.id}</td>
                                 <td>{Protocol.motivo}</td>
                                 <td>{Protocol.cliente?.nome}</td>
                                 <td>{Protocol.pessoaatendida}</td>
                                 <td>{Protocol.atendente?.nome}</td>
-                                <td>{Protocol.previsao}</td>
+                                <td>{dataPrevisao}</td>
 
                                 {Protocol.id === '0' ? (
                                     ''

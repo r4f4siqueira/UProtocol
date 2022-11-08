@@ -26,6 +26,7 @@ export default function reducer(
                         tprotocolList = tprotocolList.filter((protocol) => protocol.situacao == 'C');
                         break;
                     default:
+                        tprotocolList = tprotocolList.filter((protocol) => protocol.atendente.id !== null && protocol.situacao === 'A');
                         break;
                 }
             }

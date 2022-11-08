@@ -6,7 +6,7 @@ import PageHeader from '../../../components/PageHeader/PageHeader';
 
 //Actions
 import { AuthContext } from '../../../context/auth.tsx';
-import { getProtocolDetails, getTransfers } from '../../../store/actions/protocol.tsx';
+import { getProtocolDetails, getTransfers, getAttachments } from '../../../store/actions/protocol.tsx';
 import { getCompany } from '../../../store/actions/company.tsx';
 
 //components
@@ -57,6 +57,7 @@ function Details() {
             if (company.hasCompany) {
                 await dispatch(getProtocolDetails(user.uid, company.companyData.id, idProtocol));
                 await dispatch(getTransfers(user.uid, company.companyData.id, idProtocol));
+                await dispatch(getAttachments(user.uid, company.companyData.id, idProtocol));
             }
         }
         loadData();

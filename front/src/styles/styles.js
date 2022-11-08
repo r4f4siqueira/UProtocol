@@ -162,6 +162,18 @@ export const BtSubmit = styled(GButton)`
     }
 `;
 
+export const BtEdit = styled(BtSubmit)`
+    background-color: #d3a528;
+    :hover {
+        background-color: #be8c00;
+    }
+    :disabled {
+        :hover {
+            background-color: #c49643;
+        }
+    }
+`;
+
 export const GBTable = styled(GButton)`
     margin-top: 0rem;
     transition: all 100ms;

@@ -9,11 +9,11 @@ import { ReactComponent as LoadingGif } from '../../../../assets/Loading/Gear.sv
 
 //Estilos - icones
 import { Cabecalho, DelailsFormWrapper, DisplayWrapper, DropboxWrapper, InputWrapper } from './styles';
-import { BtCancel, BtSubmit } from '../../../../styles/styles';
+import { BtCancel, BtEdit, BtSubmit } from '../../../../styles/styles';
 
 //Acoes
 import { AuthContext } from '../../../../context/auth.tsx';
-import { updateProtocol, getProtocolDetails } from '../../../../store/actions/protocol.tsx';
+import { updateProtocol, getProtocolDetails, commitProtocol } from '../../../../store/actions/protocol.tsx';
 import { getCustomers } from '../../../../store/actions/customer.tsx';
 import { getPriorities } from '../../../../store/actions/priority.tsx';
 import { getCompany } from '../../../../store/actions/company.tsx';
@@ -112,7 +112,7 @@ function Overview() {
             setor: selectedProtocol.setor.value,
             pessoaatendida: localSelectedProtocol.pessoaatendida,
             motivo: localSelectedProtocol.motivo,
-            previsao: localSelectedProtocol.previsao,
+            previsao: localSelectedProtocol.previsao === 'Invalid date' ? null : localSelectedProtocol.previsao,
             situacao: selectedProtocol.situacao,
             uid: user.uid,
             empresa: company.companyData.id,
@@ -123,6 +123,15 @@ function Overview() {
         setTimeout(() => {
             handleCancelProtocol();
         }, 1000);
+    }
+
+    async function handleCommitProtocol() {
+        const data = {
+            uid: user.uid,
+            empresa: company.companyData.id,
+            id: localSelectedProtocol.id,
+        };
+        dispatch(commitProtocol(data.uid, data.empresa, data.id));
     }
     return (
         <DelailsFormWrapper
@@ -211,11 +220,17 @@ function Overview() {
                     >
                         Cancelar
                     </BtCancel>
-                    <BtSubmit
+                    <BtEdit
                         disabled={disableSubmit}
                         type="submit"
                     >
                         Editar
+                    </BtEdit>
+                    <BtSubmit
+                        type="button"
+                        onClick={handleCommitProtocol}
+                    >
+                        Concluir protocolo
                     </BtSubmit>
                 </>
             )}

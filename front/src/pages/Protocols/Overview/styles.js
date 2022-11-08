@@ -108,6 +108,20 @@ export const ProtocolTableWrapper = styled(TableWrapper)`
             padding-left: 0rem;
         }
     }
+    tbody {
+        tr.atrasado {
+            background-color: #f7baba;
+            :hover {
+                background-color: #f49a9a;
+            }
+        }
+        tr.concluido {
+            background-color: #afffb3;
+            :hover {
+                background-color: #6dcf72;
+            }
+        }
+    }
 `;
 
 export const TBInfo = styled(GBTable)`
