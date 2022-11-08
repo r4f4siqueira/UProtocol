@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Panel, TableWrapper, FormWrapper, PanelTable, GBTable } from '../../../../styles/styles';
+import { AvatarWrapper } from '../../../Profile/styles';
 
 export const AttachmentFormWrapper = styled(FormWrapper)`
     form {
@@ -114,3 +115,5 @@ export const TBInfo = styled(GBTable)`
     background-color: #3161ff;
     box-shadow: 0px 3px 0px #002cbe;
 `;
+
+export const FileWrapper = styled(AvatarWrapper);

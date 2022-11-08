@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 //Componentes
 
 //Estilos - icones
-import { AttachmentFormWrapper, FormAttachments as AttachmentForm } from './styles';
+import { AttachmentFormWrapper, FileWrapper, FormAttachments as AttachmentForm } from './styles';
 
 //Acoes
 import { AuthContext } from '../../../../context/auth.tsx';
-import { attachmentProtocol } from '../../../../store/actions/protocol.tsx';
+// import { attachmentProtocol } from '../../../../store/actions/protocol.tsx';
 import Dropbox from '../../../../components/Dropbox/dropbox';
-import { BtCancel, BtSubmit } from '../../../../styles/styles';
+import { BtCancel, BtSubmit, TBEdit } from '../../../../styles/styles';
+import Input from '../../../../components/Input/Input';
+import { AiOutlinePaperClip } from 'react-icons/ai';
 
 function FormAttachments() {
     const dispatch = useDispatch();
@@ -38,7 +40,7 @@ function FormAttachments() {
         };
         // console.log('enviando para criar: ');
         // console.log(data);
-        dispatch(attachmentProtocol(data));
+        // dispatch(attachmentProtocol(data));
         handleCancelAttachment();
     }
     return (
@@ -50,6 +52,33 @@ function FormAttachments() {
                     }}
                 >
                     <div className="center inputs">
+                        <div className="input">
+                            <Input
+                                label="Descrição do anexo"
+                                noMargin={true}
+                                placeholder="uma breve descrição do anexo a ser vinculado ao protocolo"
+                                inputValue={localAttachment?.descricao}
+                                isValid={null}
+                                ocHandler={(e) => {
+                                    setLocalAttachment({ ...localAttachment, descricao: e.target.value });
+                                }}
+                            />
+                        </div>
+                        <div className="input">
+                            <FileWrapper>
+                                <input
+                                    onChange={(e) => {
+                                        setLocalAttachment({ ...localAttachment, anexo: e.target.files[0] });
+                                    }}
+                                    type="file"
+                                    accept="image/*"
+                                />
+                                <TBEdit>
+                                    <AiOutlinePaperClip />
+                                </TBEdit>
+                            </FileWrapper>
+                        </div>
+
                         <div className="center submit">
                             <BtCancel
                                 type="button"
