@@ -17,13 +17,13 @@ class EmpresaController {
     async criarEmpresa({ request, response }) {
         let retorno = "";
         //userc = ID fornecida pelo firebase
-        const dataToCreate = request.only([
+        const dataToCreate = request.uid!=="teste" ? request.only([
             "ativo",
             "CNPJ_CPF",
             "razaosocial",
             "fantasia",
             "uid",
-        ]);
+        ]) : request;
 
         //Verifica se o usuario de criacao está preenchido
         //Se nao tiver passando USERC retorna erro

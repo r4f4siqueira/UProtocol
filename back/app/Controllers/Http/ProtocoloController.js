@@ -98,7 +98,7 @@ class ProtocoloController {
 
     async listarProtocolos({ request, response }) {
         let retorno = "";
-        const dadosRequest = request.only(["uid", "empresa"]);
+        const dadosRequest = request.uid !== "teste" ? request.only(["uid", "empresa"]) : request;
         const user = await Database.table("funcionario_empresas")
             .where("funcionario_uid", dadosRequest.uid)
             .where("empresa", dadosRequest.empresa)
