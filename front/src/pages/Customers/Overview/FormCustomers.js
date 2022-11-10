@@ -101,7 +101,7 @@ function FormCustomers() {
                         </div>
                         <div className="input">
                             <Input
-                                label="Rasão social"
+                                label="Razão social"
                                 noMargin={true}
                                 placeholder="Se for uma empresa"
                                 inputValue={localSelectedCustomer?.razaosocial}

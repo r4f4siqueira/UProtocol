@@ -184,8 +184,8 @@ function Overview() {
                                 }}
                             />
                             <Input
-                                label="CPNJ/CPF:"
-                                placeholder="CPNJ/CPF"
+                                label="CNPJ/CPF:"
+                                placeholder="CNPJ/CPF"
                                 inputValue={company?.CNPJ_CPF}
                                 isValid={null}
                                 ocHandler={(e) => {

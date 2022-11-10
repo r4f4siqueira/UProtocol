@@ -243,7 +243,7 @@ function Register() {
                     />
                     <Input
                         label="Senha: "
-                        placeholder="Mais de 6 caracteres e pelo menos um numero, nao aceita símbolos"
+                        placeholder="Mais de 6 caracteres e pelo menos um número, não aceita símbolos"
                         type="password"
                         inputValue={password}
                         errMsg={errors.password.msg}
@@ -257,7 +257,7 @@ function Register() {
                     />
                     <Input
                         label="Repita a Senha: "
-                        placeholder="Mais de 6 caracteres e pelo menos um numero, nao aceita símbolos"
+                        placeholder="Mais de 6 caracteres e pelo menos um número, não aceita símbolos"
                         type="password"
                         inputValue={repPassword}
                         errMsg={errors.repPassword.msg}

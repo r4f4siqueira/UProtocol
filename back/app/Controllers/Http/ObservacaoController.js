@@ -48,13 +48,13 @@ class ObservacaoController {
                         erro: { codigo: 107, msg: "Protocolo já concluido" },
                     };
                 } else {
-                    const agora = new Date();
+                    // const agora = new Date().toLocaleString('pt-br');
                     retorno = await Observacao.create({
                         protocolo: protocolo[0].id,
                         atendente: userc[0].funcionario,
                         observacao: dadosRequest.observacao,
                         empresa: userc[0].empresa,
-                        created_at: agora.toLocaleString(),
+                        created_at: null,
                     });
                 }
             }
