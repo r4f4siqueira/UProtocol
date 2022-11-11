@@ -9,26 +9,3 @@ $ npm install
 ```
 $ npm start
 ```
-
-# Cores
-
-## Sitema
-
-```
-#e2f1ff - background sistema:
-#666666 - Textos
-#1498d5 - bordas
-#d9d9d9 - background input
-#b4b4b4 - texto placeholder
-#a8a8a8 - background containers
-```
-
-## Hover/Efeitos
-
-```
-#e9e9e9 - background menu lateral bts hover
-#3ca566 - hover bts
-#82d7ea - btn ativo menu lateral
-#e85b5b - span "esqueci a senha"
-
-```
