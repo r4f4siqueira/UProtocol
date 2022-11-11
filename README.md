@@ -1,15 +1,16 @@
 # UProtocol
 
-- [Inplantação](#inplantação)
-    - [Passo 1 : Instalar Depêndencias](#passo-1--instalar-depêndencias)
-    - [Passo 2 : Criar estrutura do banco de dados](#passo-2--criar-estrutura-do-banco-de-dados)
-    - [Passo 3 : Revise o arquivo firebaseConnection.js](#passo-3--revise-o-arquivo-firebaseconnectionjs)
-    - [Passo 4 : Execute o sistema](#passo-4--execute-o-sistema)
-- [Mais informações](#mais-informações)
-    - [Teste](#teste)
-    - [Diagrama de Classe](#diagrama-de-classe)
-    - [Insomnia](#insomnia)
-- [Doc API](https://github.com/r4f4siqueira/UProtocol/tree/master/back#api-doc)
+- [😪 Inplantação](#inplantação)
+    - [😑 Passo 1 : Instalar Depêndencias](#passo-1--instalar-depêndencias)
+    - [🤨 Passo 2 : Criar estrutura do banco de dados](#passo-2--criar-estrutura-do-banco-de-dados)
+    - [😮 Passo 3 : Revise o arquivo firebaseConnection.js](#passo-3--revise-o-arquivo-firebaseconnectionjs)
+    - [😎 Passo 4 : Execute o sistema](#passo-4--execute-o-sistema)
+- [🧐 Mais informações](#mais-informações)
+    - [🥺 Teste](#teste)
+    - [🤪 Diagrama de Classe](#diagrama-de-classe)
+    - [😵 Insomnia](#insomnia)
+- [🤔 Doc API](https://github.com/r4f4siqueira/UProtocol/tree/master/back#api-doc)
+- [😀 Manual do Usuário](https://github.com/r4f4siqueira/UProtocol/wiki/Manual-do-Usu%C3%A1rio)
 
 ## Inplantação
 ### Passo 1 : Instalar Depêndencias
