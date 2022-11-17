@@ -2,10 +2,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //Componentes
+import Tooltip from '@mui/joy/Tooltip';
+import Chip from '@mui/joy/Chip';
 
 //Estilos - icones
 import { ProtocolTableWrapper, TBInfo } from './styles';
 import { FaInfo } from 'react-icons/fa';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 
 //Acoes
 import { AuthContext } from '../../../context/auth.tsx';
@@ -22,7 +25,7 @@ function TableProtocols() {
     useEffect(() => {
         // console.log(Protocols);
         if (Protocols?.protocolList === undefined || Protocols?.protocolList.length === 0) {
-            setLocalList([{ id: '0', motivo: 'Nenhum protocolo encontrado' }]);
+            setLocalList([{ id: '0', motivo: 'Nenhum protocolo encontrado', previsao: null }]);
         } else {
             setLocalList(Protocols.protocolList);
         }
@@ -77,7 +80,26 @@ function TableProtocols() {
                                 <td>{Protocol.cliente?.nome}</td>
                                 <td>{Protocol.pessoaatendida}</td>
                                 <td>{Protocol.atendente?.nome}</td>
-                                <td>{dataPrevisao}</td>
+                                <td>
+                                    {dataPrevisao && Protocol.situacao !== 'C' ? (
+                                        <Tooltip
+                                            arrow
+                                            color="danger"
+                                            placement="top"
+                                            title={Protocol.atrasado === true ? 'Esse protocolo está atrazado!' : ''}
+                                            variant="outlined"
+                                        >
+                                            <Chip
+                                                variant="soft"
+                                                color={Protocol.atrasado === true ? 'danger' : 'primary'}
+                                            >
+                                                {dataPrevisao} {Protocol.atrasado === true ? <AiOutlineInfoCircle size={16} /> : ''}
+                                            </Chip>
+                                        </Tooltip>
+                                    ) : (
+                                        dataPrevisao
+                                    )}
+                                </td>
 
                                 {Protocol.id === '0' ? (
                                     ''

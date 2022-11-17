@@ -126,12 +126,14 @@ function Overview() {
     }
 
     async function handleCommitProtocol() {
-        const data = {
-            uid: user.uid,
-            empresa: company.companyData.id,
-            id: localSelectedProtocol.id,
-        };
-        dispatch(commitProtocol(data.uid, data.empresa, data.id));
+        if (window.confirm('Você tem certeza que quer finalizar esse protocolo? após isso não será possível inserir nenhuma informação nova nele')) {
+            const data = {
+                uid: user.uid,
+                empresa: company.companyData.id,
+                id: localSelectedProtocol.id,
+            };
+            dispatch(commitProtocol(data.uid, data.empresa, data.id));
+        }
     }
     return (
         <DelailsFormWrapper
@@ -218,19 +220,19 @@ function Overview() {
                         type="button"
                         onClick={handleCancelProtocol}
                     >
-                        Cancelar
+                        Cancelar Alterações
                     </BtCancel>
                     <BtEdit
                         disabled={disableSubmit}
                         type="submit"
                     >
-                        Editar
+                        Atualizar dados
                     </BtEdit>
                     <BtSubmit
                         type="button"
                         onClick={handleCommitProtocol}
                     >
-                        Concluir protocolo
+                        Encerrar protocolo
                     </BtSubmit>
                 </>
             )}

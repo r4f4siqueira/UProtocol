@@ -17,7 +17,7 @@ export const ProtocolFormWrapper = styled(FormWrapper)`
             min-width: 50vw;
             align-items: center;
             flex-wrap: wrap;
-            @media screen and (max-width: 700px) {
+            @media screen and (max-width: 1000px) {
                 min-width: 28rem;
             }
 
@@ -30,8 +30,8 @@ export const ProtocolFormWrapper = styled(FormWrapper)`
         .submit {
             @media screen and (max-width: 1300px) {
                 button {
-                    min-width: 5rem;
-                    max-width: 5rem;
+                    min-width: 7.5rem;
+                    max-width: 7.5rem;
                 }
             }
             @media screen and (max-width: 800px) {
@@ -40,7 +40,7 @@ export const ProtocolFormWrapper = styled(FormWrapper)`
                 }
             }
 
-            @media screen and (max-width: 700px) {
+            @media screen and (max-width: 1000px) {
                 flex-direction: column;
                 min-width: 100%;
                 button {
@@ -63,11 +63,11 @@ export const ProtocolFormWrapper = styled(FormWrapper)`
                 }
             }
         }
-        @media screen and (max-width: 700px) {
+        @media screen and (max-width: 1000px) {
             flex-direction: column;
 
             .inputs {
-                width: 50%;
+                width: 100%;
             }
 
             .submit {
@@ -83,7 +83,7 @@ export const FormProtocols = styled(Panel)`
         background-color: #ffdf89;
     }
     padding: 1rem;
-    margin-top: 1rem;
+    margin-top: 0.01rem;
     margin-bottom: 1rem;
 `;
 

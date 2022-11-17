@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Panel, TableWrapper, FormWrapper, PanelTable } from "../../../styles/styles";
+import styled from 'styled-components';
+import { Panel, TableWrapper, FormWrapper, PanelTable } from '../../../styles/styles';
 
 export const EmployeeFormWrapper = styled(FormWrapper)`
     form {
@@ -39,7 +39,7 @@ export const EmployeeFormWrapper = styled(FormWrapper)`
                 }
             }
 
-            @media screen and (max-width: 700px) {
+            @media screen and (max-width: 1000px) {
                 flex-direction: column;
                 min-width: 100%;
                 button {

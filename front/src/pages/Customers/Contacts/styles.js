@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Panel, TableWrapper, FormWrapper, PanelTable } from "../../../styles/styles";
+import styled from 'styled-components';
+import { Panel, TableWrapper, FormWrapper, PanelTable } from '../../../styles/styles';
 
 export const ContactFormWrapper = styled(FormWrapper)`
     form {

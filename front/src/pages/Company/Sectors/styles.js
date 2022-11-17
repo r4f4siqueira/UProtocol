@@ -84,7 +84,7 @@ export const SectorFormWrapper = styled(FormWrapper)`
                 }
             }
         }
-        @media screen and (max-width: 700px) {
+        @media screen and (max-width: 1000px) {
             flex-direction: column;
 
             .inputs {

@@ -174,6 +174,26 @@ export const BtEdit = styled(BtSubmit)`
     }
 `;
 
+export const BtSearch = styled(BtSubmit)`
+    background-color: #c3e2ff;
+    color: #0871e9;
+    svg {
+        margin-bottom: -0.1rem;
+        margin-right: 0.4rem;
+    }
+
+    :hover {
+        background-color: #2258bb;
+        outline: 2px solid #1953be;
+        color: white;
+    }
+    :disabled {
+        :hover {
+            background-color: #437fc4;
+        }
+    }
+`;
+
 export const GBTable = styled(GButton)`
     margin-top: 0rem;
     transition: all 100ms;
