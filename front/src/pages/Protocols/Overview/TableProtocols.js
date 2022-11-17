@@ -81,7 +81,7 @@ function TableProtocols() {
                                 <td>{Protocol.pessoaatendida}</td>
                                 <td>{Protocol.atendente?.nome}</td>
                                 <td>
-                                    {dataPrevisao && Protocol.situacao !== 'C' ? (
+                                    {dataPrevisao ? (
                                         <Tooltip
                                             arrow
                                             color="danger"

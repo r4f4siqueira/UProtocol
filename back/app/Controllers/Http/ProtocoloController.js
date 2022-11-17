@@ -169,7 +169,7 @@ class ProtocoloController {
                 lista.nome = undefined;
                 lista.setor_nome = undefined;
                 lista.ordemimportancia = undefined;
-                if (lista.previsao !== null) {
+                if (lista.previsao !== null && lista.situacao !== "C") {
                     lista.atrasado = agora < lista.previsao ? false : true; //verificando se o protocolo está atrasado
                 } else {
                     lista.atrasado = false;
