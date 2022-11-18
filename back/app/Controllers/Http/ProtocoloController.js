@@ -98,6 +98,7 @@ class ProtocoloController {
 
     async listarProtocolos({ request, response }) {
         let retorno = "";
+        //console.log(request.input('dia')); novo metodo descoberto, funciona muito bem
         const dadosRequest =
             request.uid !== "teste"
                 ? request.only(["uid", "empresa"])
@@ -510,6 +511,93 @@ class ProtocoloController {
             }
         }
 
+        return retorno;
+    }
+
+    async protocolosSearch({ request, response }) {
+        let retorno = "";
+        
+        const dadosRequest =
+            request.uid !== "teste"
+                ? request.all()
+                : request;
+        const user = await Database.table("funcionario_empresas")
+            .where("funcionario_uid", dadosRequest.uid)
+            .where("empresa", dadosRequest.empresa)
+            .whereNotNull("setor");
+
+        if (user.length === 0) {
+            response?.status(404);
+            retorno = {
+                erro: {
+                    codigo: 96,
+                    msg: "Funcionario não vinculado a empresa para listar protocolos",
+                },
+            };
+        } else {
+
+            retorno = await Database.select(
+                "protocolos.*",
+                "fc.nome as userc_nome",
+                "fa.nome as atendente_nome",
+                "prioridades.ordemimportancia",
+                "prioridades.nome",
+                "clientes.fantasia",
+                "setors.nome as setor_nome"
+            )
+                .table("protocolos")
+                .innerJoin("funcionarios as fc", "fc.id", "protocolos.userc")
+                .innerJoin("clientes", "clientes.id", "protocolos.cliente")
+                .innerJoin("setors", "setors.id", "protocolos.setor")
+                .leftJoin("funcionarios as fa", "fa.id", "protocolos.atendente")
+                .leftJoin("prioridades","prioridades.id","protocolos.prioridade")
+                .where("protocolos.empresa", dadosRequest.empresa)
+                .andWhere("protocolos.created_at", '>=', dadosRequest.datainicial==null? '01/01/0001' : dadosRequest.datainicial)
+                .andWhere("protocolos.created_at", '<=', dadosRequest.datafinal==null? '31/12/99999' : dadosRequest.datafinal)
+                .andWhere("protocolos.setor", dadosRequest.setor===''? '<>' : '=', dadosRequest.setor===''? 0 : dadosRequest.setor)
+                .orderBy("ordemimportancia")
+                .orderBy("previsao");
+                //.forPage(1, 5) // caso precise usar paginação
+            //variavel para pegar a data e hora atual e comparar se o protocolo esta atrasado
+            const agora = new Date();
+            retorno.every((lista) => {
+                lista.userc = {
+                    id: lista.userc,
+                    nome: lista.userc_nome,
+                };
+                lista.prioridade = {
+                    id: lista.prioridade,
+                    ordem: lista.ordemimportancia,
+                    nome: lista.nome,
+                };
+                lista.atendente = {
+                    id: lista.atendente,
+                    nome: lista.atendente_nome,
+                };
+                lista.cliente = {
+                    id: lista.cliente,
+                    nome: lista.fantasia,
+                };
+                lista.setor = {
+                    id: lista.setor,
+                    nome: lista.setor_nome,
+                };
+                lista.fantasia = undefined;
+                lista.userc_nome = undefined;
+                lista.atendente_nome = undefined;
+                lista.nome = undefined;
+                lista.setor_nome = undefined;
+                lista.ordemimportancia = undefined;
+                if (lista.previsao !== null && lista.situacao !== "C") {
+                    lista.atrasado = agora < lista.previsao ? false : true; //verificando se o protocolo está atrasado
+                } else {
+                    lista.atrasado = false;
+                }
+                //verificando se o protocolo está atrasado
+
+                return true;
+            });
+        }
         return retorno;
     }
 

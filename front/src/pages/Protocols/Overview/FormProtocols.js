@@ -137,12 +137,12 @@ function FormProtocols() {
                     [`& .${tabClasses.root}`]: {
                         ':hover': { color: 'primary.400', bgcolor: 'primary.100' },
                         fontWeight: 'lg',
-                        bgcolor: 'white',
+                        bgcolor: '#f0f8ff',
                         position: 'relative',
                         border: '1px solid #1498d5',
                         borderBottom: '2px solid #1498d5',
                         borderRadius: '0.8rem 0.8rem 0rem 0',
-                        marginX: '0.1rem',
+                        marginX: '0rem',
                         marginBottom: '0',
                         [`&.${tabClasses.selected}`]: {
                             color: 'primary.500',

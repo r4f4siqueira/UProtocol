@@ -50,6 +50,7 @@ Route.get("/prioridade", "PrioridadeController.listarPrioridades");
 Route.get("/prioridade/:id", "PrioridadeController.dadosPrioridade");
 
 Route.get("/protocolo", "ProtocoloController.listarProtocolos");
+Route.get("/protocolo/search", "ProtocoloController.protocolosSearch");
 Route.get("/protocolo/:id", "ProtocoloController.dadosProtocolo");
 
 Route.get("/repasse", "RepasseController.listarRepasses");

@@ -87,6 +87,7 @@ function FormTransfers() {
                                 label="Funcionário:"
                                 options={employeeOptions}
                                 ocHandler={(value) => {
+                                    console.log(localTransfer);
                                     setLocalTransfer({ ...localTransfer, funcionariodestino: value });
                                 }}
                                 inputValue={localTransfer?.funcionariodestino}
