@@ -25,7 +25,7 @@ function TableProtocols() {
     useEffect(() => {
         // console.log(Protocols);
         if (Protocols?.protocolList === undefined || Protocols?.protocolList.length === 0) {
-            setLocalList([{ id: '0', motivo: 'Nenhum protocolo encontrado', previsao: null }]);
+            setLocalList([{ id: '0', motivo: 'Nenhum protocolo encontrado', previsao: null, created_at: null }]);
         } else {
             setLocalList(Protocols.protocolList);
         }
@@ -38,7 +38,6 @@ function TableProtocols() {
             navigate(`/protocols/details/${localList[index].id}/overview`);
         });
     }
-    //Prioridade | ID | Motivo | Cliente_nome | Pessoa Atendida | Atendente | Previsao
     return (
         <ProtocolTableWrapper>
             <table>
@@ -50,6 +49,7 @@ function TableProtocols() {
                         <th>Cliente</th>
                         <th>Pessoa Atendida</th>
                         <th>Atendente</th>
+                        <th>Criado em</th>
                         <th>Previsao</th>
                         <th>Ações</th>
                     </tr>
@@ -59,6 +59,18 @@ function TableProtocols() {
                         const dataPrevisao =
                             Protocol.previsao !== null
                                 ? new Date(Protocol.previsao).toLocaleDateString('pt-br', {
+                                      day: 'numeric',
+                                      month: 'numeric',
+                                      year: 'numeric',
+                                      hour: 'numeric',
+                                      minute: 'numeric',
+                                      second: 'numeric',
+                                      timeZone: 'America/Cuiaba',
+                                  })
+                                : '';
+                        const dataCriacao =
+                            Protocol.created_at !== null
+                                ? new Date(Protocol.created_at).toLocaleDateString('pt-br', {
                                       day: 'numeric',
                                       month: 'numeric',
                                       year: 'numeric',
@@ -80,6 +92,14 @@ function TableProtocols() {
                                 <td>{Protocol.cliente?.nome}</td>
                                 <td>{Protocol.pessoaatendida}</td>
                                 <td>{Protocol.atendente?.nome}</td>
+                                <td>
+                                    <Chip
+                                        variant="soft"
+                                        color={Protocol.atrasado === true ? 'danger' : 'primary'}
+                                    >
+                                        {dataCriacao}
+                                    </Chip>
+                                </td>
                                 <td>
                                     {dataPrevisao ? (
                                         <Tooltip

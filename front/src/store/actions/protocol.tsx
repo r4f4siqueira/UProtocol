@@ -20,6 +20,7 @@ interface protocolData {
  * Pega a lista de protocolos da empresa que o usuário se encontra
  * @param   {String} uid  UID do usuário que irá realizar a operação
  * @param   {Number} empresa  ID da empresa que o usuário está tentando buscar os dados
+ * @param   {Number} filter  parâmetro para definir se irá filtrar os protocolos abertos, fila ou concluídos
  */
 export const getProtocols = (uid: String, empresa: Number, filter?: String) => async (dispatch) => {
     dispatch(setLoading(true));
@@ -44,6 +45,46 @@ export const getProtocols = (uid: String, empresa: Number, filter?: String) => a
             console.error(err);
             dispatch(setLoading(false));
         });
+};
+
+/**
+ * Pega a lista de protocolos da empresa que o usuário se encontra baseado nos filtros de setor e data
+ * @param   {String} uid  UID do usuário que irá realizar a operação
+ * @param   {Number} empresa  ID da empresa que o usuário está tentando buscar os dados
+ * @param   {String} filter  parâmetro para definir se irá filtrar os protocolos abertos, fila ou concluídos
+ * @param   {Object} searchParams  parâmetros de busca da lista de protocolos
+ */
+
+/*
+    uid , empresa , datainicial , datafinal , setor
+*/
+export const searchProtocols = (uid: String, empresa: Number, filter?: String, searchParams?: { datainicial?; datafinal?; setor? }) => async (dispatch) => {
+    dispatch(setLoading(true));
+    console.log('buscando protocolos');
+
+    if (searchParams) {
+        api.get(`/protocolo/search`, { params: { uid, empresa, ...searchParams } })
+            .then(async (resp) => {
+                // console.log(resp);
+                console.log('protocolos encontrados');
+
+                dispatch({
+                    type: SET_PROTOCOL,
+                    protocolList: resp.data,
+                    filter,
+                });
+                dispatch(setLoading(false));
+            })
+            .catch((err) => {
+                if (err.response?.data?.erro) {
+                    toast.error(err.response.data.erro.msg);
+                }
+                console.error(err);
+                dispatch(setLoading(false));
+            });
+    } else {
+        dispatch(getProtocols(uid, empresa));
+    }
 };
 /**
  * Pega os dados de um protocolo informado por parâmetro
@@ -83,7 +124,7 @@ export const observeProtocol = (uid: String, empresa: Number, protocolo: number,
     console.log('Salvando observacao');
 
     api.post(`/observacao`, { uid, empresa, protocolo, observacao })
-        .then(async (resp) => {
+        .then(async () => {
             console.log('Observacao salva');
             toast.success('Observacao registrada com sucesso!');
 

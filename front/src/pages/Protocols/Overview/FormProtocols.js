@@ -7,7 +7,7 @@ import Input from '../../../components/Input/Input';
 
 //Actions
 import { AuthContext } from '../../../context/auth.tsx';
-import { getProtocols, setSelectedProtocol, createProtocol } from '../../../store/actions/protocol.tsx';
+import { getProtocols, setSelectedProtocol, createProtocol, searchProtocols } from '../../../store/actions/protocol.tsx';
 import { BtCancel, BtSearch, BtSubmit } from '../../../styles/styles';
 
 // styles
@@ -96,12 +96,17 @@ function FormProtocols() {
     async function handleSearchProtocol(evt) {
         evt.preventDefault();
         const data = {
-            dataInicial: localFilters?.dataInicial,
-            dataFinal: localFilters?.dataFinal,
-            setor: localFilters?.setor?.value,
+            datainicial: localFilters?.dataInicial || null,
+            datafinal: localFilters?.dataFinal || null,
+            setor: localFilters?.setor?.value || '',
         };
-        console.log('enviando para criar: ');
+        console.log('enviando para pesquisar: ');
         console.log(data);
+        if (tab === 'overview') {
+            dispatch(searchProtocols(user.uid, companyId, 'geral', data));
+        } else {
+            dispatch(searchProtocols(user.uid, companyId, tab, data));
+        }
     }
 
     async function handleProtocol(evt) {
