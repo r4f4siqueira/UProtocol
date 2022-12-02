@@ -32,12 +32,11 @@ function FormTransfers() {
         }
         return true;
     });
-
     // preenchendo a dropbox
     const employeeOptions = [];
     employeeList.every((employee, index) => {
         if (localTransfer.setor?.value === employee.setor) {
-            employeeOptions[index] = { value: employee.id, label: `${employee.id} - ${employee.nome}` };
+            employeeOptions[index] = { value: employee.funcionario, label: `${employee.funcionario} - ${employee.nome}` };
         }
         return true;
     });
