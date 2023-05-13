@@ -18,6 +18,7 @@
     - [🥺 Teste](#teste)
     - [🤪 Diagrama de Classe](#diagrama-de-classe)
     - [😵 Insomnia](#insomnia)
+    - [😴 Observações](#obs)
 - [🤔 Doc API](https://github.com/r4f4siqueira/UProtocol/tree/master/back#api-doc)
 - [😀 Manual do Usuário](https://github.com/r4f4siqueira/UProtocol/wiki/Manual-do-Usu%C3%A1rio)
 - [🙃 Anexos](https://github.com/r4f4siqueira/UProtocol/tree/master/docs)
@@ -148,4 +149,9 @@ Diagrama de classe disponível em 👉 [Diagrams.net](https://drive.google.com/f
 
 ### Insomnia
 Faça o dawload do arquivo JSON disponivel no link [Insomnia.json](/docs/Insomnia.json) e importe no IMSOMNIA caso queira testar as rotas ou retornos da API
+
+### Obs
+#### Google
+Ao abrir a aplicação no navegador através de `localhost` e entrar utilizando uma conta _google_ não é possivel renderizar a imagem do usuário, caso o usuário não tenha feito upload de alguma imagem para o perfil, pois o google não deixa que localhost tenha alguns acessos, até conseguimos o caminho da imagem, mas não é possivel rendereizar na tela;
+Para que funcione é nescessário abrir a aplicação em algum endereço válido como por exemplo `127.0.0.1`
 
